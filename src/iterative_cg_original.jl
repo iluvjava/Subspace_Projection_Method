@@ -17,7 +17,7 @@ mutable struct IterativeCGOriginal <: IterativeCG
         this.d = this.r
         this.itr = 0
         return this
-    end``
+    end
 
     function IterativeCGOriginal(A::AbstractArray, b::AbstractArray)
         return IterativeCGOriginal((x)->A*x, b)
