@@ -31,7 +31,6 @@ mutable struct CGOriginal
 end
 
 function (this::CGOriginal)()
-
     r = this.r
     if r == 0
         return 0 # The problem is solved already. 
@@ -40,15 +39,16 @@ function (this::CGOriginal)()
     d = this.d
     Ad = A(d)
 
-    α = dot(r, r)/dot(d, Ad)
-    if α < 0 
+    a = dot(r, r)/dot(d, Ad)
+    if a < 0 
         error("CG got a non-definite matrix")
     end
-    this.x += α*d
-    this.rnew = r - α*Ad                # update rnew 
-    β = dot(this.rnew, this.rnew)/dot(r, r)
+
+    this.x += a*d
+    this.rnew = r - a*Ad                # update rnew 
+    b = dot(this.rnew, this.rnew)/dot(r, r)
     # @assert abs(dot(rnew + β*d, Ad)) < 1e-8 "Not conjugate"
-    this.d = this.rnew + β*d
+    this.d = this.rnew + b*d
     this.r = this.rnew                      # Override
     this.itr += 1 
     return convert(Float64, norm(this.rnew))
