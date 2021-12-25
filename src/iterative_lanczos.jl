@@ -4,7 +4,9 @@ mutable struct IterativeLanczos
     alphas::Dict
     k::Int64       # when k=1, the algorithm haven't started yet. 
     q_store::Int64
+    Aq
     Q::Dict
+    
     function IterativeLanczos(A::Function, q1, q_store::Int64=typemax(Int64))
         @assert q_store > 1 "storage must be at least 2. "
         this = new()
@@ -13,10 +15,11 @@ mutable struct IterativeLanczos
         this.alphas = Dict()
         this.k = 1
         this.q_store = q_store
-        this.Q = Dict{Int64, typeof(A(q1))}()
-        this.Q[1] = q1/norm(q1)
-        
-        this.alphas[1] = dot(this.Q[1], this.A(this.Q[1]))  # Alpha is computed in Advance!
+        q1 = q1/norm(q1)
+        this.Aq = A(q1)
+        this.Q = Dict{Int64, typeof(this.Aq)}()
+        this.Q[1] = q1
+        this.alphas[1] = dot(this.Q[1], this.Aq)  # Alpha is computed in Advance!
         return this
     end
 
@@ -32,7 +35,7 @@ end
 """
 function (this::IterativeLanczos)()
     q = this.Q[this.k]
-    Aq = this.A(q)
+    Aq = this.Aq
     alphas = this.alphas
     if this.k == 1
         qNew = Aq
@@ -49,11 +52,13 @@ function (this::IterativeLanczos)()
     end
 
     this.Q[this.k + 1] = qNew
-    this.alphas[this.k + 1] = dot(qNew, this.A(qNew))
+    this.Aq = this.A(qNew)
+    this.alphas[this.k + 1] = dot(qNew, this.Aq)
     this.betas[this.k] = betaNew
     this.k += 1
     return betaNew
 end
+
 
 """
     It calls the () operator 3 j times, performing j iterations. 
@@ -65,6 +70,7 @@ function (this::IterativeLanczos)(j::Int64)
     end
     return betas
 end
+
 
 """
     Get the Q matrix from the Lanczos Iterations, the number of columnos of the 
@@ -98,6 +104,14 @@ function GetTMatrix(this::IterativeLanczos)
     )
 end
 
+"""
+    Get the Hessenberg form of the Tridiagonal matrix, the shape of the 
+    matrix is (k,k - 1). 
+"""
+function GetHMatrix(this::IterativeLanczos)
+    T = GetTMatrix(this)
+    return T[:, 1: end - 1]
+end
 
 """
     Get the previous 3 Orthogonal vector from the Lanczos Algorithm. 
@@ -113,6 +127,3 @@ function GetPrevious3OrthogonalVec(this::IterativeLanczos)
     end
     return hcat(this.Q[this.k], this.Q[this.k - 1], this.Q[this.k - 2])
 end
-
-
-

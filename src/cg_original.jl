@@ -1,6 +1,6 @@
 # include("iterative_hessenberg.jl")  # import stuff that this import. 
 
-mutable struct IterativeCGOriginal <: IterativeCG
+mutable struct CGOriginal
     r
     rnew
     d
@@ -8,7 +8,10 @@ mutable struct IterativeCGOriginal <: IterativeCG
     x
     b
     itr
-    function IterativeCGOriginal(A::Function, b, x0=nothing)
+
+    record_lanczos::Bool  # whether start recording for the Lanczos Decomposition.
+
+    function CGOriginal(A::Function, b, x0=nothing)
         this = new()
         this.A = A
         this.x = x0 === nothing ? b .+ 0.1  : x0  # just to handle matrix A that has eigenvalue of exactly 1.
@@ -16,16 +19,18 @@ mutable struct IterativeCGOriginal <: IterativeCG
         this.rnew = similar(this.r)
         this.d = this.r
         this.itr = 0
+
+        this.record_lanczos = false
         return this
     end
 
-    function IterativeCGOriginal(A::AbstractArray, b::AbstractArray)
-        return IterativeCGOriginal((x)->A*x, b)
+    function CGOriginal(A::AbstractArray, b::AbstractArray)
+        return CGOriginal((x)->A*x, b)
     end
     
 end
 
-function (this::IterativeCGOriginal)()
+function (this::CGOriginal)()
 
     r = this.r
     if r == 0

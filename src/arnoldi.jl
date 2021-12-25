@@ -1,9 +1,10 @@
-
-
 # ==============================================================================
 # ITERATIVE HESSENBERG
 #   * Type of A, and type of b has to be the same. For example, if A is complex, 
 #   then b vector/matrix has to be complex too. 
+#   Storage Format: 
+#       H: The upper Hessenberg form is stored as vectors of vectors, where 
+#       each element in the vector `H`, are columns of the Hessenberg matrix. 
 
 mutable struct Arnoldi
     
@@ -94,8 +95,11 @@ function GetHessenberMatrix(this::Arnoldi)
             H[IdxI, IdxJ] = 0
         end
     end
-    
     return H
+end
+
+function GetHMatrix(this::Arnoldi) 
+    return GetHessenberMatrix(this)
 end
 
 function GetOrthogonalMatrix(this::Arnoldi)
@@ -104,6 +108,10 @@ function GetOrthogonalMatrix(this::Arnoldi)
         Q[:, IdxJ] = this.Q[IdxJ]
     end
     return Q
+end
+
+function GetQMatrix(this::Arnoldi)
+    return GetOrthogonalMatrix(this)
 end
 
 
