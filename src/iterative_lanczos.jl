@@ -13,7 +13,7 @@ mutable struct IterativeLanczos
         this.alphas = Dict()
         this.k = 1
         this.q_store = q_store
-        this.Q = Dict{Int64, typeof(q1)}()
+        this.Q = Dict{Int64, typeof(A(q1))}()
         this.Q[1] = q1/norm(q1)
         
         this.alphas[1] = dot(this.Q[1], this.A(this.Q[1]))  # Alpha is computed in Advance!
