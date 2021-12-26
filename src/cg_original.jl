@@ -1,6 +1,8 @@
-# include("iterative_hessenberg.jl")  # import stuff that this import. 
+# A original flavor of the Conjugate Gradient Algorithm. 
+# * It performs the Conjugate Gradient and record all the residuals vectors for 
+#   computing the lanczos iterations. 
 
-mutable struct CGOriginal
+mutable struct CG
     r
     rnew
     d
@@ -9,9 +11,7 @@ mutable struct CGOriginal
     b
     itr
 
-    record_lanczos::Bool  # whether start recording for the Lanczos Decomposition.
-
-    function CGOriginal(A::Function, b, x0=nothing)
+    function CG(A::Function, b, x0=nothing)
         this = new()
         this.A = A
         this.x = x0 === nothing ? b .+ 0.1  : x0  # just to handle matrix A that has eigenvalue of exactly 1.
@@ -24,13 +24,13 @@ mutable struct CGOriginal
         return this
     end
 
-    function CGOriginal(A::AbstractArray, b::AbstractArray)
-        return CGOriginal((x)->A*x, b)
+    function CG(A::AbstractArray, b::AbstractArray)
+        return CG((x)->A*x, b)
     end
     
 end
 
-function (this::CGOriginal)()
+function (this::CG)()
     r = this.r
     if r == 0
         return 0 # The problem is solved already. 
@@ -54,7 +54,7 @@ function (this::CGOriginal)()
     return convert(Float64, norm(this.rnew))
 end
 
-function GetCurrentResidualNorm(this::IterativeCG)
+function GetCurrentResidualNorm(this::CG)
     return norm(this.r)
 end
 
