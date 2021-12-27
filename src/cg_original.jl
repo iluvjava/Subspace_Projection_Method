@@ -2,7 +2,7 @@
 # * It performs the Conjugate Gradient and record all the residuals vectors for 
 #   computing the lanczos iterations. 
 
-mutable struct CG
+mutable struct ConjGrad
     r
     rnew
     d
@@ -11,7 +11,7 @@ mutable struct CG
     b
     itr
 
-    function CG(A::Function, b, x0=nothing)
+    function ConjGrad(A::Function, b, x0=nothing)
         this = new()
         this.A = A
         this.x = x0 === nothing ? b .+ 0.1  : x0  # just to handle matrix A that has eigenvalue of exactly 1.
@@ -24,13 +24,13 @@ mutable struct CG
         return this
     end
 
-    function CG(A::AbstractArray, b::AbstractArray)
-        return CG((x)->A*x, b)
+    function ConjGrad(A::AbstractArray, b::AbstractArray)
+        return ConjGrad((x)->A*x, b)
     end
     
 end
 
-function (this::CG)()
+function (this::ConjGrad)()
     r = this.r
     if r == 0
         return 0 # The problem is solved already. 
@@ -54,7 +54,7 @@ function (this::CG)()
     return convert(Float64, norm(this.rnew))
 end
 
-function GetCurrentResidualNorm(this::CG)
+function GetCurrentResidualNorm(this::ConjGrad)
     return norm(this.r)
 end
 
