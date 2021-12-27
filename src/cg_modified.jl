@@ -1,6 +1,9 @@
 # Suitable for any linear transformation on any type of multi-dimensional arrays. 
 # Implementation details and advantages: 
-
+# * has the option to keep all previous residual vectors for orthogonalizing the newest 
+#   residual vectors obtained. 
+# * The re-orthogonalization process is computed in parallel because it uses a matrix of zero that 
+#   resizes to double the number of columns each time.  
 
 mutable struct ConjGradModified
     A::Function              # Linear opeartor
