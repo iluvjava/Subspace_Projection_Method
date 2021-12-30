@@ -156,3 +156,16 @@ function (this::ConjGradModified)()
     this.itr += 1 
     return convert(Float64, norm(this.rnew))
 end
+
+
+"""
+    Performs j iterations of conjugate gradient, collect the 
+    2norm of the residual and return all of them in a vector. 
+"""
+function (this::ConjGradModified)(j::Int64)
+    results = Vector()
+    for _ in 1: j
+        push!(results, this())
+    end
+    return results
+end

@@ -17,8 +17,9 @@ mutable struct IterativeBiLanczos
 
     itr::Int64                  # Iterations Counts 
     """
-        r1, r2, are initialization for the A and A^H krylov space. 
-        They can't be orthogonal. 
+        The initializations needs: 
+            * A linear operator: A in the form of a function, acts on tensor. 
+            * 2 initialization vector r1, r2, for the krylov subspace of A and A^H. 
     """
     function IterativeBiLanczos(
         A::Function,
@@ -68,12 +69,13 @@ function LeftApply(this::IterativeBiLanczos, v::AbstractVector)
 end
 
 
-function GetTMatrix(this::IterativeBiLanczos)
+function GetTMatrix(this::IterativeBiLanczos, start::Int64 = 1, stop = nothing)
+    stop = stop === nothing ? this.itr : stop
     T = this.T
     valuesX = Vector{Int64}()
     valuesY = Vector{Int64}()
     values = Vector{Number}()
-    for Idx in 1: this.itr
+    for Idx in start: stop
         β = T[Idx, Idx + 1]
         push!(valuesX, Idx); push!(valuesY, Idx + 1); push!(values, β)
         α = T[Idx, Idx]
@@ -81,22 +83,30 @@ function GetTMatrix(this::IterativeBiLanczos)
         γ = T[Idx + 1, Idx]
         push!(valuesX, Idx + 1); push!(valuesY, Idx); push!(values, γ)
     end
+    # Only on element in the matrix I think
     if this.itr == 0
-        return nothing
+        return T[1, 1]
     end
-    push!(valuesX, this.itr + 1)
-    push!(valuesY, this.itr + 1)
-    push!(values, T[this.itr + 1, this.itr + 1])
+    push!(valuesX, stop + 1)
+    push!(valuesY, stop + 1)
+    push!(values, T[stop + 1, stop + 1])
     return sparse(valuesX, valuesY, values)
 end
 
 function GetWMatrix(this::IterativeBiLanczos)
-    return hcat([this.W[Idx] for Idx in 1: this.itr + 1]...)
+    return GetWMatrix(this, 1, this.itr)
 end
 
+function GetWMatrix(this::IterativeBiLanczos, start::Int64, stop::Int64)
+    return hcat([this.W[Idx] for Idx in start: stop + 1]...)
+end
 
 function GetVMatrix(this::IterativeBiLanczos)
-    return hcat([this.V[Idx] for Idx in 1: this.itr + 1]...)
+    return GetVMatrix(this, 1, this.itr)
+end
+
+function GetVMatrix(this::IterativeBiLanczos, start::Int64, stop::Int64)
+    return hcat([this.V[Idx] for Idx in start: stop + 1]...)
 end
 
 
@@ -108,8 +118,10 @@ function Decomposition(this::IterativeBiLanczos)
     return nothing
 end
 
-
-
+"""
+    Performs one step of the iterative bi-lanczos algorithm and 
+    return the v, w matrix. 
+"""
 function (this::IterativeBiLanczos)()
     this.itr += 1
     j = this.itr
@@ -145,13 +157,20 @@ function (this::IterativeBiLanczos)()
     return v, w
 end
 
+
+"""
+    Performs the iterations for j step, and returned the T, W, and V
+    matrix generated during the running of the algorithms. 
+"""
+function (this::IterativeBiLanczos)(j::Int64)
+    start = this.itr + 1 
+    for _ in 1: j
+        this()
+    end
+    return GetVMatrix(this, start, this.itr), 
+        GetWMatrix(this, start, this.itr), 
+        GetTMatrix(this, start)
+end
+
 # ==============================================================================
 # Basic Testing
-using LinearAlgebra, SparseArrays
-ibl = IterativeBiLanczos(rand(3,3))
-ibl()
-ibl()
-ibl()
-V = GetVMatrix(ibl)
-W = GetWMatrix(ibl)     # TODO: Orthogonality of left right ortho subspace is not 
-                        # showing up. 
