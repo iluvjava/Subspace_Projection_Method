@@ -41,13 +41,13 @@ function GetNastyPSDMatrix(rho::Number, N=20, inverted=false)
     return Diagonal(EigenValues)
 end
 
-N = 512
+N = 1024
 A = GetNastyPSDMatrix(0.9, N)
 A = A^4
 b = rand(N)
-cg1 = ConjGrad(A, b)
-cg2 = ConjGrad(A, b)
-cg3 = ConjGrad(A, b)
+cg1 = ConjGradModified(A, b)
+cg2 = ConjGradModified(A, b)
+cg3 = ConjGradModified(A, b)
 cg1Soln = Vector{typeof(b)}()
 cg2Soln = Vector{typeof(b)}()
 cg3Soln = Vector{typeof(b)}()
@@ -68,8 +68,6 @@ fig = plot(objectiveVals1, label="With Re-orthonalization", title="Convergence o
 plot!(fig, objectiveVals2, label="without Re-orthogonalization")
 plot!(fig, objectiveVals3, label="partial Re-orthogonalization")
 savefig(fig, "objectivevals_convergence.png")
-
-
 
 
 cd(".")
