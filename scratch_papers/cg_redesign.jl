@@ -165,8 +165,9 @@ end
 
 ### Experiments. 
 
-function GetObjectiveVals(A, b, xs)
-    return xs .|> x -> dot(x, A, x) - 2*dot(b, x)
+function GetErrorEnergyNorm(A, b, xs)
+    xStar = A\b
+    return xs .|> x -> dot(x - xStar, A, x-xStar)/dot(xs[1] - xStar, A, xs[1] - xStar)
 end
 
 """
@@ -201,9 +202,11 @@ function GetNastyPSDMatrix(rho::Number, N=20, inverted=false)
     return Diagonal(EigenValues)
 end
 
-N = 512
+
+N = 256
 A = GetNastyPSDMatrix(0.9, N)
-A = A^4
+B = sprand(Float64, N, N, 2/N)
+A = A + B'*B
 b = rand(N)
 cg1 = ConjGrad(A, b)
 cg2 = ConjGrad(A, b)
@@ -215,15 +218,15 @@ push!(cg1Soln, cg1.x)
 push!(cg2Soln, cg2.x)
 push!(cg3Soln, cg3.x)
 TurnOffReorthgonalize(cg2)
-ChangeStorageLimit(cg3, 32)
-for _ in 1:2*N
+ChangeStorageLimit(cg3, 188)
+for _ in 1:3*N
     cg1(); cg2(); cg3()
     push!(cg1Soln, cg1.x); push!(cg2Soln, cg2.x); push!(cg3Soln, cg3.x)
 end
 
-objectiveVals1 = GetObjectiveVals(A, b, cg1Soln)
-objectiveVals2 = GetObjectiveVals(A, b, cg2Soln)
-objectiveVals3 = GetObjectiveVals(A, b, cg3Soln)
-fig = plot(objectiveVals1, label="With Re-orthonalization")
-plot!(fig, objectiveVals2, label="without Re-orthogonalization")
-plot!(fig, objectiveVals3, label="partial Re-orthogonalization")
+objectiveVals1 = GetErrorEnergyNorm(A, b, cg1Soln)
+objectiveVals2 = GetErrorEnergyNorm(A, b, cg2Soln)
+objectiveVals3 = GetErrorEnergyNorm(A, b, cg3Soln)
+fig = plot(log10.(objectiveVals1), label="With Re-orthonalization")
+plot!(fig, log10.(objectiveVals2), label="without Re-orthogonalization")
+plot!(fig, log10.(objectiveVals3), label="partial Re-orthogonalization")

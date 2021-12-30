@@ -1,7 +1,7 @@
 mutable struct IterativeLanczos
     A::Function
-    betas::Dict
-    alphas::Dict
+    betas::Dict    # The sub and super diagonal of the matrix
+    alphas::Dict   # The diagonal of the matrix
     k::Int64       # when k=1, the algorithm haven't started yet. 
     q_store::Int64
     Aq
@@ -111,6 +111,23 @@ end
 function GetHMatrix(this::IterativeLanczos)
     T = GetTMatrix(this)
     return T[:, 1: end - 1]
+end
+
+
+"""
+    Returns Q, T matrices such that QTQ^T approximates A
+"""
+function DecompositionQTQ(this::IterativeLanczos)
+    return GetQMatrix(this), GetTMatrix(this)
+end
+
+
+"""
+    Returns H, Q Matrix such that AQ = QH. 
+"""
+function DecompositionQH(this::IterativeLanczos)
+
+    return GetQMatrix(this)[:, 1: end - 1], GetHMatrix(this)
 end
 
 """

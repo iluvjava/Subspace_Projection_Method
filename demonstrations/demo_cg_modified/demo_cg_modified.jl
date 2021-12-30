@@ -69,4 +69,7 @@ plot!(fig, objectiveVals2, label="without Re-orthogonalization")
 plot!(fig, objectiveVals3, label="partial Re-orthogonalization")
 savefig(fig, "objectivevals_convergence.png")
 
+
+
+
 cd(".")
