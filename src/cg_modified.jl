@@ -17,6 +17,7 @@ mutable struct ConjGradModified
     r::AbstractVector        # previous computed residual
     rnew::AbstractVector     # Current residual
     d::AbstractVector        # Conjugate Direction
+    Ad::AbstractVector       # for reducing garbage collector time. 
     
     itr::UInt64              # Iteration count. 
     Q::Union{AbstractMatrix, Nothing}        # Re-Orthogonalization basis.
@@ -26,7 +27,7 @@ mutable struct ConjGradModified
     storage_limit::UInt64    # storage limit for the Q vector. 
     reorthogonalize::Bool    # Whether to perform reorthogonalization.
 
-    
+
     function ConjGradModified(
         A::Function, 
         b::AbstractArray, 
@@ -41,6 +42,7 @@ mutable struct ConjGradModified
         this.r = ComputeResidualVec(this, this.x)
         this.rnew = similar(this.r)
         this.d = this.r
+        this.Ad = similar(this.r)
         this.x = x0
         this.itr = 0
 
@@ -121,6 +123,11 @@ function ComputeVec(this::ConjGradModified, x::AbstractArray)
     return reshape(vec, length(vec))
 end
 
+function ComputeVec!(this::ConjGradModified, x::AbstractArray, vec::AbstractArray)
+    vec .= this.A(reshape(x, this.tensor_size))
+    return reshape(vec, :)
+end
+
 
 """
     Performs One step of conjugate Gradient. 
@@ -131,34 +138,38 @@ function (this::ConjGradModified)()
         return 0 # The problem is solved already. 
     end
     d = this.d
-    Ad = ComputeVec(this, d)
+    Ad = this.Ad
+    ComputeVec!(this, d, Ad)
+
     a = dot(r, r)/dot(d, Ad)
+    
     if a < 0 
         error("CG got a non-definite matrix")
     end
 
     this.x += a*d
-    this.rnew = r - a*Ad                    # update rnew 
+    this.rnew .= r - a*Ad                    # update rnew 
+    rnewNorm = norm(this.rnew)
     
     if this.reorthogonalize
-        this.rnew -= this.Q*this.Q'*this.rnew
-
+        this.rnew .-= this.Q*(this.Q'*this.rnew)
+        
         if this.Q_size == this.storage_limit  # starts overwrite
-            this.Q[:, this.over_write + 1] = this.rnew/norm(this.rnew)
+            this.Q[:, this.over_write + 1] = this.rnew/rnewNorm
             this.over_write = (this.over_write + 1)%this.storage_limit
 
         elseif this.Q_size == size(this.Q, 2) # Resize
             newQ = zeros(
                 typeof(this.r[1]), 
                 size(this.Q, 1), 
-                max(2*size(this.Q, 2), this.storage_limit)
+                min(2*size(this.Q, 2), this.storage_limit)
             )
             newQ[:, 1:this.Q_size] = this.Q
-            newQ[:, this.Q_size + 1] = this.rnew/norm(this.rnew)
+            newQ[:, this.Q_size + 1] = this.rnew/rnewNorm
             this.Q = newQ
             this.Q_size += 1
         else                                  # add one more.
-            this.Q[:, this.Q_size + 1] = this.rnew/norm(this.rnew)
+            this.Q[:, this.Q_size + 1] = this.rnew/rnewNorm
             this.Q_size += 1
         end
     end
@@ -166,9 +177,9 @@ function (this::ConjGradModified)()
     b = dot(this.rnew, this.rnew)/dot(r, r)
     # @assert abs(dot(rnew + β*d, Ad)) < 1e-8 "Not conjugate"
     this.d = this.rnew + b*d
-    this.r = this.rnew                      # Override
+    this.r = copy(this.rnew)                      # Override
     this.itr += 1 
-    return convert(Float64, norm(this.rnew))
+    return convert(Float64, rnewNorm)
 end
 
 

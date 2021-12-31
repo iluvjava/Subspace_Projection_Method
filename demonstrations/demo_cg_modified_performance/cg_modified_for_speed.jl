@@ -3,13 +3,15 @@
 #   computing the lanczos iterations. 
 
 mutable struct ConjGrad
-    r
-    rnew
-    d
+    r::Vector{Float64}
+    rnew::Vector{Float64}
+    d::Vector{Float64}
     A::Function
-    x
-    b
-    itr
+    x::Vector{Float64}
+    b::Vector{Float64}
+    Ad::Vector{Float64}
+    itr::Int64
+
 
     function ConjGrad(A::Function, b, x0=nothing)
         this = new()
@@ -19,12 +21,12 @@ mutable struct ConjGrad
         this.rnew = similar(this.r)
         this.d = this.r
         this.itr = 0
+        this.Ad = similar(this.d)
 
-        this.record_lanczos = false
         return this
     end
 
-    function ConjGrad(A::AbstractArray, b::AbstractArray)
+    function ConjGrad(A::AbstractMatrix{Float64}, b::VecOrMat{Float64})
         return ConjGrad((x)->A*x, b)
     end
     
@@ -37,7 +39,9 @@ function (this::ConjGrad)()
     end
     A = this.A
     d = this.d
-    Ad = A(d)
+    Ad = this.Ad
+    Ad .= A(d)
+
 
     a = dot(r, r)/dot(d, Ad)
     if a < 0 
@@ -45,13 +49,13 @@ function (this::ConjGrad)()
     end
 
     this.x += a*d
-    this.rnew = r - a*Ad                # update rnew 
+    this.rnew .= r - a*Ad                # update rnew 
     b = dot(this.rnew, this.rnew)/dot(r, r)
     # @assert abs(dot(rnew + β*d, Ad)) < 1e-8 "Not conjugate"
-    this.d = this.rnew + b*d
-    this.r = this.rnew                      # Override
+    @. this.d = this.rnew + b*d
+    this.r = copy(this.rnew)                      # Override
     this.itr += 1 
-    return norm(this.rnew)
+    return convert(Float64, norm(this.rnew))
 end
 
 function GetCurrentResidualNorm(this::ConjGrad)
