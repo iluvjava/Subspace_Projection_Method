@@ -9,6 +9,7 @@ function GetObjectiveVals(A, b, xs)
     return xs .|> x -> dot(x, A, x) - 2*dot(b, x)
 end
 
+
 """
     Bad eigen value distribution, they are distributed from 0.001 to 1 like a 
     geometric series. 

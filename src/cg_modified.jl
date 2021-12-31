@@ -2,8 +2,11 @@
 # Implementation details and advantages: 
 # * has the option to keep all previous residual vectors for orthogonalizing the newest 
 #   residual vectors obtained. 
+# 
 # * The re-orthogonalization process is computed in parallel because it uses a matrix of zero that 
-#   resizes to double the number of columns each time.  
+#   resizes to double the number of columns each time. 
+# 
+# * (TO ADD) Always store the Tridiaognalizations of the Linear operator while running the conjugate gradient. 
 
 mutable struct ConjGradModified
     A::Function              # Linear opeartor
@@ -22,6 +25,8 @@ mutable struct ConjGradModified
 
     storage_limit::UInt64    # storage limit for the Q vector. 
     reorthogonalize::Bool    # Whether to perform reorthogonalization.
+
+    
     function ConjGradModified(
         A::Function, 
         b::AbstractArray, 
@@ -96,6 +101,15 @@ end
 function ComputeResidualVec(this::ConjGradModified, x::AbstractArray)
     resVec = this.b - this.A(reshape(x, this.tensor_size))
     return reshape(resVec, length(resVec))
+end
+
+
+"""
+    Get the norm of the current residual of Modified Conjugate 
+    Gradient. 
+"""
+function GetResidualNorm(this::ConjGradModified)
+    return norm(this.r)
 end
 
 

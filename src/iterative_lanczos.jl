@@ -56,7 +56,7 @@ function (this::IterativeLanczos)()
     this.alphas[this.k + 1] = dot(qNew, this.Aq)
     this.betas[this.k] = betaNew
     this.k += 1
-    return betaNew
+    return qNew
 end
 
 
@@ -104,6 +104,7 @@ function GetTMatrix(this::IterativeLanczos)
     )
 end
 
+
 """
     Get the Hessenberg form of the Tridiagonal matrix, the shape of the 
     matrix is (k,k - 1). 
@@ -129,6 +130,7 @@ function DecompositionQH(this::IterativeLanczos)
 
     return GetQMatrix(this)[:, 1: end - 1], GetHMatrix(this)
 end
+
 
 """
     Get the previous 3 Orthogonal vector from the Lanczos Algorithm. 
