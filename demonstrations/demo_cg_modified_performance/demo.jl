@@ -1,15 +1,14 @@
 include("../demo_utilities.jl")
-include("../../scratch_papers/cg_modified_redesigned.jl")
-using BenchmarkTools
+include("../../src/cg_modified.jl")
+using BenchmarkTools, Profile
 
-
-n = 512
-A = Diagonal(rand(n).^6)
+n = 1024
+A = Diagonal(collect(LinRange(1e-3, 1, n)).^3)
 b = randn(n)
 bNorm = norm(b)
 function trial()
     cgm = ConjGradModified(A, b)
-    SetStorageLimit(cgm, 256)
+    ChangeStorageLimit(cgm, 1024)
     # TurnOffReorthgonalize(cgm)
     ResNorm = norm(cgm.r)
     iterationCount = 0
@@ -23,7 +22,24 @@ function trial()
     println("iterationCount: $iterationCount")
 end
 
-@time trial()
+display(@benchmark trial())
 
 
+# function Trial2()
+#     cgm = ConjGradModified(A, b)
+#     SetStorageLimit(cgm, 1024)
+#     # TurnOffReorthgonalize(cgm)
+#     ResNorm = norm(cgm.r)
+#     iterationCount = 0
+#     while ResNorm > 1e-10
+#         ResNorm = cgm()/bNorm
+#         iterationCount += 1
+#         if ResNorm == Inf || ResNorm == NaN
+#             error("Resnorm is inf or nan.")
+#         end
+#     end
+#     println("iterationCount: $iterationCount")
+
+# end
+# @time Trial2()
 

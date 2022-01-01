@@ -105,8 +105,9 @@ end
     everything that is already in Q. 
 """
 function SetStorageLimit(this::ConjGradModified, storage_limit)
-    this.Q = zeros(typeof(this.r[1]), length(this.r), storage_limit)
+    this.Q = zeros(typeof(this.r[1]), length(this.r), min(length(this.r) - 1, storage_limit))
     this.Q[:, 1] = this.r/norm(this.r)
+    this.storage_limit = storage_limit
     this.Q_size = 1
     this.over_write = 0
 end
@@ -177,6 +178,7 @@ function (this::ConjGradModified)()
         if this.Q_size == this.storage_limit  # starts overwrite
             this.Q[:, this.over_write + 1] = this.rnew/rnewNorm
             this.over_write = (this.over_write + 1)%this.storage_limit
+            
 
         elseif this.Q_size == size(this.Q, 2) # Resize
             newQ = zeros(
@@ -188,9 +190,11 @@ function (this::ConjGradModified)()
             newQ[:, this.Q_size + 1] = this.rnew/rnewNorm
             this.Q = newQ
             this.Q_size += 1
+            
         else                                  # add one more.
             this.Q[:, this.Q_size + 1] = this.rnew/rnewNorm
             this.Q_size += 1
+            
         end
     end
     
