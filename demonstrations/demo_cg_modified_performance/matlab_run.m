@@ -1,5 +1,5 @@
-    n = 1024;
-    A = spdiags(linspace(1e-3, 1, n)'.^3, 0, n, n); 
+    n = 4096;
+    A = spdiags(linspace(1e-3, 1, n)'.^2, 0, n, n); 
     b = randn(n, 1);
     Times = [];
 %% 

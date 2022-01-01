@@ -20,9 +20,7 @@ mutable struct ConjGradModified{T <: Number}
     Ad::Vector{T}       # for reducing garbage collector time. 
     
     itr::UInt64              # Iteration count. 
-    Q::Union{AbstractMatrix{T}, Nothing}        # Re-Orthogonalization basis.
-    Q_size::UInt64           # Number of orthogonalization vectors. 
-    over_write::UInt64       # position for overwrite once storage is limit is reached.
+    Q::Union{Nothing, Vector{Vector{T}}}       # Re-Orthogonalization basis.
 
     storage_limit::UInt64    # storage limit for the Q vector, default is n - 1
     reorthogonalize::Bool    # Whether to perform reorthogonalization.
@@ -35,7 +33,8 @@ mutable struct ConjGradModified{T <: Number}
     )
         x0 = x0===nothing ? b .+ 0.1 : x0
         r = reshape(b - A(x0), :)
-        this = new{typeof(r[1])}()
+        T = typeof(r[1])            # type extraction          
+        this = new{T}()
         this.r = r
         this.A = A
         this.b = b
@@ -48,10 +47,8 @@ mutable struct ConjGradModified{T <: Number}
         this.x = x0
         this.itr = 0
 
-        this.Q = zeros(typeof(this.r[1]), length(this.r), 4)
-        this.Q[:, 1] = this.r/norm(this.r)
-        this.Q_size = 1
-        this.over_write = 0
+        this.Q = Vector{Vector{T}}()
+        push!(this.Q, this.r/norm(this.r))
 
         this.storage_limit = length(this.r) - 1       # Maximal limit, if not, we have a problem. 
         this.reorthogonalize = true
@@ -62,54 +59,6 @@ mutable struct ConjGradModified{T <: Number}
         return ConjGradModified((x)-> A*x, b, x0)
     end
 
-end
-
-
-"""
-    Turn on the reorthogonalizations using the residual vectors, 
-    and add current residual to the list of residuals. 
-"""
-function TurnOnReorthgonalize(this::ConjGradModified)
-    this.reorthogonalize = true
-    this.Q = zeros(typeof(this.r[1]), length(this.r), storage_limit)
-    this.Q[:, 1] = this.r/norm(this.r)
-    this.Q_size = 1
-    this.over_write = 0
-    return 
-end
-
-"""
-    Turn off the reorthogonalization on the residual vectors. And then 
-    clear all the stored residual vectors. 
-"""
-function TurnOffReorthgonalize(this::ConjGradModified)
-    this.reorthogonalize = false
-    this.Q = nothing
-    return
-end
-
-
-"""
-    Change the storage limit for the number of vectors used for 
-    re-orthogonalization.
-"""
-function ChangeStorageLimit(this::ConjGradModified, storage_limit)
-    this.storage_limit = min(length(this.r) - 1, storage_limit)
-    return
-end
-
-
-
-"""
-    Set the number of vectors in the Q matrix by force. This will clear 
-    everything that is already in Q and fill it with zeros. 
-"""
-function SetStorageLimit(this::ConjGradModified, storage_limit)
-    this.Q = zeros(typeof(this.r[1]), length(this.r), storage_limit)
-    this.storage_limit = storage_limit
-    this.Q[:, 1] = this.r/norm(this.r)
-    this.Q_size = 1
-    this.over_write = 0
 end
 
 
@@ -173,28 +122,16 @@ function (this::ConjGradModified)()
     rnewNorm = norm(this.rnew)
     
     if this.reorthogonalize
-        this.rnew .-= this.Q*(this.Q'*this.rnew)
+        for q in this.Q
+            this.rnew .-= dot(q, this.rnew)*q
+        end
         
-        if this.Q_size == this.storage_limit  # starts overwrite
-            this.Q[:, this.over_write + 1] = this.rnew/rnewNorm
-            this.over_write = (this.over_write + 1)%this.storage_limit
-            
-
-        elseif this.Q_size == size(this.Q, 2) # Resize
-            newQ = zeros(
-                typeof(this.r[1]), 
-                size(this.Q, 1), 
-                min(2*size(this.Q, 2), this.storage_limit)
-            )
-            newQ[:, 1:this.Q_size] = this.Q
-            newQ[:, this.Q_size + 1] = this.rnew/rnewNorm
-            this.Q = newQ
-            this.Q_size += 1
-            
-        else                                  # add one more.
-            this.Q[:, this.Q_size + 1] = this.rnew/rnewNorm
-            this.Q_size += 1
-            
+        if length(this.Q) == this.storage_limit
+            # newQ = popfirst!(this.Q)
+            # newQ .= this.rnew/rnewNorm
+            # push!(this.Q, newQ)
+        else
+            push!(this.Q, this.rnew/rnewNorm)
         end
     end
     

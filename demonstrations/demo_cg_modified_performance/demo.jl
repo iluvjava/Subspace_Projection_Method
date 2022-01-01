@@ -3,13 +3,13 @@ include("../../src/cg_modified.jl")
 using BenchmarkTools, Profile
 
 n = 1024
-A = Diagonal(collect(LinRange(1e-3, 1, n)).^3)
+A = Diagonal(collect(LinRange(1e-3, 1, n)).^2)
 b = randn(n)
 bNorm = norm(b)
 function trial()
     cgm = ConjGradModified(A, b)
     ChangeStorageLimit(cgm, 1024)
-    # TurnOffReorthgonalize(cgm)
+    TurnOffReorthgonalize(cgm)
     ResNorm = norm(cgm.r)
     iterationCount = 0
     while ResNorm > 1e-10
@@ -21,7 +21,7 @@ function trial()
     end
     println("iterationCount: $iterationCount")
 end
-
+@time trial()
 display(@benchmark trial())
 
 
