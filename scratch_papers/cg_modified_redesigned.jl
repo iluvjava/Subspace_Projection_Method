@@ -215,3 +215,7 @@ function (this::ConjGradModified)(j::Int64)
     return results
 end
 
+
+### Using stuff. 
+
+using LinearAlgebra

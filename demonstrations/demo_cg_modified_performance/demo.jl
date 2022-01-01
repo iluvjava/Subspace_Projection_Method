@@ -1,29 +1,29 @@
 include("../demo_utilities.jl")
-include("cg_modified_for_speed.jl")
+include("../../scratch_papers/cg_modified_redesigned.jl")
 using BenchmarkTools
 
 
-n = 128^2
-
-function trial(store = n)
-    A = Diagonal(rand(n))
-    b = randn(n)
-    bNorm = norm(b)
-    cgm = ConjGrad(A, b)
-    # ChangeStorageLimit(cgm, store)
+n = 512
+A = Diagonal(rand(n).^6)
+b = randn(n)
+bNorm = norm(b)
+function trial()
+    cgm = ConjGradModified(A, b)
+    SetStorageLimit(cgm, 256)
+    # TurnOffReorthgonalize(cgm)
     ResNorm = norm(cgm.r)
     iterationCount = 0
-    res = @benchmark while ResNorm > 1e-2
+    while ResNorm > 1e-10
         ResNorm = cgm()/bNorm
         iterationCount += 1
         if ResNorm == Inf || ResNorm == NaN
             error("Resnorm is inf or nan.")
         end
     end
-    return res
+    println("iterationCount: $iterationCount")
 end
 
-@benchmark trial()
+@time trial()
 
 
 
