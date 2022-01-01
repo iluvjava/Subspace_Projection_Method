@@ -26,7 +26,7 @@ mutable struct ConjGradModified{T <: Number}
 
     storage_limit::UInt64    # storage limit for the Q vector. 
     reorthogonalize::Bool    # Whether to perform reorthogonalization.
-
+    
 
     function ConjGradModified(
         A::Function, 
@@ -77,6 +77,7 @@ function TurnOnReorthgonalize(this::ConjGradModified)
     this.over_write = 0
     return 
 end
+
 
 """
     Turn off the reorthogonalization on the residual vectors. And then 
@@ -178,8 +179,6 @@ function (this::ConjGradModified)()
         if this.Q_size == this.storage_limit  # starts overwrite
             this.Q[:, this.over_write + 1] = this.rnew/rnewNorm
             this.over_write = (this.over_write + 1)%this.storage_limit
-            
-
         elseif this.Q_size == size(this.Q, 2) # Resize
             newQ = zeros(
                 typeof(this.r[1]), 
@@ -205,6 +204,7 @@ function (this::ConjGradModified)()
     this.itr += 1 
     return convert(Float64, rnewNorm)
 end
+
 
 
 """

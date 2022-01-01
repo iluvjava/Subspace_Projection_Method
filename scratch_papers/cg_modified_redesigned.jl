@@ -102,7 +102,7 @@ end
 
 """
     Set the number of vectors in the Q matrix by force. This will clear 
-    everything that is already in Q. 
+    everything that is already in Q and fill it with zeros. 
 """
 function SetStorageLimit(this::ConjGradModified, storage_limit)
     this.Q = zeros(typeof(this.r[1]), length(this.r), storage_limit)
