@@ -1,3 +1,3 @@
-using LinearAlgebra, SparseArrays
+using LinearAlgebra, SparseArrays, Statistics
 using Logging
 using Test

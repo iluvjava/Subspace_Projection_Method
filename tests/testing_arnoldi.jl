@@ -1,7 +1,4 @@
-using Test
-using Logging
-using Statistics
-
+include("test_utilities.jl")
 include("../src/arnoldi.jl")
 
 
