@@ -121,15 +121,16 @@ function (this::ConjGradModified)()
     this.rnew .= r - a*Ad                    # update rnew 
     rnewNorm = norm(this.rnew)
     
-    if this.reorthogonalize
+    if this.reorthogonalize && dot(this.Q[1], this.rnew/rnewNorm) > 1e-4
+        # println("Re-orthogonalized initialized")
         for q in this.Q
             this.rnew .-= dot(q, this.rnew)*q
         end
         
         if length(this.Q) == this.storage_limit
-            # newQ = popfirst!(this.Q)
-            # newQ .= this.rnew/rnewNorm
-            # push!(this.Q, newQ)
+            newQ = popfirst!(this.Q)
+            newQ .= this.rnew/rnewNorm
+            push!(this.Q, newQ)
         else
             push!(this.Q, this.rnew/rnewNorm)
         end
