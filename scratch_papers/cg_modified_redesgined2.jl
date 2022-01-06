@@ -1,16 +1,11 @@
-# Suitable for any linear transformation on any type of multi-dimensional arrays. 
-# Implementation details and advantages: 
-# * has the option to keep all previous residual vectors for orthogonalizing the newest 
-#   residual vectors obtained. 
-# 
-# * The re-orthogonalization process is computed in parallel because it uses a matrix of zero that 
-#   resizes to double the number of columns each time. 
-# 
-# * (TO ADD) Always store the Tridiaognalizations of the Linear operator while running the conjugate gradient. 
+# INVESTIGATE THE FOLLOWING: 
+# * Orthogonalize the conjugate vector and the residual vector together, periodically against previous vectors, does it 
+#   reduce the number of iterations? 
+
 
 mutable struct ConjGradModified{T <: Number}
     A::Function              # Linear opeartor
-    b::AbstractArray{T}         # RHS vector
+    b::AbstractArray{T}      # RHS vector
     tensor_size::Tuple       # The size of the tensor the linear operator is acting on. 
 
     x::Vector{T}        # current guess, started with initial guess. 
@@ -20,43 +15,44 @@ mutable struct ConjGradModified{T <: Number}
     Ad::Vector{T}       # for reducing garbage collector time. 
     
     itr::UInt64              # Iteration count. 
-    Q::Union{Nothing, Vector{Vector{T}}}       # Re-Orthogonalization basis.
+    Q::Vector{Vector{T}}     # list of normalized residuals vectors. 
+    Ds::Vector{Vector{T}}    # ist of normalized Ad vector during the iterations. 
 
-    storage_limit::UInt64    # storage limit for the Q vector, default is n - 1
-    reorthogonalize::Bool    # Whether to perform reorthogonalization.
-    ortho_period::Int64
-
+    
     function ConjGradModified(
         A::Function, 
-        b::AbstractArray, 
+        b::AbstractArray,
         x0::Union{AbstractArray,Nothing}=nothing
     )
         x0 = x0===nothing ? b .+ 0.1 : x0
         r = reshape(b - A(x0), :)
-        T = typeof(r[1])            # type extraction          
+        T = typeof(r[1])
         this = new{T}()
         this.r = r
         this.A = A
         this.b = b
         this.tensor_size = size(b)
         this.x = x0
-        # this.r = ComputeResidualVec(this, this.x)
         this.rnew = similar(this.r)
         this.d = this.r
         this.Ad = similar(this.r)
+        ComputeVec!(this, this.r, this.Ad)
         this.x = x0
         this.itr = 0
 
         this.Q = Vector{Vector{T}}()
+        this.Ds = Vector{Vector{T}}()
         push!(this.Q, this.r/norm(this.r))
-
-        this.storage_limit = length(this.r) - 1       # Maximal limit, if not, we have a problem. 
-        this.reorthogonalize = true
-        this.ortho_period = 1
+        push!(this.Ds, this.d/norm(this.d))
         return this
     end
 
-    function ConjGradModified(A::AbstractMatrix, b::AbstractVector, x0::Union{AbstractArray,Nothing}=nothing)
+
+    function ConjGradModified(
+            A::AbstractMatrix, 
+            b::AbstractVector, 
+            x0::Union{AbstractArray,Nothing}=nothing
+        )
         return ConjGradModified((x)-> A*x, b, x0)
     end
 
@@ -96,8 +92,27 @@ end
     pre-allocated vector. 
 """
 function ComputeVec!(this::ConjGradModified, x::AbstractArray, vec::AbstractArray)
-    vec .= this.A(reshape(x, this.tensor_size))
-    return reshape(vec, :)
+    vec .= reshape(this.A(reshape(x, this.tensor_size)), :)
+    return nothing
+end
+
+
+"""
+    Force the orthogonalization happen between the residual vectors against 
+    all previous residual vectors, and the conjugate vector as well. 
+"""
+function ForceOrthogonalize(this::ConjGradModified)
+    for Idx in 1: length(this.Q)
+        for Jdx in 1: Idx - 1
+            # this.Q[Idx] .-= dot(this.Q[Jdx], this.Q[Idx])*this.Q[Jdx]
+            this.Ds[Idx] .-= dot(this.Ds[Jdx], this.Ds[Idx])*this.Ds[Jdx]
+        end
+    end
+    for  Aq in this.Q
+        this.d .-= dot(Aq, this.d)*Aq
+    end
+
+    return
 end
 
 
@@ -111,8 +126,8 @@ function (this::ConjGradModified)()
     end
     d = this.d
     Ad = this.Ad
-    ComputeVec!(this, d, Ad)
     a = dot(r, r)/dot(d, Ad)
+    
     
     if a < 0 
         error("CG got a non-definite matrix")
@@ -122,33 +137,12 @@ function (this::ConjGradModified)()
     this.rnew .= r - a*Ad                    # update rnew 
     rnewNorm = norm(this.rnew)
     
-    if this.reorthogonalize 
-        orErr = abs(dot(this.Q[1], this.rnew/rnewNorm))
-        if this.itr%this.ortho_period == 0
-            println("Itr = $(this.itr); re-orthog error $orErr")
-            for q in this.Q 
-                this.rnew .-= dot(q, this.rnew)*q
-            end
-        else
-            
-        end
-        
-        # manage the vectors. 
-        if length(this.Q) == this.storage_limit
-            newQ = popfirst!(this.Q)
-            newQ .= this.rnew/rnewNorm
-            push!(this.Q, newQ)
-        else
-            push!(this.Q, this.rnew/rnewNorm)
-        end
-    end
-    
-    
-    # @assert abs(dot(rnew + β*d, Ad)) < 1e-8 "Not conjugate"
     b = dot(this.rnew, this.rnew)/dot(r, r)
+    # @assert abs(dot(rnew + β*d, Ad)) < 1e-8 "Not conjugate"
     this.d = this.rnew + b*d
     this.r = copy(this.rnew)                      # Override
     this.itr += 1 
+    ComputeVec!(this, this.d, Ad)
     return convert(Float64, rnewNorm)
 end
 
@@ -167,5 +161,36 @@ end
 
 
 ### Using stuff. 
+using Test, LinearAlgebra
+@testset begin
+    
+    function Test1()
+        n = 10
+        A = rand(n, n)
+        A = A'*A
+        display(A)
+        b = rand(n)
+        cg = ConjGradModified(A, b)
+        for I in 1:n + 1
+            println("Iter: $I; "*"$(cg())")
+        end
+        return norm(b - A*cg.x) < 1e-8
 
-using LinearAlgebra
+    end
+    function Test2()
+        n = 5
+        A = rand(n, n)
+        A = A'*A
+        display(A)
+        b = rand(n)
+        cg = ConjGradModified(A, b)
+        for I in 1:n + 1
+            println("Iter: $I; "*"$(cg())")
+            ForceOrthogonalize(cg)
+        end
+        return norm(b - A*cg.x) < 1e-8
+    end
+
+    @test Test1()
+    @test Test2()
+end

@@ -87,7 +87,7 @@ end
     get the converged ones and put them into the V vectors of matrices. 
 """
 function Restart(this::IterativeLanczosModified)
-    if this.k == 1                  #  TODO: Investigate Edge Case. 
+    if this.k == 1                      #  TODO: Investigate Edge Case. 
         return 
     end
 
@@ -100,6 +100,7 @@ function Restart(this::IterativeLanczosModified)
     # this.Y = Vector{Vector{D}}()
     # this.ritz_values = Vector{D}()
     Θ, V = eigen(T)
+    
     converged = 0
     for (θ, j) in zip(Θ, 1:length(Θ))
         v = V[:, j]

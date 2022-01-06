@@ -78,3 +78,5 @@ end
 
 display(fig4)
 savefig(fig4, "$(@__DIR__)/plots/fig4.png")
+
+T = GetTMatrix(il)

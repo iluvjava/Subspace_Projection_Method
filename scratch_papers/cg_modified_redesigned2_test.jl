@@ -1,12 +1,4 @@
-# Suitable for any linear transformation on any type of multi-dimensional arrays. 
-# Implementation details and advantages: 
-# * has the option to keep all previous residual vectors for orthogonalizing the newest 
-#   residual vectors obtained. 
-# 
-# * The re-orthogonalization process is computed in parallel because it uses a matrix of zero that 
-#   resizes to double the number of columns each time. 
-# 
-# * (TO ADD) Always store the Tridiaognalizations of the Linear operator while running the conjugate gradient. 
+# We are going to make the conjugate vectors more conjugate. 
 
 mutable struct ConjGradModified{T <: Number}
     A::Function              # Linear opeartor
@@ -129,8 +121,10 @@ function (this::ConjGradModified)()
             for q in this.Q 
                 this.rnew .-= dot(q, this.rnew)*q
             end
+            this.d = this.rnew  # Basically restart
         else
-            
+            b = dot(this.rnew, this.rnew)/dot(r, r)
+            this.d = this.rnew + b*d
         end
         
         # manage the vectors. 
@@ -143,10 +137,8 @@ function (this::ConjGradModified)()
         end
     end
     
-    
     # @assert abs(dot(rnew + β*d, Ad)) < 1e-8 "Not conjugate"
-    b = dot(this.rnew, this.rnew)/dot(r, r)
-    this.d = this.rnew + b*d
+    
     this.r = copy(this.rnew)                      # Override
     this.itr += 1 
     return convert(Float64, rnewNorm)
