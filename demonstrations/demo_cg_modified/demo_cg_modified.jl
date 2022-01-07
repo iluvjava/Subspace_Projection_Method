@@ -42,7 +42,7 @@ function GetNastyPSDMatrix(rho::Number, N=20, inverted=false)
     return Diagonal(EigenValues)
 end
 
-N = 1024
+N = 512
 A = GetNastyPSDMatrix(0.9, N)
 A = A^4
 b = rand(N)

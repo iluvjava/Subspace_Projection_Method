@@ -105,8 +105,7 @@ function Restart(this::IterativeLanczosModified)
     for (θ, j) in zip(Θ, 1:length(Θ))
         v = V[:, j]
         error = abs(this.T[k, k - 1]*v[k - 1])
-
-        if error < sqrt(eps(Float64))*norm(T)                          # store the ritz values and the ritz vector. 
+        if error < sqrt(eps(Float64))*norm(T)                        # store the ritz values and the ritz vector. 
             y = Q[:, 1:end - 1]*v
             ŷ = y/norm(y)
             projVal = 0
@@ -207,20 +206,21 @@ end
 
 # Basic Testing here -----------------------------------------------------------
 using LinearAlgebra, Plots
-n = 256
-eigenValues = collect(LinRange(1e-3, 1, n)).^2
+n = 64
+eigenValues = collect(LinRange(1e-3, 1, n)).^3
 A = Diagonal(eigenValues); 
 b = rand(n)
 ilm = IterativeLanczosModified(A, b)
 converged = 0
 for itr in 1: n - 1
     ilm()
-    if itr % 2 == 0
+    if itr % 1 == 0
+    # if GetOrthogonalError(ilm) > 1e-14
         converged += Restart(ilm)
         println("Restarts at itr=$itr, converged = $converged")
-        if converged >= n
-            break
-        end
+        # if converged >= n
+        #     break
+        # end
     end
 end
 
@@ -228,3 +228,5 @@ Q = GetQMatrix(ilm)
 T = GetTMatrix(ilm)
 println()
 heatmap(Q'*Q .|> abs .|> log2)
+
+# LANSO, 

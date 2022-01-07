@@ -12,7 +12,7 @@ for _ in 1: n - 1
     il()
 end
 Q = GetQMatrix(il)
-fig = heatmap(Q'*Q .|> abs .|> log2)
+fig = heatmap(Q'*Q .|> abs .|> log2, size=(1024, 1024))
 ToPlot = Q'*Q .|> abs .|> log2
 fig2 = heatmap(ToPlot .>= -10)
 mkpath("$(@__DIR__)/plots")
