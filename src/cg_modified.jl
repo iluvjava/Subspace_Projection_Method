@@ -13,11 +13,11 @@ mutable struct ConjGradModified{T <: Number}
     b::AbstractArray{T}         # RHS vector
     tensor_size::Tuple       # The size of the tensor the linear operator is acting on. 
 
-    x::Vector{T}        # current guess, started with initial guess. 
-    r::Vector{T}        # previous computed residual
-    rnew::Vector{T}     # Current residual
-    d::Vector{T}        # Conjugate Direction
-    Ad::Vector{T}       # for reducing garbage collector time. 
+    x::Vector{T}            # current guess, started with initial guess. 
+    r::Vector{T}            # previous computed residual
+    rnew::Vector{T}         # Current residual
+    d::Vector{T}            # Conjugate Direction
+    Ad::Vector{T}           # for reducing garbage collector time. 
     
     itr::UInt64              # Iteration count. 
     Q::Union{AbstractMatrix{T}, Nothing}        # Re-Orthogonalization basis.
@@ -189,11 +189,9 @@ function (this::ConjGradModified)()
             newQ[:, this.Q_size + 1] = this.rnew/rnewNorm
             this.Q = newQ
             this.Q_size += 1
-            
         else                                  # add one more.
             this.Q[:, this.Q_size + 1] = this.rnew/rnewNorm
             this.Q_size += 1
-            
         end
     end
     

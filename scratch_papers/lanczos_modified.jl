@@ -96,16 +96,16 @@ function Restart(this::IterativeLanczosModified)
     D = typeof(this.Aq[1])
     k = this.k
 
-    # this.V = Vector{Union{Matrix{D}, Vector{D}}}()
-    # this.Y = Vector{Vector{D}}()
-    # this.ritz_values = Vector{D}()
+    this.V = Vector{Union{Matrix{D}, Vector{D}}}()
+    this.Y = Vector{Vector{D}}()
+    this.ritz_values = Vector{D}()
     Θ, V = eigen(T)
     
     converged = 0
     for (θ, j) in zip(Θ, 1:length(Θ))
         v = V[:, j]
         error = abs(this.T[k, k - 1]*v[k - 1])
-        if error < sqrt(eps(Float64))*norm(T)                        # store the ritz values and the ritz vector. 
+        if error < sqrt(eps(Float32))*norm(T)    # store the ritz values and the ritz vector. 
             y = Q[:, 1:end - 1]*v
             ŷ = y/norm(y)
             projVal = 0
@@ -113,18 +113,17 @@ function Restart(this::IterativeLanczosModified)
                 projVal += dot(y, ŷ)
             end
             # if projVal > 1e-10
-            #     continue                # repeated eigenvectors, ignore
+            #     continue                           # repeated eigenvectors, ignore
             # end
             push!(this.Y, ŷ)
             push!(this.ritz_values, θ)
             converged += 1
         end
     end
-    if converged == 0
-        return 0
-    end
+    # if converged == 0
+    #     return 0
+    # end
     
-
     # # Store Q, reset T, and Q.  
     
     # q1 = Q[:, end]
@@ -143,8 +142,6 @@ function Restart(this::IterativeLanczosModified)
     # this.k = 1
     return converged
 end
-
-
 
 
 """
@@ -206,8 +203,8 @@ end
 
 # Basic Testing here -----------------------------------------------------------
 using LinearAlgebra, Plots
-n = 64
-eigenValues = collect(LinRange(1e-3, 1, n)).^3
+n = 128
+eigenValues = collect(LinRange(1e-3, 1, n)).^4
 A = Diagonal(eigenValues); 
 b = rand(n)
 ilm = IterativeLanczosModified(A, b)
@@ -216,7 +213,7 @@ for itr in 1: n - 1
     ilm()
     if itr % 1 == 0
     # if GetOrthogonalError(ilm) > 1e-14
-        converged += Restart(ilm)
+        converged = Restart(ilm)
         println("Restarts at itr=$itr, converged = $converged")
         # if converged >= n
         #     break
