@@ -13,7 +13,7 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
     U::Vector{T}            # Lower diagonal of the upper bi-diagonal matrix U
     k::Int64                # Size of the matrix. 
 
-    V::Vector{Vector{T}}    # Eigenvectors
+    V::Matrix{T}            # Eigenvectors
     thetas::Vector{T}       # Eigen values. 
 
     function DynamicSymTridiagonal{T}(alpha::T) where {T<:Float64}
@@ -51,25 +51,63 @@ end
     Using the Lapack library to get the eigen system of the curent T, and then after 
     this, it will keep track of the eigensystem as elements are added to the dynamic matrix. 
 """
-function InitializeEigenSystem(this::DynamicSymTridiagonal{T}, max_size::Int64) where {T <: AbstractFloat}
+function InitializeEigenSystem(this::DynamicSymTridiagonal{T}, max_size::Int64) where {T<:AbstractFloat}
     if max_size > 32728 || max_size < 2
         error("Eigen system estimated max size can't be: $(max_size)")
     end
-    # TODO: Implement this
-    
-    
+    Trid = GetT(this)
+    theta, V = eigen(Trid)
+    Vbigger = zeros(T, max_size, max_size)
+    Vbigger[1:this.k, 1:this.k] = V
+    this.V = Vbigger
+    Theta = zeros(T, max_size)
+    Theta[1:this.k] = theta
+    this.thetas = Theta
     return this
 end
 
 """
-    Update the eigensystem of the bigger matrix using the preivous eigen system. 
+    Update the eigensystem of the bigger matrix using the preivous eigen system. Use Power Iterations 
+    iteratively. 
 """
 function UpdateEigenSystem(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat}
-    if !@isdefined(this.V)
-        error("Must initialize the eigensystem with an estimated size before calling this function. ")
+    # if !(isdefined(Base, :this.V))  # cheks if defined first. 
+    #     error("Must initialize the eigensystem with an estimated size before calling this function. ")
+    # end
+    k = this.k
+    V = this.V
+    Θ = this.thetas
+    A = this
+    if k > size(this.V, 1)
+        error("Hasn't implemented this part yet, k exceed the maximal size of eigen system.")
     end
 
-
+    for j in 1: k
+        # if j != k
+        #     vⱼ = view(V, 1:k, j) .+ 1e-6*rand(T, k)
+        # else
+        #     vⱼ = rand(T, k)
+        # end
+        vⱼ = rand(T, k)
+        if j >= 2   # Components on to previous ortho eigen vectors removed. 
+            vⱼ .-= view(V, 1:k, 1:j - 1)*view(V, 1:k, 1:j - 1)'*vⱼ
+        end
+        for _ in 1: k^2             # Power iterations
+            Avⱼ = A*vⱼ
+            vⱼᵀvⱼ = dot(vⱼ, vⱼ)
+            λ̃ = dot(vⱼ, Avⱼ)/vⱼᵀvⱼ  # Rayleigh Quotient. 
+            ∇r = 2(Avⱼ - λ̃*vⱼ)      # Gradient of Rayleigh Quotient. 
+            println("||∇r||: $(norm(∇r)) ")
+            if norm(∇r, Inf) <= 1e-10
+                V[1:k, j] .= vⱼ/sqrt(vⱼᵀvⱼ)
+                Θ[j] = λ̃
+                
+                break               # go to Next Eigenvector. 
+            end
+            vⱼ = Avⱼ/norm(Avⱼ)
+        end
+    end
+    return 
 end
 
 
@@ -113,7 +151,7 @@ end
     Multiply a vector on the left hand size of this dynamically growing matrix 
     T. 
 """
-function Base.:*(this::DynamicSymTridiagonal{T}, b::Vector{T}) where {T <: AbstractFloat}
+function Base.:*(this::DynamicSymTridiagonal{T}, b::AbstractArray{T}) where {T <: AbstractFloat}
     @assert length(b) == this.k "Dimension of vector b does match the number of rows in k. Expect $(this.k) but get $(length(b))"
     β = this.betas
     α = this.alphas
@@ -128,16 +166,20 @@ end
 
 
 # BASIC TESTING ----------------------------------------------------------------
-using LinearAlgebra
-n = 128
+using LinearAlgebra, Logging
+@info "Basic Testing"
+n = 8
 A = SymTridiagonal(rand(n), rand(n - 1))
-T = DynamicSymTridiagonal(A[1, 1])
+T_dy = DynamicSymTridiagonal(A[1, 1])
+InitializeEigenSystem(T_dy, n)
 for Idx in 2: n
-    T(A[Idx, Idx], A[Idx - 1, Idx])
+    T_dy(A[Idx, Idx], A[Idx - 1, Idx])
+    UpdateEigenSystem(T_dy)
+    display(T_dy.V)
 end
 
-L = GetL(T)
-U = GetU(T)
+L = GetL(T_dy)
+U = GetU(T_dy)
 b = rand(n)
-@assert norm(GetT(T) - L*U) < 1e-10
-@assert norm(T*b - GetT(T)*b) < 1e-10
+@assert norm(GetT(T_dy) - L*U) < 1e-10
+@assert norm(T_dy*b - GetT(T_dy)*b) < 1e-10
