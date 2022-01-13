@@ -99,7 +99,7 @@ function Restart(this::IterativeLanczosModified)
     this.V = Vector{Union{Matrix{D}, Vector{D}}}()
     this.Y = Vector{Vector{D}}()
     this.ritz_values = Vector{D}()
-    Θ, V = eigen(T)
+    Θ, V = eigen(T, max(k - 8, 1):k - 1)
     
     converged = 0
     for (θ, j) in zip(Θ, 1:length(Θ))
@@ -112,34 +112,13 @@ function Restart(this::IterativeLanczosModified)
             for y in this.Y
                 projVal += dot(y, ŷ)
             end
-            # if projVal > 1e-10
-            #     continue                           # repeated eigenvectors, ignore
-            # end
+        
             push!(this.Y, ŷ)
             push!(this.ritz_values, θ)
             converged += 1
         end
     end
-    # if converged == 0
-    #     return 0
-    # end
-    
-    # # Store Q, reset T, and Q.  
-    
-    # q1 = Q[:, end]
-    # q0 = Q[:, end - 1]
-    # α = this.T[k, k]
-    # β = this.T[k - 1, k]
-    # push!(this.Q_blocks, Q[:, 1:end - 1])
-    # push!(this.T_blocks, this.T)
-    # this.T = Dict{Tuple{Int64}, D}()
-    # this.T[1, 1] = α
-    # this.T[0, 1] = this.T[1, 0] = β
-    
-    # this.Q = Dict{Int64, Vector{D}}()
-    # this.Q[1] = q1               # don't need to change Aq
-    # this.Q[0] = q0
-    # this.k = 1
+    sort!(this.ritz_values)
     return converged
 end
 
@@ -191,6 +170,8 @@ end
 
 """
     Get the T matrix since last restart of Lanczos Algorithm. 
+    parameter: 
+        `ignore_last`: ignore the last row of matrix T_k. 
 """
 function GetPreviousT(this::IterativeLanczosModified, ignore_last=false)
     endAt = ignore_last ? this.k - 1 : this.k
@@ -204,7 +185,7 @@ end
 # Basic Testing here -----------------------------------------------------------
 using LinearAlgebra, Plots
 n = 128
-eigenValues = collect(LinRange(1e-3, 1, n)).^4
+eigenValues = collect(LinRange(1e-3, 1, n)).^2
 A = Diagonal(eigenValues); 
 b = rand(n)
 ilm = IterativeLanczosModified(A, b)

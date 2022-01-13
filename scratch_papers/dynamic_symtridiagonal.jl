@@ -27,6 +27,7 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
         this.k = 1
         return this
     end
+    
     function DynamicSymTridiagonal(alpha::AbstractFloat)
         T = typeof(alpha)
         return DynamicSymTridiagonal{T}(alpha)
@@ -63,14 +64,18 @@ function InitializeEigenSystem(this::DynamicSymTridiagonal{T}, max_size::Int64) 
     Theta = zeros(T, max_size)
     Theta[1:this.k] = theta
     this.thetas = Theta
-    return this
+    # Sort by absolute values. 
+    SortedIdx = sortperm(abs.(this.thetas))
+    this.thetas = this.thetas[SortedIdx]
+    this.V = this.V[:, SortedIdx]
+    return this.thetas, this.V
 end
 
 """
     Update the eigensystem of the bigger matrix using the preivous eigen system. Use Power Iterations 
     iteratively. 
 """
-function UpdateEigenSystem(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat}
+function UpdateEigenSystemPowItr(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat}
     # if !(isdefined(Base, :this.V))  # cheks if defined first. 
     #     error("Must initialize the eigensystem with an estimated size before calling this function. ")
     # end
@@ -81,32 +86,55 @@ function UpdateEigenSystem(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
     if k > size(this.V, 1)
         error("Hasn't implemented this part yet, k exceed the maximal size of eigen system.")
     end
-
+    Avⱼ = zeros(T, k)
     for j in 1: k
-        # if j != k
-        #     vⱼ = view(V, 1:k, j) .+ 1e-6*rand(T, k)
-        # else
-        #     vⱼ = rand(T, k)
-        # end
-        vⱼ = rand(T, k)
+        vⱼ = view(V, 1:k, j)
+        vⱼ .+= 1e-10*rand(T, k)    
         if j >= 2   # Components on to previous ortho eigen vectors removed. 
             vⱼ .-= view(V, 1:k, 1:j - 1)*view(V, 1:k, 1:j - 1)'*vⱼ
         end
-        for _ in 1: k^2             # Power iterations
-            Avⱼ = A*vⱼ
+        for Itr in 1: k^2 + 1e3      # Power iterations
             vⱼᵀvⱼ = dot(vⱼ, vⱼ)
+            Apply!(A, vⱼ, Avⱼ)
+            if j >= 2  # Components on to previous ortho eigen vectors removed. 
+                Avⱼ .-= view(V, 1:k, 1:j - 1)*view(V, 1:k, 1:j - 1)'*Avⱼ
+            end
             λ̃ = dot(vⱼ, Avⱼ)/vⱼᵀvⱼ  # Rayleigh Quotient. 
             ∇r = 2(Avⱼ - λ̃*vⱼ)      # Gradient of Rayleigh Quotient. 
-            println("||∇r||: $(norm(∇r)) ")
-            if norm(∇r, Inf) <= 1e-10
+            if norm(∇r, Inf) <= 1e-8
                 V[1:k, j] .= vⱼ/sqrt(vⱼᵀvⱼ)
                 Θ[j] = λ̃
-                
                 break               # go to Next Eigenvector. 
             end
-            vⱼ = Avⱼ/norm(Avⱼ)
+            vⱼ .= Avⱼ/norm(Avⱼ)
         end
     end
+    return 
+end
+
+
+"""
+    Update the eigen system of the growing tridiagonal matrix using 
+    Inverse Power Iterations. It will requires k - 1 eigenvectors from the 
+    previous iterations or else this will complain. 
+
+"""
+function UpdateEigenSystemInvPowItr(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat} 
+    T̃ = GetT(this)
+    if len(this.thetas) < this.k - 1
+        error("Inverse iteration make use of cauchy interlace, which requires updating the"* 
+        "eigensystem consistently for all updates of the matrix. ")
+
+    end
+    
+    for (j, θ) in enumerate(this.thetas)
+        if j <= k/j|>floor|>Int64
+            
+        else
+            
+        end
+    end
+
     return 
 end
 
@@ -164,22 +192,40 @@ function Base.:*(this::DynamicSymTridiagonal{T}, b::AbstractArray{T}) where {T <
     return v
 end
 
+"""
+    Memory friendly version of multiplications. 
+"""
+function Apply!(this::DynamicSymTridiagonal{T}, b::AbstractArray{T}, v::Vector{T}) where {T <: AbstractFloat}
+    @assert length(b) == this.k "Dimension of vector b does match the number of rows in k. Expect $(this.k) but get $(length(b))"
+    @assert length(v) == this.k "Dimension of mutable vector v deosn't match the number of rows in k. Expect $(this.k) but get $(length(v))"
+    β = this.betas
+    α = this.alphas
+    v[1] = α[1]*b[1] + β[1]*b[2]
+    for Idx in 2: this.k - 1
+        v[Idx] = β[Idx - 1]*b[Idx - 1] + α[Idx]*b[Idx] + β[Idx]*b[Idx + 1]
+    end
+    v[this.k] = β[this.k - 1]*b[end - 1] + α[this.k]*b[end]
+    return v
+end
+
 
 # BASIC TESTING ----------------------------------------------------------------
-using LinearAlgebra, Logging
+using LinearAlgebra, Logging, Plots
 @info "Basic Testing"
-n = 8
-A = SymTridiagonal(rand(n), rand(n - 1))
+n = 64
+A = SymTridiagonal(fill(-2.0, n), fill(1.0,n - 1))
 T_dy = DynamicSymTridiagonal(A[1, 1])
 InitializeEigenSystem(T_dy, n)
 for Idx in 2: n
     T_dy(A[Idx, Idx], A[Idx - 1, Idx])
-    UpdateEigenSystem(T_dy)
-    display(T_dy.V)
+    @time UpdateEigenSystemPowItr(T_dy)
+    # display(T_dy.V)
 end
-
+@info "Dynamic T Eigen System"
+display(T_dy.V)
 L = GetL(T_dy)
 U = GetU(T_dy)
 b = rand(n)
 @assert norm(GetT(T_dy) - L*U) < 1e-10
 @assert norm(T_dy*b - GetT(T_dy)*b) < 1e-10
+
