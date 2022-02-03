@@ -99,8 +99,8 @@ function Restart(this::IterativeLanczosModified)
     this.V = Vector{Union{Matrix{D}, Vector{D}}}()
     this.Y = Vector{Vector{D}}()
     this.ritz_values = Vector{D}()
-    Θ, V = eigen(T, max(k - 8, 1):k - 1)
-    
+    # Θ, V = eigen(T, max(k - 8, 1):k - 1)
+    Θ, V = eigen(T)
     converged = 0
     for (θ, j) in zip(Θ, 1:length(Θ))
         v = V[:, j]
@@ -184,7 +184,7 @@ end
 
 # Basic Testing here -----------------------------------------------------------
 using LinearAlgebra, Plots
-n = 128
+n = 512
 eigenValues = collect(LinRange(1e-3, 1, n)).^2
 A = Diagonal(eigenValues); 
 b = rand(n)
@@ -192,8 +192,8 @@ ilm = IterativeLanczosModified(A, b)
 converged = 0
 for itr in 1: n - 1
     ilm()
-    if itr % 1 == 0
-    # if GetOrthogonalError(ilm) > 1e-14
+    # if itr % 1 == 0
+    if GetOrthogonalError(ilm) > 1e-10
         converged = Restart(ilm)
         println("Restarts at itr=$itr, converged = $converged")
         # if converged >= n

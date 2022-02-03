@@ -113,31 +113,6 @@ function UpdateEigenSystemPowItr(this::DynamicSymTridiagonal{T}) where {T <: Abs
 end
 
 
-"""
-    Update the eigen system of the growing tridiagonal matrix using 
-    Inverse Power Iterations. It will requires k - 1 eigenvectors from the 
-    previous iterations or else this will complain. 
-
-"""
-function UpdateEigenSystemInvPowItr(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat} 
-    T̃ = GetT(this)
-    if len(this.thetas) < this.k - 1
-        error("Inverse iteration make use of cauchy interlace, which requires updating the"* 
-        "eigensystem consistently for all updates of the matrix. ")
-
-    end
-    
-    for (j, θ) in enumerate(this.thetas)
-        if j <= k/j|>floor|>Int64
-            
-        else
-            
-        end
-    end
-
-    return 
-end
-
 
 """
     Get the L matrix for this instance. 
@@ -148,7 +123,7 @@ end
 
 
 """
-    Get the L matrix for this instance. 
+    Get the U matrix for this instance. 
 """
 function GetU(this::DynamicSymTridiagonal)
     return Bidiagonal(convert(Vector{Float64}, this.U), this.betas, :U) 
