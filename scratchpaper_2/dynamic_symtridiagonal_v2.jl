@@ -152,18 +152,28 @@ return midX end
         based on the eigenvalues from the previous iterations. 
 """
 function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat}
+    if this.k == 1  # current matrix is 1 x 1. 
+        EstablishEigenSystem(this)
+        this.last_update = this.k
+        return
+    end
+
     if this.k == this.last_update  # eigen system already updated.
         return
-
     elseif this.k - this.last_update == 1
         # update the eigensystem using the interlace properties and search routine. 
+        thetas = this.thetas
+        newThetas = Array{T}(undef, size(thetas) + 1)
+        push!(thetas, convert(T, Inf64))
+        pushfirst!(thetas, Convert(T, -Inf64))
 
-        if !isdefined(this, :thetas)  # first time running
-            this.thetas = Vector{T}()
-            this.converged = Vector{Bool}()
+        for (i, w) in enumerate(view(thetas, 2, length(thetas) - 1))
+            if i <= ceil(i/2)|>Int64
+                
+            else
+
+            end
         end
-        
-
 
     else
         # Maybeshould consdier re-establishing the system. 
