@@ -14,4 +14,15 @@ function CharPolyEvolution(n=10)
     display(fig)
 return end
 
-CharPolyEvolution()
+#CharPolyEvolution()
+
+function MakeMeRandDynamicTridiagonal(n=10)
+    mainDiag = rand(n)
+    subDiag = rand(n - 1)
+    dynamicT = DynamicSymTridiagonal(mainDiag[1])
+    for Idx in 1:n - 1
+        dynamicT(mainDiag[Idx + 1], subDiag[Idx]) 
+    end
+return dynamicT end
+
+DymT = MakeMeRandDynamicTridiagonal();

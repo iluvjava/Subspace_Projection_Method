@@ -4,11 +4,6 @@
 ### * Fast characteristic polynomial computations for shifted system of this 
 ###   matrix. 
 
-
-"""
-
-
-"""
 mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
     # Parameters groupd 1
     alphas::Vector{T}       # Diaognal
@@ -19,8 +14,8 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
 
     # Parameters group 2 
     last_update::Int64          # last iteration where eigenvalues are updated for this matrix.   
-    thetas::Dict                # Ritz values. 
-    converged::Dict             # Indicates convergence. 
+    thetas::Vector{T}           # Ritz values. 
+    converged::Vector{Bool}     # Indicates convergence for matching index ritz value from last iteration.
     
     function DynamicSymTridiagonal{T}(alpha::T) where {T<:Float64}
         this = new{T}()
@@ -157,14 +152,24 @@ return midX end
         based on the eigenvalues from the previous iterations. 
 """
 function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractFloat}
-    if this.k == this.last_update
+    if this.k == this.last_update  # eigen system already updated.
         return
+
     elseif this.k - this.last_update == 1
         # update the eigensystem using the interlace properties and search routine. 
 
+        if !isdefined(this, :thetas)  # first time running
+            this.thetas = Vector{T}()
+            this.converged = Vector{Bool}()
+        end
+        
+
+
     else
+        # Maybeshould consdier re-establishing the system. 
         error("Must updated after each iterations, or else we lost track of the eigenvalues. ")
     end
+
 return end
 
 """
@@ -174,7 +179,8 @@ return end
 function EstablishEigenSystem(this::DynamicSymTridiagonal{T}) where {T<:AbstractFloat}
     TMatrix = GetT(this)
     eigenValues = sort!(eigenvals(TMatrix))
-
+    this.thetas = eigenValues
+    this.betas = fill(true, length(eigenValues))
 return end
 
 
