@@ -5,7 +5,7 @@ include("CG_Convergence_Utilities.jl")
 # ==============================================================================
 
 
-function Experiment1(A, b, immitate_exact=true)
+function PerformCGFor(A, b, immitate_exact=true)
     cgm = ConjGradModified(A, b)
     if !immitate_exact 
         TurnOffReorthgonalize(cgm)
@@ -23,10 +23,16 @@ function Experiment1(A, b, immitate_exact=true)
 end
 
 
+
+function Run1()
+    
+return end
+    
+
 N = 512
 A = GetUniformPSDMatrix(N)
 b = rand(N)
-ResidualNorms, Guesses = Experiment1(A, b)
+ResidualNorms, Guesses = PerformCGFor(A, b)
 ResidualEnergy = ResRelEnergyNorm(A, b,Guesses)
 k = length(ResidualNorms)
 ErrorsBound = [TheoreticalErrorBound(A, idx) for idx in 1: k]
@@ -42,7 +48,7 @@ SaveFigToCurrentScriptDir(fig1, "fig1.png")
 
 A = GetUniformPSDMatrix(N)
 b = rand(N)
-ResidualNorms, Guesses = Experiment1(A, b, false)
+ResidualNorms, Guesses = PerformCGFor(A, b, false)
 ResidualEnergy = ResRelEnergyNorm(A, b,Guesses)
 k = length(ResidualNorms)
 ErrorsBound = [TheoreticalErrorBound(A, idx) for idx in 1: k]

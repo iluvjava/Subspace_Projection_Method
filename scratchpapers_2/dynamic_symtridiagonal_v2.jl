@@ -155,6 +155,7 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
     if this.k == 1  # current matrix is 1 x 1. 
         EstablishEigenSystem(this)
         this.last_update = this.k
+
         return
     end
 
@@ -185,6 +186,9 @@ return end
 """
     Function establish the eigen system of the Tridiagonal Matrix using Lapack 
     Routine, and erase all running parameters about the eigensystem. 
+
+    * Compute all the eigenvalues of the tridiagonal system and mark all as
+    unconvergend
 """
 function EstablishEigenSystem(this::DynamicSymTridiagonal{T}) where {T<:AbstractFloat}
     TMatrix = GetT(this)

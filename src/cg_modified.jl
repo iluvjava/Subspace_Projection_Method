@@ -10,7 +10,7 @@
 
 mutable struct ConjGradModified{T <: Number}
     A::Function              # Linear opeartor
-    b::AbstractArray{T}         # RHS vector
+    b::AbstractArray{T}      # RHS vector
     tensor_size::Tuple       # The size of the tensor the linear operator is acting on. 
 
     x::Vector{T}            # current guess, started with initial guess. 
