@@ -52,7 +52,7 @@ mutable struct CGPO{T <: Number}
         this.R = Vector{typeof(r)}()
         r̂ = this.r/norm(this.r)
         push!(this.P, r̂)
-        push!(this.R, r̂)  
+        push!(this.R, r̂)
 
         # Default settings
         this.storage_limit = length(this.r) - 1       # Maximal limit, if not, we have a problem. 
@@ -90,10 +90,11 @@ function (this::CGPO)()
     p = this.p
     Ap = this.Ap
     Ap = ComputeVec(this, p)
-    a = dot(p, r)/dot(p, Ap)
+    a = dot(r, r)/dot(p, Ap)
 
     if a < 0 
-        error("CG got a non-definite matrix")
+        warn("reset step size a. ")
+        a = 0
     end
 
     this.x += a*p
@@ -107,21 +108,28 @@ function (this::CGPO)()
     # partial orthogonalizations. 
     Ar = ComputeVec(this, this.rnew)
     δp = zeros(size(this.r))
+    δr = zeros(size(this.r))
     if this.orthogonalization_mode == 1
-        for p̄ in this.P[1:end - 1]
+        for p̄ in this.P[
+                convert(Int64, max(length(this.P) - this.storage_limit, 1)): end - 1
+            ]
             Ap̄ = ComputeVec(this, p̄)
             δp -= (dot(p̄, Ar)/dot(p̄,Ap̄))*p̄
         end
         this.p += δp
-        
-
+        for r̄ in this.R[
+            convert(Int64, max(length(this.R) - this.storage_limit, 1)): end - 1
+        ]
+            δr += dot(r̄, this.rnew)*r̄
+        end
+        this.rnew -= δr
     end
 
     this.r = copy(this.rnew)
     push!(this.P, this.p)
-    # push!(this.R, this.rnew)
+    push!(this.R, this.rnew/norm(this.rnew))
     this.itr += 1
-    AutoTrimStorage(this)
+    AutoTrimStorage!(this)
 
 return convert(Float64, rnewNorm) end
 
@@ -130,11 +138,17 @@ function GetPMatrix(this::CGPO) return hcat(this.P...) end
 """
     Trim the storage for all the conjugate vectors. 
 """
-function AutoTrimStorage(this::CGPO)
-    while length(this.P) > this.storage_limit
-        popfirst!(this.P)
-    end
+function AutoTrimStorage!(this::CGPO)
+    # while length(this.P) > this.storage_limit
+    #     popfirst!(this.P)
+    # end
 end
+
+function Reset!(this::CGPO)
+    this.r = this.b - ComputeVec(this, this.x)
+    this.p = this.r
+    empty!(this.P)
+return end
 
 
 # Basic Tests ------------------------------------------------------------------
@@ -142,29 +156,43 @@ end
 using LinearAlgebra, Plots
 
 function BasicRun()
-    N = 2014
-    d = LinRange(1e-3, 1, N)
-    A = Diagonal(d.^4)
+    N = 1024; ϵ = 1e-10
+    d = LinRange(0, 1 - ϵ, N)
+    A = Diagonal(d .+ ϵ)
     b = ones(N)
-    
+    ẋ = A\b
     cg1 = CGPO(A, b)
-    cg1.storage_limit = N/64
+    cg1.storage_limit = N
     cg3 = CGPO(A, b)
     cg3.orthogonalization_mode = 0
-
-    
-    
-    for II in 1:N - 1
-        print("Iterative Residual: $(cg1())")
-        println("; $(cg3())")
+    e0 = ẋ - cg1.x
+    for II in 1:N^2
+        cg1()
+        e = ẋ - cg1.x
+        if sqrt(dot(e,A*e))/sqrt(dot(e0, A*e0)) < 1e-10
+            println("cg1 Iter: $(II)")
+            break
+        else
+            # println(norm(ẋ - cg1.x, Inf))
+        end
     end
-    println("Actual Residual: ")
-    println("cg1 error norm: $(norm(b - A*cg1.x)) <-- mode 1 unlimited")
-    println("cg3 error norm: $(norm(b - A*cg3.x)) <-- mode 0 ")
     P1 = GetPMatrix(cg1)
-    display(P1'*A*P1)
+    D1 = P1'*A*P1
+    display(heatmap(D1.|>abs.|>log2))
+    for II in 1:N^2
+        cg3()
+        e = ẋ - cg3.x
+        if sqrt(dot(e, A*e))/sqrt(dot(e0, A*e0))  < 1e-10
+            println("cg3 Iter: $(II)")
+            break
+        else
+            # println(norm(ẋ - cg3.x, Inf))
+        end
+    end
     P3 = GetPMatrix(cg3)
-    display(P3'*A*P3)
+    D3 = P3'*A*P3
+    display(heatmap(D3.|>abs.|>log2))
+
     
 return end
 
