@@ -8,7 +8,7 @@
 
 
 
-mutable struct CGPO{T <: AbstractFloat}
+mutable struct CGPO{T <: Number}
     A::Function             # Linear opeartor
     b::AbstractArray{T}     # RHS vector
     tensor_size::Tuple      # The size of the tensor the linear operator is acting on. 
@@ -24,7 +24,7 @@ mutable struct CGPO{T <: AbstractFloat}
     AP::Vector{Vector{T}}   # Past AP vector. 
     R::Vector{Vector{T}}    # past residual vectors. 
     storage_limit           # How many P vectors to store. 
-    orthogonalization_mode::Int64   
+    orthon_on::Bool   
                             # An options for how to orthogonalized. 
                             # 1: Partial orthogonalize according to storage 
                             # limit
@@ -42,8 +42,7 @@ mutable struct CGPO{T <: AbstractFloat}
         this.b = b
         this.tensor_size = size(b)
         this.x = x0
-        # this.r = ComputeResidualVec(this, this.x)
-        this.rnew = similar(this.r)
+        this.rnew = this.r
         this.p = this.r
         this.Ap = similar(this.r)
         this.x = x0
@@ -57,7 +56,7 @@ mutable struct CGPO{T <: AbstractFloat}
 
         # Default settings
         this.storage_limit = length(this.r) - 1       # Maximal limit, if not, we have a problem. 
-        this.orthogonalization_mode = 1
+        this.orthon_on = true
 
     return this end
 
@@ -99,7 +98,7 @@ function (this::CGPO)()
     end
 
     this.x += a*p
-    this.rnew .= r - a*Ap      # <--- Here. 
+    this.rnew = r - a*Ap      # <--- Here. 
     rnew_dotted = dot(this.rnew, this.rnew)
     rnewNorm = sqrt(rnew_dotted)
     b = rnew_dotted/dot(r, r)  # <--- Here too. 
@@ -110,7 +109,7 @@ function (this::CGPO)()
     Ar = ComputeVec(this, this.rnew)
     δp = zeros(size(this.r))
     δr = zeros(size(this.r))
-    if this.orthogonalization_mode == 1
+    if this.orthon_on
         for p̄ in this.P[1: end - 1]
             Ap̄ = ComputeVec(this, p̄)
             δp -= (dot(p̄, Ar)/dot(p̄,Ap̄))*p̄
@@ -131,6 +130,14 @@ return convert(Float64, rnewNorm) end
 
 function GetPMatrix(this::CGPO) return hcat(this.P...) end
 
+function ResNorm(this::CGPO) return convert(Float64, norm(this.rnew)) end
+
+function TurnOffReorthgonalize!(this::CGPO)
+    this.orthon_on = false
+    empty!(this.P)
+    empty!(this.R)
+return end
+
 """
     Keep currrent x, and reset everything that is here. 
 """
@@ -150,57 +157,56 @@ function UpdatePR!(this::CGPO, new_p, new_r)
 return end
 
 
-# Basic Tests ------------------------------------------------------------------
 
-using LinearAlgebra, Plots
+# using LinearAlgebra, Plots
 
-function BasicRun()
-    N = 128; ϵ = 1e-10
-    d = LinRange(0, 1 - ϵ, N)
-    A = Diagonal(d.^2 .+ ϵ)
-    b = ones(N)
-    ẋ = A\b
-    cg1 = CGPO(A, b)
-    cg1.storage_limit = N/2
-    cg3 = CGPO(A, b)
-    cg3.orthogonalization_mode = 0
-    e0 = ẋ - cg1.x
-    P1 = Vector{Vector{Float64}}()
-    push!(P1, cg1.p)
-    for II in 1:N^2
-        cg1()
-        push!(P1, cg1.p)
-        e = ẋ - cg1.x
-        if sqrt(dot(e,A*e))/sqrt(dot(e0, A*e0)) < 1e-1
-            println("cg1 Iter: $(II)")
-            break
-        else
-            # println(norm(ẋ - cg1.x, Inf))
-        end
-    end
-    P1 = hcat(P1...)
-    D1 = P1'*A*P1
-    display(heatmap(D1.|>abs.|>log2))
+# function BasicRun()
+#     N = 16; ϵ = 1e-10
+#     d = LinRange(0, 1 - ϵ, N)
+#     A = Diagonal(d.^2 .+ ϵ)
+#     b = ones(N)
+#     ẋ = A\b
+#     cg1 = CGPO(A, b)
+#     cg1.storage_limit = N/2
+#     cg3 = CGPO(A, b)
+#     cg3.orthon_on = true
+#     e0 = ẋ - cg1.x
+#     P1 = Vector{Vector{Float64}}()
+#     push!(P1, cg1.p)
+#     for II in 1:N^2
+#         cg1()
+#         push!(P1, cg1.p)
+#         e = ẋ - cg1.x
+#         if sqrt(dot(e,A*e))/sqrt(dot(e0, A*e0)) < 1e-1
+#             println("cg1 Iter: $(II)")
+#             break
+#         else
+#             # println(norm(ẋ - cg1.x, Inf))
+#         end
+#     end
+#     P1 = hcat(P1...)
+#     D1 = P1'*A*P1
+#     display(heatmap(D1.|>abs.|>log2))
 
 
-    P3 = Vector{Vector{Float64}}()
-    push!(P3, cg3.p)
-    for II in 1:N^2
-        cg3()
-        e = ẋ - cg3.x
-        push!(P3, cg3.p)
-        if sqrt(dot(e, A*e))/sqrt(dot(e0, A*e0))  < 1e-1
-            println("cg3 Iter: $(II)")
-            break
-        else
-            # println(norm(ẋ - cg3.x, Inf))
-        end
-    end
-    P3 = hcat(P3...)
-    D3 = P3'*A*P3
-    display(heatmap(D3.|>abs.|>log2))
+#     P3 = Vector{Vector{Float64}}()
+#     push!(P3, cg3.p)
+#     for II in 1:N^2
+#         cg3()
+#         e = ẋ - cg3.x
+#         push!(P3, cg3.p)
+#         if sqrt(dot(e, A*e))/sqrt(dot(e0, A*e0))  < 1e-1
+#             println("cg3 Iter: $(II)")
+#             break
+#         else
+#             # println(norm(ẋ - cg3.x, Inf))
+#         end
+#     end
+#     P3 = hcat(P3...)
+#     D3 = P3'*A*P3
+#     display(heatmap(D3.|>abs.|>log2))
 
     
-return end
+# return end
 
-BasicRun()
+# BasicRun()

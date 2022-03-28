@@ -1,5 +1,5 @@
 using LinearAlgebra, SparseArrays, Logging, Plots, ProgressMeter
-include("../../src/cg_modified.jl")
+
 
 """
     Bad eigen value distribution, they are distributed from 0.001 to 1 like a 
@@ -27,7 +27,6 @@ function GetNastyPSDMatrix(
 )
     @assert rho <= 1 && rho >= 0
     EigenValues = zeros(N)
-    eigen_min, eigen_max = 0.001, 1    # Min Max Eigenvalues. 
     EigenValues[1] = eigen_min
     for IdexI in 2:N
         EigenValues[IdexI] = eigen_min + 
