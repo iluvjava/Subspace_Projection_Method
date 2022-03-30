@@ -121,7 +121,7 @@ function EigenValueLocate(
     pL = P(left_bound); pR = P(right_bound)
     @assert sign(pL) != sign(pR) "Bisection search error;"*
     "the left and right bondary turns out to have the same sign, please check the "*
-    "caller routine which is responsible. the left nd right bounds are: $(left_bound), $(right_bound) "
+    "caller routine which is responsible. the left and right bounds are: $(left_bound), $(right_bound) "
     @assert !isnan(pL) && !isnan(pR) "Polynomial exploded with Nan on one of "*
     "the boundaries OR both boundaries after expontneial probing "*
     "(or without the probing). Please refine search interval. "
@@ -142,6 +142,9 @@ function EigenValueLocate(
         end
         itrLimit -= 1
         midX = (left_bound + right_bound)/2
+        if right_bound - left_bound < this.converged_tol
+            break
+        end
         midP = P(midX)
         # println("Bisection: [$left_bound, $right_bound]")
     end
@@ -174,6 +177,7 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
         v = this.thetas
         c = this.converged
         k = length(v) + 1
+        δ = 1e-16
         push!(v, convert(T, Inf64))
         pushfirst!(v, convert(T, -Inf64))
         newThetas = Array{T}(undef, k)
@@ -184,7 +188,7 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
                     newThetas[II] = v[II + 1] 
                     newConverged[II] = true
                 else
-                    newThetas[II] = EigenValueLocate(this, v[II], v[II + 1])   
+                    newThetas[II] = EigenValueLocate(this, v[II] + δ, v[II + 1] - δ)
                     newConverged[II] = abs(newThetas[II] - v[II + 1]) <= this.converged_tol
                     if II != 1 && II != k
                         newConverged[II] = newConverged[II] && c[II - 1]
@@ -195,14 +199,14 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
                     newThetas[II] = v[II] 
                     newConverged[II] = true
                 else
-                    newThetas[II] = EigenValueLocate(this, v[II], v[II + 1])
+                    newThetas[II] = EigenValueLocate(this, v[II] + δ, v[II + 1] - δ)
                     newConverged[II] = abs(newThetas[II] - v[II]) <= this.converged_tol
                     if II != 1 && II != k
                         newConverged[II] = newConverged[II] && c[II]
                     end
                 end
             else
-                newThetas[II] = EigenValueLocate(this, v[II], v[II + 1])
+                newThetas[II] = EigenValueLocate(this, v[II] + δ, v[II + 1] - δ)
                 newConverged[II] = false
             end
         end
