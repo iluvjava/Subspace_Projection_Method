@@ -49,7 +49,8 @@ function GetNormalPSDMatrix(N=20)
 end
 
 """
-
+    Return a diagonal matrix whose entries are draw from the uniform distribution on the 
+    [0, 1] interval. 
 """
 function GetUniformPSDMatrix(N)
     v = rand(N)

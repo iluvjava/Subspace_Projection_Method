@@ -60,7 +60,7 @@ for Idx in 1: 10
         markershape=:cross
     )
 end
-for Idx in 1: 10
+for Idx in 1:10
     RitzTrajectory = Vector{Float64}()
     for RitzValues in FoundRitzValues
         if Idx <= length(RitzValues)
