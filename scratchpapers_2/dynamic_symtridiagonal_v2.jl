@@ -16,8 +16,10 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
     last_update::Int64          # last iteration where eigenvalues are updated for this matrix.   
     thetas::Vector{T}           # Ritz values. 
     converged::Vector{Bool}     # Indicates convergence for matching index ritz value from last iteration.
+
+    converged_tol::Float64
     
-    function DynamicSymTridiagonal{T}(alpha::T) where {T<:Float64}
+    function DynamicSymTridiagonal{T}(alpha::T) where {T<:AbstractFloat}
         this = new{T}()
         this.alphas = Vector{T}()
         push!(this.alphas, alpha)
@@ -26,12 +28,14 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
         this.U = Vector{T}()
         push!(this.U, alpha)
         this.k = 1
-        this.last_update = 0
+        this.last_update = 1
+        this.thetas = Vector{T}(); push!(this.thetas, alpha)
+        this.converged = Vector{T}(); push!(this.converged, false)
+        this.converged_tol = 1e-8 # <- Default value. 
     return this end
 
-    function DynamicSymTridiagonal(alpha::AbstractFloat)
-        T = typeof(alpha)
-        return DynamicSymTridiagonal{T}(alpha)
+    function DynamicSymTridiagonal(alpha::Number)
+        return DynamicSymTridiagonal{Float64}(convert(Float64, alpha))
     end
 end
 
@@ -117,7 +121,7 @@ function EigenValueLocate(
     pL = P(left_bound); pR = P(right_bound)
     @assert sign(pL) != sign(pR) "Bisection search error;"*
     "the left and right bondary turns out to have the same sign, please check the "*
-    "caller routine which is responsible. "
+    "caller routine which is responsible. the left nd right bounds are: $(left_bound), $(right_bound) "
     @assert !isnan(pL) && !isnan(pR) "Polynomial exploded with Nan on one of "*
     "the boundaries OR both boundaries after expontneial probing "*
     "(or without the probing). Please refine search interval. "
@@ -139,7 +143,7 @@ function EigenValueLocate(
         itrLimit -= 1
         midX = (left_bound + right_bound)/2
         midP = P(midX)
-        println("Bisection: [$left_bound, $right_bound]")
+        # println("Bisection: [$left_bound, $right_bound]")
     end
 
 return midX end
@@ -155,7 +159,6 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
     if this.k == 1  # current matrix is 1 x 1. 
         EstablishEigenSystem(this)
         this.last_update = this.k
-
         return
     end
 
@@ -163,38 +166,71 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
         return
     elseif this.k - this.last_update == 1
         # update the eigensystem using the interlace properties and search routine. 
-        thetas = this.thetas
-        newThetas = Array{T}(undef, size(thetas) + 1)
-        push!(thetas, convert(T, Inf64))
-        pushfirst!(thetas, Convert(T, -Inf64))
-
-        for (i, w) in enumerate(view(thetas, 2, length(thetas) - 1))
-            if i <= ceil(i/2)|>Int64
-                
+        if all(this.converged)
+            # method will re-establish eigen system. 
+            EstablishEigenSystem(this)
+            return 
+        end
+        v = this.thetas
+        c = this.converged
+        k = length(v) + 1
+        push!(v, convert(T, Inf64))
+        pushfirst!(v, convert(T, -Inf64))
+        newThetas = Array{T}(undef, k)
+        newConverged = Array{Bool}(undef, k)
+        for II in 1: k
+            if II < min(ceil(k/2), floor(k/2) + 1)
+                if c[II]
+                    newThetas[II] = v[II + 1] 
+                    newConverged[II] = true
+                else
+                    newThetas[II] = EigenValueLocate(this, v[II], v[II + 1])   
+                    newConverged[II] = abs(newThetas[II] - v[II + 1]) <= this.converged_tol
+                    if II != 1 && II != k
+                        newConverged[II] = newConverged[II] && c[II - 1]
+                    end
+                end
+            elseif II > max(ceil(k/2), floor(k/2) + 1)
+                if c[II - 1]
+                    newThetas[II] = v[II] 
+                    newConverged[II] = true
+                else
+                    newThetas[II] = EigenValueLocate(this, v[II], v[II + 1])
+                    newConverged[II] = abs(newThetas[II] - v[II]) <= this.converged_tol
+                    if II != 1 && II != k
+                        newConverged[II] = newConverged[II] && c[II]
+                    end
+                end
             else
-
+                newThetas[II] = EigenValueLocate(this, v[II], v[II + 1])
+                newConverged[II] = false
             end
         end
-
+        this.thetas = newThetas
+        this.converged = newConverged
+        this.last_update = this.k
+        return
     else
         # Maybeshould consdier re-establishing the system. 
-        error("Must updated after each iterations, or else we lost track of the eigenvalues. ")
+        # error("Must updated after each iterations, or else we lost track of the eigenvalues. ")
+        EstablishEigenSystem(this)
     end
 
 return end
 
 """
-    Function establish the eigen system of the Tridiagonal Matrix using Lapack 
+    Function establish the eigensystem of the current Tridiagonal Matrix using Lapack 
     Routine, and erase all running parameters about the eigensystem. 
 
     * Compute all the eigenvalues of the tridiagonal system and mark all as
-    unconvergend
+    convernged. 
 """
 function EstablishEigenSystem(this::DynamicSymTridiagonal{T}) where {T<:AbstractFloat}
     TMatrix = GetT(this)
-    eigenValues = sort!(eigenvals(TMatrix))
+    eigenvalues = eigvals(TMatrix)
+    sort!(eigenvalues)
     this.thetas = eigenValues
-    this.betas = fill(true, length(eigenValues))
+    this.betas = fill(true, length(eigenValues)) 
 return end
 
 
@@ -221,4 +257,6 @@ function GetT(this::DynamicSymTridiagonal)
     return SymTridiagonal(this.alphas, this.betas)
 end
 
-
+function CountConverged(this::DynamicSymTridiagonal)
+    return convert(Vector{Int64}, this.converged) |> sum
+end

@@ -30,7 +30,7 @@ function Test1(n=50)
 
 return dynamicT end
 
-Test1();
+# Test1();
 
 function Test2(n = 200)
     mainDiag = rand(n)
@@ -61,11 +61,35 @@ function Test2(n = 200)
         @warn "Error is bigger than expected. "
         # might over probe and cause big problem. 
     end
-    
 
 
 return T, locatedEig, LocatedEigenVec end
 
 
-T, locatedEig, locatedEigenVec = Test2()
-display(plot(locatedEigenVec))
+# T, locatedEig, locatedEigenVec = Test2()
+# display(plot(locatedEigenVec))
+
+
+function Test3(n=4096)
+    mainDiag = -2*ones(n)
+    subDiag = ones(n - 1)
+    dynamicT = DynamicSymTridiagonal(mainDiag[1])
+    dynamicT.converged_tol = 1e-4
+    referenceT = SymTridiagonal(mainDiag, subDiag)
+    for Idx in 1:n÷16
+        dynamicT(mainDiag[Idx + 1], subDiag[Idx])
+        EigenvaluesUpdate(dynamicT)
+        # print("Ritzvalues total norm error: ")
+        # w = dynamicT |> GetT |> eigvals |> sort
+        # norm(w - dynamicT.thetas, Inf) |> println
+    end
+    @info "Ritz System: "
+    display(dynamicT.thetas)
+    display(dynamicT.converged)
+    display("Converged $(CountConverged(dynamicT))")
+    # Plot the converged that are identified and the correct eigenvalues, 
+    # curious how good cauchy interlace is. 
+
+return end
+
+Test3() 

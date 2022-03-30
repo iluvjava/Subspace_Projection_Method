@@ -33,7 +33,7 @@ end
 function (this::ConjGrad)()
     r = this.r
     if r == 0
-        return 0 # The problem is solved already. 
+        return 0    # The problem is solved already. 
     end
     A = this.A
     d = this.d

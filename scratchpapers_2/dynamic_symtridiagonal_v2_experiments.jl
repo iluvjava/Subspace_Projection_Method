@@ -14,7 +14,7 @@ function CharPolyEvolution(n=10)
     display(fig)
 return end
 
-#CharPolyEvolution()
+CharPolyEvolution()
 
 function MakeMeRandDynamicTridiagonal(n=10)
     mainDiag = rand(n)
@@ -25,4 +25,4 @@ function MakeMeRandDynamicTridiagonal(n=10)
     end
 return dynamicT end
 
-DymT = MakeMeRandDynamicTridiagonal();
+DymT = MakeMeRandDynamicTridiagonal()
