@@ -52,9 +52,13 @@
     commentstyle     = \color{ForestGreen},
     showstringspaces = false,
 }
+
+\linespread{1}
+\usepackage[fontsize=10pt]{fontsize}
+
 \begin{document}
-\numberwithin{equation}{subsection}{section}
-\section{Fundations}
+\numberwithin{equation}{subsection}
+\section{Foundations}
     This sections focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this sections cited from... 
 
     \subsection{Projectors}
@@ -147,8 +151,6 @@
                 A famous example of an orthogonal projector is $QQ^H$ where $Q$ is an Unitary Matrix. This is a Hermitian Matrix and it's idempotent, making it an orthogonal projector. 
             \subsubsection{Projector Geometric Intuitions}
                 A projector describes a given vector using some elements from another basis. The oblique projector creates a light sources in the form of the subspace $L$ and it shoots parrell light ray orthogonal to $L$, crossing vectors and projecting their shadow onto subspace $M$. 
-            
-
     \subsection{Projectors and Norm Minimizations}
         An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the some matrix, say $A$, then $P_M$ as a projector onto the basis $M$ one example can be: $A(AA^T)^{-1}A^T$. Let's consider the claim: 
         \begin{align}
@@ -203,26 +205,29 @@
             \\
             W^TAVy = W^Tr^{(0)}
         \end{align}
-        And from here, we can define a simple prototype algorithm using this framworks. 
-        \begin{align}
-        \begin{aligned}
-            & \text{While not converging}: 
-            \\&\hspace{1.1em}
-                    \begin{aligned}
-                    &\text{Increase Span for: } \mathcal{K, L}
-                    \\
-                    &\text{Choose: } V, W \text{ for } \mathcal{K}, \mathcal{L}
-                    \\
-                    & r := b - Ax
-                    \\
-                    & y := (W^TAV)^{-1}W^Tr
-                    \\
-                    & x := x + Vy
-                \end{aligned}
-        \end{aligned}\tag{6}
-        \end{align}
-        Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. 
-    \subsection{Subspace Minimizations Framework}
+        \subsubsection{Prototype Algorithm}
+            And from here, we can define a simple prototype algorithm using this framworks. 
+            \begin{align}
+            \begin{aligned}
+                & \text{While not converging}: 
+                \\&\hspace{1.1em}
+                        \begin{aligned}
+                        &\text{Increase Span for: } \mathcal{K, L}
+                        \\
+                        &\text{Choose: } V, W \text{ for } \mathcal{K}, \mathcal{L}
+                        \\
+                        & r := b - Ax
+                        \\
+                        & y := (W^TAV)^{-1}W^Tr
+                        \\
+                        & x := x + Vy
+                    \end{aligned}
+            \end{aligned}\tag{6}
+            \end{align}
+            Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions. 
+        
+
+    \subsection{Subspace Minimizations Framework}\label{sec:1.4}
         Other times, iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under certain norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, and we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$. 
         \begin{align}
             &\hspace{0.6em} \min_{x\in x_0 + \mathcal{K}} \Vert b - Ax\Vert_B^2 
@@ -267,10 +272,85 @@
         \begin{align}
             p_k(A|w)v = \sum_{j = 0}^{k - 1}w_jA^jv
         \end{align}
+        \subsubsection{The Grade of a Krylov Subspace}
+            The most important porperty of the subspace is the idea of grade denoted as: $\text{grade}(A|v)$, indicating when the Krylov Subspace of $A$ wrt to $v$ stops expanding after a certain size. To show this idea, we consider the following 3 statements about Krylov Subspace which we will proceed to prove.
+            \begin{prop}
+                \begin{align}
+                    \exists 1 \le k \le m + 1: \mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v)
+                \end{align}
+                There exists an natural number between $1$ and $m+ 1$ such that, the successive krylov subspace span the same space asthe previous one. 
+            \end{prop} 
+            \begin{prop}
+                \begin{align}
+                    \exists \min k \text{ s.t: }\mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v) \implies 
+                    \mathcal K_k(A|v) \text{ is Lin Ind} \wedge \mathcal K_{k + 1}(A|v) \text{ is Lin Dep}. 
+                \end{align}
+                There eixsts a minimum such $k$ where the immediate next krylov subspace is linear dependent. 
+            \end{prop}
+            \begin{prop}
+                \begin{align}
+                    \mathcal K_k(A|v) \text{ Lin Dep} \implies \mathcal K_{k + 1}(A|v) = \mathcal K_k(A|v)
+                \end{align}
+                if the $k$ krylov subspace is linear dependent, then it stops expanding and the successive krylov subspace spans the same space. 
+            \end{prop}
+            \begin{theorem}[Existence of Grade for a Krylov Subspace]
+                Let $k$ be the minumum number when the krylov subspace stops expanding, then all successive krylov subspace spand the same space. $\mathcal K_k(A|v) = \mathcal K_{k + j}(A|v) \;\forall j \ge 0$. The number $k$ is regarded as the grade of krylov subspace wrt to v denoted using $\text{grade}(A|v)$. 
+            \end{theorem}
+            Proposition 2, 3 ensures that there exists a term in the sequence of krylov subspace stops expanding, and when that happens all subsequent Krylov Subspace will span the same subspace, this is by Proposition 4. 
+            \par
+            Next, let's consider the proof of theorem 1 by proving all proposition 2, 3, and 4. 
+            \begin{proof}[Proposition 2]
+                For notational simplicity, $\mathcal K_k$ now denotes $\mathcal K_k(A|v)$. Let's start the considerations from the definition of the Krylov Subspace: 
+                \begin{align}
+                    \forall\; k: \mathcal K_k \subseteq \mathcal K_{k + 1}\implies \text{dim}(\mathcal K_{k})\le \text{dim}(\mathcal K_{k + 1})
+                    \\
+                    \mathcal K_{k + 1}\setminus \mathcal K_k = \text{span}(A^{k}v) 
+                    \\
+                    \implies \dim(\mathcal K_{k + 1}) - \dim(\mathcal K_k) \le 1
+                \end{align}
+                Therefore, the dimension of the successive krylov subspace forms a sequence of positive integer that is monotonically increasing. By the Cayley's Hamilton's theorem (will be stated later), the sequence is bounded by $m$, since there are $m + 1$ terms, it must be the case that at least 2 of the krylov subspace has the same dimension (And the earliest such occurance will exist), implying the the fact that the new added vector from $k$ to $k + 1$ is in the span of the previous subspace. 
+            \end{proof}
+            \begin{proof}[Proposition 4]
+                \begin{align}
+                    & \mathcal K_k \text{Lin Dep}
+                    \\
+                    \implies & \exists w_k \neq \mathbf 0 : p_k(A|w^+_k)v = \mathbf 0
+                    \\
+                    \implies & Ap_k(A|w_k^+)v = \mathbf 0
+                    \\
+                    & p_{k + 1}(A| [0 \; (w_k^+)^T]) = \mathbf 0
+                    \\
+                    & \mathcal K_{k + 1} \text{ is Lin Dep}
+                \end{align}
+                The recurrence of multplying by $A$ allows the krylov subspace to grow and the new bigger subspace will contain the previous one. Therefore inheriting the linear dependence, we use the idea of matrix polynomial for the proof. 
+            \end{proof}
+            \begin{proof}[Proposition 3]
+                Assuming that prop 2, 4 are true. prop 3 implies the existence of the smallest such $k$. For contradiction, we only have one case to assume, that is $\mathcal K_k$ and $\mathcal K_{k + 1}$ are linear dependence. Then $\mathcal K_k$ is either Linear Dependence, or Independence. 
+                \par
+                If $\mathcal K_{k - 1}$ is linear dependence, then by (3) $\mathcal K_{k - 1} = \mathcal K_k$, hence $k$ is not the minimum. Else assume $\mathcal K_{k - 1}$ is linear independence, however $\mathcal K_k$ is linear dependence, and $\mathcal K_k \setminus \mathcal K_{k - 1} = \text{span}(A^{k - 1}v)$; therefore, $A^{k -1}v$ is in the span of $\mathcal K_{k -1}$, hence $\mathcal K_{k -1} = \mathcal K_k$, contradicing again that $k$ is the minimum such $k$. 
+            \end{proof}
+    \subsection{Minimal Polynomial of a Matrix}
+        % TODO
     \subsection{Useful Theorems}
         \subsubsection{Cauchy Interlace Theorem}
         \subsubsection{Caley Hamilton's Theorem}
     \subsection{Deriving Conjugate Gradient from First Principles}
+        \subsubsection{CG Objective and Framework}
+            We introduce the algorithm as an attempt to minimize the energy norm of the error for a linear equation $Ax = b$, here we make the assumptions: 
+            \begin{itemize}
+                \item [1)] The matrix $A$ is symmetric semi-positive definite.  
+                \item [2)] Further assume another matrix $P_k = [p_0 \;p_1\;\cdots p_{k-1}]$ as a matrix whose columns is a basis.
+            \end{itemize}
+            \begin{align}
+                \min_{w \in \mathbb{R}^k}\Vert 
+                    A^{-1}b - (x_0 + P_kw)
+                \Vert_A^2 \iff P^T_kr_0 = P_k^TAP_kw
+            \end{align}
+            Refer back to \hyperref[sec:1.4]{(1.4)} for how to deal with the above minimization objective. Using the matrix form for the Petrov Galerkin Conditions where $W, V$ are both $P_k$, we have this orthgonality formulations: 
+            \begin{align}
+                \text{choose: }x \in x_0 + \text{ran}(P_k) \text{ s.t: } b - Ax \perp \text{ran}(P_k)    
+            \end{align}
+            Take note that this link between a norm minimzation and an equivalent Orthogonality condition doesn't garantee to happen, for example the FOM and Bi-Lanczos Method are orthogonalizations method that doesn't directly link to a norm minimization objective. 
 
 
 \end{document}
