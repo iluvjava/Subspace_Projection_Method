@@ -55,7 +55,7 @@ for Idx in 1: 10
     scatter!(
         fig4, 
         Idx: length(RitzTrajectory) + Idx - 1, 
-        RitzTrajectory, size=(1000,1500), 
+        RitzTrajectory, size=(750,750), 
         dpi=250, 
         markershape=:cross
     )
@@ -70,12 +70,13 @@ for Idx in 1:10
     scatter!(
         fig4, 
         Idx: length(RitzTrajectory) + Idx - 1, 
-        RitzTrajectory, size=(1000,1500), 
+        RitzTrajectory,
         dpi=250, 
         markershape=:xcross
     )
 end
-
+xlabel!(fig4, "iterations")
+ylabel!(fig4, "logged ritz values")
 display(fig4)
 savefig(fig4, "$(@__DIR__)/plots/fig4.png")
 

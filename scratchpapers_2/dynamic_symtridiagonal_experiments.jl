@@ -1,4 +1,4 @@
-include("dynamic_symtridiagonal_v2.jl")
+include("dynamic_symtridiagonal.jl")
 using LinearAlgebra, Plots
 
 function CharPolyEvolution(n=10)
@@ -28,19 +28,19 @@ return dynamicT end
 
 # DymT = MakeMeRandDynamicTridiagonal()
 
-function ViewConvergence(n=32)
+function ViewConvergence(n=2048)
     a = 1; b = 1/2
     mainDiag = -a*ones(n)
     subDiag = b*ones(n)
     mainDiag .+= a + 2b
     referenceT = SymTridiagonal(mainDiag, subDiag)
-    referenceT = referenceT*3
+    # referenceT = referenceT*3
     mainDiag = referenceT.dv
     subDiag = referenceT.ev
     dynamicT = DynamicSymTridiagonal(mainDiag[1])
-    dynamicT.converged_tol = 1e-3
+    dynamicT.velocity_tol = 1e-4
     fig1=plot(legend=nothing)
-    for Idx in n - 1:-1:1
+    for Idx in n÷16:-1:2
         dynamicT(mainDiag[Idx + 1], subDiag[Idx]) 
         EigenvaluesUpdate(dynamicT)
         dynamicEigs = dynamicT.thetas |> sort
@@ -57,6 +57,9 @@ function ViewConvergence(n=32)
             Idx*(converedRitz |> length |> ones),
             markershape=:square
         )
+        if dynamicT.converged_this_step |> length >= 1
+            println("Ritzvalues: $(dynamicT.converged_this_step); converged at step $Idx")
+        end
     end
     
     referenceEigs = eigvals(referenceT) |> sort

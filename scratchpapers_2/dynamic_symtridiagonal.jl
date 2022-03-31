@@ -16,10 +16,15 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
     last_update::Int64          # last iteration where eigenvalues are updated for this matrix.   
     thetas::Vector{T}           # Ritz values. 
     converged::Vector{Bool}     # Indicates convergence for matching index ritz value from last iteration.
+    converged_this_step::Vector{T}
+    velocity::Vector{T}
+    velocity_tol::Float64
 
-    converged_tol::Float64
     
-    function DynamicSymTridiagonal{T}(alpha::T) where {T<:AbstractFloat}
+    function DynamicSymTridiagonal{T}(
+        alpha::T;
+        velocity_tol::S=1e-10
+    ) where {T<:AbstractFloat, S<:AbstractFloat}
         this = new{T}()
         this.alphas = Vector{T}()
         push!(this.alphas, alpha)
@@ -31,7 +36,10 @@ mutable struct DynamicSymTridiagonal{T<:AbstractFloat}
         this.last_update = 1
         this.thetas = Vector{T}(); push!(this.thetas, alpha)
         this.converged = Vector{T}(); push!(this.converged, false)
-        this.converged_tol = 1e-8 # <- Default value. 
+        this.velocity = Vector{T}();push!(this.velocity, Inf)
+        this.velocity_tol = velocity_tol # <- Default value. 
+        this.converged_this_step = Vector{T}()
+
     return this end
 
     function DynamicSymTridiagonal(alpha::Number)
@@ -75,7 +83,10 @@ return pNow end
     Evalute the derivetive of the characteristic polynoial for a shifted quantity x.
     det(T - xI)
 """
-function CharacteristicPolyDerivative(this::DynamicSymTridiagonal{T}, x::Number) where {T<:AbstractFloat}
+function CharacteristicPolyDerivative(
+    this::DynamicSymTridiagonal{T}, 
+    x::Number
+) where {T<:AbstractFloat}
     error("I haven't implement it yet. ")
 return end
 
@@ -121,7 +132,9 @@ function EigenValueLocate(
     pL = P(left_bound); pR = P(right_bound)
     @assert sign(pL) != sign(pR) "Bisection search error;"*
     "the left and right bondary turns out to have the same sign, please check the "*
-    "caller routine which is responsible. the left and right bounds are: $(left_bound), $(right_bound) "
+    "caller routine which is responsible. the left and right bounds are"*
+    ": $(left_bound), $(right_bound), function values is: $(pL), $(pR); "*
+    "please consider adjusing the velocity tolerance."
     @assert !isnan(pL) && !isnan(pR) "Polynomial exploded with Nan on one of "*
     "the boundaries OR both boundaries after expontneial probing "*
     "(or without the probing). Please refine search interval. "
@@ -142,7 +155,7 @@ function EigenValueLocate(
         end
         itrLimit -= 1
         midX = (left_bound + right_bound)/2
-        if right_bound - left_bound < this.converged_tol
+        if right_bound - left_bound < this.velocity_tol
             break
         end
         midP = P(midX)
@@ -177,11 +190,13 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
         v = this.thetas
         c = this.converged
         k = length(v) + 1
-        δ = 1e-16
+        δ = 0
         push!(v, convert(T, Inf64))
         pushfirst!(v, convert(T, -Inf64))
         newThetas = Array{T}(undef, k)
         newConverged = Array{Bool}(undef, k)
+        Δ = Array{T}(undef, k)
+        empty!(this.converged_this_step)
         for II in 1: k
             if II < min(ceil(k/2), floor(k/2) + 1)
                 if c[II]
@@ -189,9 +204,12 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
                     newConverged[II] = true
                 else
                     newThetas[II] = EigenValueLocate(this, v[II] + δ, v[II + 1] - δ)
-                    newConverged[II] = abs(newThetas[II] - v[II + 1]) <= this.converged_tol
+                    newConverged[II] = abs(newThetas[II] - v[II + 1]) <= this.velocity_tol
                     if II != 1 && II != k
                         newConverged[II] = newConverged[II] && c[II - 1]
+                    end
+                    if newConverged[II]
+                        push!(this.converged_this_step, newThetas[II])
                     end
                 end
             elseif II > max(ceil(k/2), floor(k/2) + 1)
@@ -200,18 +218,35 @@ function EigenvaluesUpdate(this::DynamicSymTridiagonal{T}) where {T <: AbstractF
                     newConverged[II] = true
                 else
                     newThetas[II] = EigenValueLocate(this, v[II] + δ, v[II + 1] - δ)
-                    newConverged[II] = abs(newThetas[II] - v[II]) <= this.converged_tol
+                    newConverged[II] = abs(newThetas[II] - v[II]) <= this.velocity_tol
                     if II != 1 && II != k
                         newConverged[II] = newConverged[II] && c[II]
+                    end
+                    if newConverged[II]
+                        push!(this.converged_this_step, newThetas[II])
                     end
                 end
             else
                 newThetas[II] = EigenValueLocate(this, v[II] + δ, v[II + 1] - δ)
                 newConverged[II] = false
             end
+            
         end
+        # Velocity update
+        for II in 1:k 
+            if II < min(ceil(k/2), floor(k/2) + 1)
+                Δ[II] = newThetas[II] - v[II + 1]
+            elseif II > max(ceil(k/2), floor(k/2) + 1)
+                Δ[II] = newThetas[II] - v[II]
+            else
+                Δ[II] = Inf
+            end
+        end
+
+
         this.thetas = newThetas
         this.converged = newConverged
+        this.velocity = Δ
         this.last_update = this.k
         return
     else
@@ -266,3 +301,10 @@ function CountConverged(this::DynamicSymTridiagonal)
 end
 
 function GetConverged(this::DynamicSymTridiagonal) return this.thetas[this.converged] end
+
+function ChangeVelocityTol!(
+    this::DynamicSymTridiagonal, 
+    velocity_tol::T
+) where {T<:AbstractFloat}
+    this.velocity_tol = velocity_tol
+end

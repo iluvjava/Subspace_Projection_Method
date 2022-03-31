@@ -56,6 +56,7 @@ function (this::IterativeLanczos)()
     this.alphas[this.k + 1] = dot(qNew, this.Aq)
     this.betas[this.k] = betaNew
     this.k += 1
+    
     return qNew
 end
 

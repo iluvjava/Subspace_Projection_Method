@@ -2,7 +2,7 @@
 ### ---- Basic testing for the Shifted Characteristic Polynomial Evaluation: 
 ### ----------------------------------------------------------------------------
 
-include("dynamic_symtridiagonal_v2.jl")
+include("dynamic_symtridiagonal.jl")
 
 using LinearAlgebra, Logging, Plots
 
@@ -70,23 +70,23 @@ return T, locatedEig, LocatedEigenVec end
 # display(plot(locatedEigenVec))
 
 
-function Test3(n=4096)
+function Test3(n=2048)
     mainDiag = -2*ones(n)
     subDiag = ones(n - 1)
     dynamicT = DynamicSymTridiagonal(mainDiag[1])
-    dynamicT.converged_tol = 1e-4
+    ChangeVelocityTol!(dynamicT, 1e-4)
     referenceT = SymTridiagonal(mainDiag, subDiag)
     for Idx in 1:n÷16
         dynamicT(mainDiag[Idx + 1], subDiag[Idx])
         EigenvaluesUpdate(dynamicT)
-        # print("Ritzvalues total norm error: ")
-        # w = dynamicT |> GetT |> eigvals |> sort
-        # norm(w - dynamicT.thetas, Inf) |> println
+        if dynamicT.converged_this_step |> length >= 1
+            println("step $(Idx) has: $(dynamicT.converged_this_step) converged. ")
+        end
     end
     @info "Ritz System: "
     display(dynamicT.thetas)
     display(dynamicT.converged)
-    display("Converged $(CountConverged(dynamicT))")
+    println("Converged $(CountConverged(dynamicT))")
     # Plot the converged that are identified and the correct eigenvalues, 
     # curious how good cauchy interlace is. 
 
