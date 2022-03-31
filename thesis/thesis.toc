@@ -1,0 +1,26 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Foundations}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Projectors}{2}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Orthogonal Projector}{2}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Oblique Projector}{3}{subsubsection.1.1.2}%
+\contentsline {subsubsection}{\numberline {1.1.3}Projector Geometric Intuitions}{4}{subsubsection.1.1.3}%
+\contentsline {subsubsection}{\numberline {1.1.4}Projector as a 2-Norm Minimizer}{4}{subsubsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.2}Subspace Projection Methods}{4}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Prototype Algorithm}{5}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Norm Minimizations using Subspace}{5}{subsubsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.3}Krylov Subspace}{6}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}The Grade of a Krylov Subspace}{6}{subsubsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.4}Minimal Polynomial of a Matrix}{8}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Useful Theorems}{8}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}Cauchy Interlace Theorem}{8}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Caley Hamilton's Theorem}{8}{subsubsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.6}Deriving Conjugate Gradient from First Principles}{8}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}CG Objective and Framework}{8}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.2}Using the Projector}{9}{subsubsection.1.6.2}%
+\contentsline {subsubsection}{\numberline {1.6.3}Assisted Conjugate Gradient}{10}{subsubsection.1.6.3}%
+\contentsline {subsubsection}{\numberline {1.6.4}Properties of Assisted Conjugate Gradient}{11}{subsubsection.1.6.4}%
+\contentsline {subsubsection}{\numberline {1.6.5}Residual Assisted Conjugate Gradient}{11}{subsubsection.1.6.5}%
+\contentsline {subsubsection}{\numberline {1.6.6}RACG and Krylov Subspace}{14}{subsubsection.1.6.6}%
+\contentsline {subsection}{\numberline {1.7}Anoldi Iterations and Lanczos}{15}{subsection.1.7}%
+\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{15}{section.2}%
+\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{15}{section.3}%
