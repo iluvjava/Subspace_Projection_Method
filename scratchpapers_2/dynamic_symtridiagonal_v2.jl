@@ -264,3 +264,5 @@ end
 function CountConverged(this::DynamicSymTridiagonal)
     return convert(Vector{Int64}, this.converged) |> sum
 end
+
+function GetConverged(this::DynamicSymTridiagonal) return this.thetas[this.converged] end

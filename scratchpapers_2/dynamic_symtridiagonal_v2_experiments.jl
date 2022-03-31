@@ -28,8 +28,8 @@ return dynamicT end
 
 # DymT = MakeMeRandDynamicTridiagonal()
 
-function ViewConvergence(n=20)
-    a = -1; b = 1
+function ViewConvergence(n=32)
+    a = 1; b = 1/2
     mainDiag = -a*ones(n)
     subDiag = b*ones(n)
     mainDiag .+= a + 2b
@@ -50,7 +50,15 @@ function ViewConvergence(n=20)
             Idx*ones(dynamicEigs |> length),  
             markershape=:cross
         )
+        converedRitz = GetConverged(dynamicT)
+        scatter!(
+            fig1,
+            converedRitz,
+            Idx*(converedRitz |> length |> ones),
+            markershape=:square
+        )
     end
+    
     referenceEigs = eigvals(referenceT) |> sort
     scatter!(
         fig1,

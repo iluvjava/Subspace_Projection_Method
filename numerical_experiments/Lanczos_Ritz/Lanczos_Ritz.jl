@@ -5,8 +5,8 @@ include("../../src/iterative_lanczos.jl")
 # Demonstrating the loss of orthogonality of the lanczos vectors. 
 # And the linear dependence of eigenvalues of the exterior of the spectrum. 
 # ------------------------------------------------------------------------------
-n = 128
-A = Diagonal(LinRange(1e-3, 1, n).^2)
+n = 64
+A = Diagonal(LinRange(1e-3, 1, n).^3)
 il = IterativeLanczos(A, rand(n))
 for _ in 1: n - 1
     il()
