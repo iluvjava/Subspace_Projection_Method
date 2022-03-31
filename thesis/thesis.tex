@@ -1,0 +1,164 @@
+\documentclass[]{article}
+\usepackage{amsmath}\usepackage{amsfonts}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}{Proposition}
+\newtheorem{lemma}{Lemma}
+\usepackage[margin=1in,footskip=0.25in]{geometry}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\usepackage[final]{graphicx}
+\usepackage{listings}
+\usepackage{courier}
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+\newcommand{\indep}{\perp \!\!\! \perp}
+% \usepackage{wrapfig}
+\graphicspath{{.}}
+% \usepackage{fancyvrb}
+
+%%
+%% Julia definition (c) 2014 Jubobs
+%%
+\usepackage[T1]{fontenc}
+\usepackage{beramono}
+\usepackage[usenames,dvipsnames]{xcolor}
+\lstdefinelanguage{Julia}%
+  {morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,%
+      end,export,false,for,function,immutable,import,importall,if,in,%
+      macro,module,otherwise,quote,return,switch,true,try,type,typealias,%
+      using,while},%
+   sensitive=true,%
+   alsoother={$},%
+   morecomment=[l]\#,%
+   morecomment=[n]{\#=}{=\#},%
+   morestring=[s]{"}{"},%
+   morestring=[m]{'}{'},%
+}[keywords,comments,strings]%
+
+\lstset{%
+    language         = Julia,
+    basicstyle       = \ttfamily,
+    keywordstyle     = \bfseries\color{blue},
+    stringstyle      = \color{magenta},
+    commentstyle     = \color{ForestGreen},
+    showstringspaces = false,
+}
+\begin{document}
+\numberwithin{equation}{subsection}{section}
+\section{Fundations}
+    This sections focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this sections cited from... 
+
+    \subsection{Projectors}
+        There are 2 types of projector, an oblique Projector and Orthgonal Projector. An Orthogonal Projector is Hermitian and vice versa. A matrix P is called a projector if: 
+        \begin{align}
+            P^2 = P
+        \end{align}
+        This property is sometimes referred as idempotent. As a consequence, $\text{ran}(I - P) = \text{null}(P)$ and here is the proof: 
+        \begin{proof}
+            \begin{align}
+                \forall x \in \mathbb{C}^n: P(I - P)x &= \mathbf{0} \implies \text{ran}(I - P)\subseteq \text{null}(P)
+                \\
+                \forall x \in \text{null}(P): Px &= \mathbf{0} \implies (I - P)x = x \implies x \in \text{ran}(I - P)
+                \\
+                \implies \text{ran}(I - P) &= \text{null}(P)
+                \label{a:1.1.4}
+            \end{align}
+        \end{proof}
+        
+        \subsubsection{Orthogonal Projector}
+            An orthogonal projector is a projector such that: 
+            \begin{align}
+                \text{null}(P) \perp \text{ran}(P)
+            \end{align}
+            This property is in fact, very special. A good example of an orthogonal projector would be the Householder Reflector Matrix. Or just any $\hat{u}\hat{u}^H$ where $\hat{u}$ is being an unitary vector. For convenience of proving, assume subspace $M = \text{ran}(P)$. Consider the following lemma: 
+            \begin{lemma}
+                \begin{align}
+                    \text{null}(P^H) = \text{ran}(P)^{\perp}
+                    \\
+                    \text{null}(P) = \text{ran}(P^H)^{\perp}
+                \end{align}    
+            \end{lemma}
+            \noindent
+            Using \hyperref[a:1.1.4]{(1.1.4)} and consider the proof: 
+            \begin{proof}
+                \begin{align}
+                    \langle P^Hx, y\rangle &= \langle x, Py\rangle 
+                    \\
+                    \forall  x &\in \text{null}(P^H), y\in \mathbb{C}^n
+                    \\
+                    \implies \langle P^Hx ,y\rangle &= 0 = \langle x, Py\rangle
+                    \\
+                    \implies \text{null}(P^H) \perp& \text{ran}(P)
+                    \\
+                    \forall y \in& \text{null}(P), x \in \mathbb{C}^n: 
+                    \\
+                    \langle x, Py\rangle &= 0 = \langle P^Hx, y\rangle
+                    \\
+                    \implies \text{ran}(P^H) \perp& \text{null}(P)
+                \end{align}
+            \end{proof}
+            
+            \begin{prop}
+                A projector is orthogonal iff it's Hermitian. 
+            \end{prop}
+            \begin{proof}
+                $\impliedby$ Assuming the matrix is Hermitian and it's a projector, then we wish to prove that it's an orthogonal projector. Let's recall: 
+                \begin{align}
+                    \text{null}(P^H) = \text{ran}(P)^{\perp}
+                    \\
+                    \text{null}(P) = \text{ran}(P^H)^{\perp}
+                \end{align}
+                Substituting $P^H = P$, we have $\text{null}(P) = \text{ran}(P)^{\perp}$, Which is the definition of Orthogonal Projector. Therefore, $P$ is an orthogonal projector by the definition of the projector. 
+                \par
+                For the $\implies$ direction, we assume that $P$ is an Orthogonal Projector, then we wish to show that it's also Hermitian. Observe that $P^H$ is also a projector because $(P^H)^2 = (P^2)^H$. Then, using the definition of orthogonal projector: 
+
+
+            \end{proof}
+            
+            
+
+    \subsection{Projectors and Norm Minimizations}
+        An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the some matrix, say $A$, then $P_M$ as a projector onto the basis $M$ one example can be: $A(AA^T)^{-1}A^T$. Let's consider the claim: 
+        \begin{align}
+            \Vert P_Mx\Vert^2 \le \Vert x\Vert^2
+        \end{align}
+        Proof: 
+        \begin{align}
+            x &= Px + (I - P)x 
+            \\
+            \Vert x\Vert^2 &= \Vert Px\Vert^2 + \Vert (I - P)x\Vert^2
+            \\
+            \Vert x\Vert^2 &\ge \Vert Px\Vert^2
+        \end{align}
+        Using this property of the Orthogonal Projector, we consider the following minimizations problem: 
+        \begin{align}
+            \min_{x\in M} \Vert y - x\Vert_2^2 = \Vert y - P_M(y)\Vert_2^2
+        \end{align}
+        Proof:
+        \begin{align}
+            \Vert y - x\Vert_2^2 &= 
+            \Vert y - P_My + P_My - x\Vert_2^2
+            \\
+            \Vert y - x\Vert_2^2 &= 
+            \Vert y - P_My\Vert_2^2 + \Vert P_My - x\Vert_2^2
+            \\
+            \implies 
+            \Vert y - P_My\Vert_2^2 &\le \Vert y - x\Vert_2^2
+        \end{align}
+        That concludes the proof. Observe that, $y - P_My\perp M$ and $P_My - x \in M$ because $P_My, x \in M$, which allows us to split the norm of $y - x$ into 2 components. In addition using the fact that the projector is orthogonal. That concludes the proof. 
+
+    \subsection{Subspace Orthogonality Framework}
+        
+    \subsection{Useful Theorems}
+
+
+
+\end{document}
