@@ -717,95 +717,97 @@
                 \end{align}
                 Take note that, $\text{ran}(P_k) = \mathcal K_k(A|r_0)$ because the index starts with zero. The above formulations gives theoretical importance for the Conjugate Gradient Algorithm. 
             \end{proof}
-    \subsection{Anoldi Iterations and Lanczos}
-        We first define the Arnoldi Algorithm, and then we proceed to derive it using the idea of orthgonal projector. Next, we discuss a special case of the Arnoldi Iteration: the Lanczos Algorithm, which is just Arnoldi applied to a symmetric matrix. And such algorithm will inherit the properties of the Arnoldi Iterations. 
-        \par
-        Before stating the algorithm, I would like to point out the interpreations of the algorithm and its relations to Krylov Subspace. Consider a matrix of Hessenberg Form:
-        \begin{align}
-            \tilde{H}_k = 
-            \begin{bmatrix}
-                h_{1, 1} & h_{1, 2} & \cdots & h_{1, k} 
-                \\
-                h_{1, 2} & h_{2, 2} & \cdots & h_{2, k}
-                \\
-                \\
-                & \ddots & &\vdots
-                \\
-                & & h_{k, k - 1}& h_{k, k}
-                \\
-                & & & h_{k + 1, k}
-            \end{bmatrix}
-        \end{align}
-        We initialize the orhtogonal projector with the vector $q_1$, which is $q_1q_1^H$, next, we apply the linear operator $A$ on the current range of the projector: $Aq_1$, then, we orthogonalize it against $q$. Let the projection of $Aq_1$ onto $I - q_1q_1^H$ be $h_{1, 2}q_2$, and let the projection onto $q_1q_1^H$ be $h_{1,1}$. This completes the first column of $H_k$, we do this recursively. Please allow me to demonstrate: 
-        \begin{align}
-            (\tilde{H}_k)_{2, 1}q_2 &= (I - q_1q_1^H)Aq_1
-            \\
-            (\tilde{H}_k)_{1, 1}q_1 &= q_1q_1^HAq_1
-            \\
-            Q_2 &:= \begin{bmatrix}
-                q_1 & q_2
-            \end{bmatrix}
-            \\
-            (\tilde{H}_k)_{3, 2}q_3 &= (I - Q_2Q_2^H)Aq_2
-            \\
-            (\tilde{H}_k)_{1:2, 2} &= Q_2Q_2^HAq_2
-            \\
-            Q_3 &:= \begin{bmatrix}
-                q_1 & q_2 & q_3
-            \end{bmatrix}
-            \\
-            & \vdots 
-            \\
-            Q_j &:= \begin{bmatrix}
-                q_1 & q_2 & \cdots & q_j
-            \end{bmatrix}
-            \\
-            (\tilde{H}_k)_{j + 1, j}q_{j + 1}&= (I - Q_jQ_j^H)Aq_j
-            \\
-            (\tilde{H}_k)_{1:j, j} &= Q_jQ_j^HAq_j
-            \\
-            &\vdots 
-            \\
-            Q_k &:= \begin{bmatrix}
-                q_1 & q_2 & \cdots & q_k
-            \end{bmatrix}
-            \\
-            (\tilde{H}_k)_{k + 1, k}q_{k + 1}&= (I - Q_kQ_k^H)Aq_k
-            \\
-            (\tilde{H}_k)_{1:k, k} &= Q_kQ_k^HAq_k
-        \end{align}
-        Reader please observe that $Q_k$ is going to be orthogonal because how at the start, $q_1q_1^H$ and $I - q_1q_1^H$ is giving us an orthogonal subspace. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
-        \begin{align}
-            AQ_{k} &= Q_{k + 1}\tilde{H}_k
-            \\
-            Q_{k}^HAQ_{k} &= H_k
-        \end{align}
-        And here, we explicitly define $H_k$ to be the principal submatrix of $\tilde{H}_k$. Reader please immediately observe that, if $A$ is symmetric, then it has to be the case that $Q^H_kAQ_k$ is also symmetric, which will make $H_k$ to be symmetric as well, which implies that $H_k$ will be a Symmetric Tridiagonal Matrix. And under that assumption, we can develop the Lanczos Algorithm. Instead of orthogoalizing against all previous vectors, we have the option to simply orthogonalize against the previous $q_k, q_{k - 1}$ vector. And we can reuse the sub-diagonal elements for $q_{k - 1}$; giving us the Lanczos Algorithm in the following form: 
-
-        \begin{definition}[Lanczos Iterations]
+    \subsection{Arnoldi Iterations and Lanczos}
+        In this section, we introduce another important algorithm: The Lanczos Algorithm. However, to give more context for the discussion, the Arnoldi iteration is considered as well and it's used to amphasize that Lanczos Iterations is just Arnoldi but with the matrix $A$ being a symmetric matrix. Finally we make the link between Lanczos Iterations and Krylov Subspace, which wil inevitably linked back to RACG and plays an important role for the analysis of RACG. 
+        \subsubsection{The Arnoldi Iterations}
+            We first define the Arnoldi Algorithm, and then we proceed to derive it using the idea of orthgonal projector. Next, we discuss a special case of the Arnoldi Iteration: the Lanczos Algorithm, which is just Arnoldi applied to a symmetric matrix. And such algorithm will inherit the properties of the Arnoldi Iterations. 
+            \par
+            Before stating the algorithm, I would like to point out the interpreations of the algorithm and its relations to Krylov Subspace. Consider a matrix of Hessenberg Form:
             \begin{align}
-                & \text{Given arbitrary: } q_1 \text{ s.t: } \Vert q_1\Vert = 1
-                \\
-                & \text{set: }\beta_0 = 0
-                \\
-                & \text{For } j = 1, 2, \cdots 
-                \\
-                &\hspace{1.1em}\begin{aligned}
-                    & \tilde{q}_{j + 1} := Aq_j - \beta_{j - 1}q_{j - 1}
+                \tilde{H}_k = 
+                \begin{bmatrix}
+                    h_{1, 1} & h_{1, 2} & \cdots & h_{1, k} 
                     \\
-                    & \alpha_j := \langle q_j,\tilde{q}_{j + 1}\rangle
+                    h_{1, 2} & h_{2, 2} & \cdots & h_{2, k}
                     \\
-                    & \tilde{q}_{j + 1} \leftarrow \tilde{q}_{j + 1} - \alpha_j q_j
                     \\
-                    & \beta_j = \Vert \tilde{q}_{j + 1}\Vert
+                    & \ddots & &\vdots
                     \\
-                    & q_{j + 1} := \tilde{q}_{j + 1}/\beta_j
-                \end{aligned}
+                    & & h_{k, k - 1}& h_{k, k}
+                    \\
+                    & & & h_{k + 1, k}
+                \end{bmatrix}
             \end{align}
-        \end{definition}
-        Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. 
-
+            We initialize the orhtogonal projector with the vector $q_1$, which is $q_1q_1^H$, next, we apply the linear operator $A$ on the current range of the projector: $Aq_1$, then, we orthogonalize it against $q$. Let the projection of $Aq_1$ onto $I - q_1q_1^H$ be $h_{1, 2}q_2$, and let the projection onto $q_1q_1^H$ be $h_{1,1}$. This completes the first column of $H_k$, we do this recursively. Please allow me to demonstrate: 
+            \begin{align}
+                (\tilde{H}_k)_{2, 1}q_2 &= (I - q_1q_1^H)Aq_1
+                \\
+                (\tilde{H}_k)_{1, 1}q_1 &= q_1q_1^HAq_1
+                \\
+                Q_2 &:= \begin{bmatrix}
+                    q_1 & q_2
+                \end{bmatrix}
+                \\
+                (\tilde{H}_k)_{3, 2}q_3 &= (I - Q_2Q_2^H)Aq_2
+                \\
+                (\tilde{H}_k)_{1:2, 2} &= Q_2Q_2^HAq_2
+                \\
+                Q_3 &:= \begin{bmatrix}
+                    q_1 & q_2 & q_3
+                \end{bmatrix}
+                \\
+                & \vdots 
+                \\
+                Q_j &:= \begin{bmatrix}
+                    q_1 & q_2 & \cdots & q_j
+                \end{bmatrix}
+                \\
+                (\tilde{H}_k)_{j + 1, j}q_{j + 1}&= (I - Q_jQ_j^H)Aq_j
+                \\
+                (\tilde{H}_k)_{1:j, j} &= Q_jQ_j^HAq_j
+                \\
+                &\vdots 
+                \\
+                Q_k &:= \begin{bmatrix}
+                    q_1 & q_2 & \cdots & q_k
+                \end{bmatrix}
+                \\
+                (\tilde{H}_k)_{k + 1, k}q_{k + 1}&= (I - Q_kQ_k^H)Aq_k
+                \\
+                (\tilde{H}_k)_{1:k, k} &= Q_kQ_k^HAq_k
+            \end{align}
+            Reader please observe that $Q_k$ is going to be orthogonal because how at the start, $q_1q_1^H$ and $I - q_1q_1^H$ is giving us an orthogonal subspace. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
+            \begin{align}
+                AQ_{k} &= Q_{k + 1}\tilde{H}_k
+                \\
+                Q_{k}^HAQ_{k} &= H_k
+            \end{align}
+            And here, we explicitly define $H_k$ to be the principal submatrix of $\tilde{H}_k$. Reader please immediately observe that, if $A$ is symmetric, then it has to be the case that $Q^H_kAQ_k$ is also symmetric, which will make $H_k$ to be symmetric as well, which implies that $H_k$ will be a Symmetric Tridiagonal Matrix. And under that assumption, we can develop the Lanczos Algorithm. Instead of orthogoalizing against all previous vectors, we have the option to simply orthogonalize against the previous $q_k, q_{k - 1}$ vector. And we can reuse the sub-diagonal elements for $q_{k - 1}$; giving us the Lanczos Algorithm. 
+        \subsubsection{The Lanczos Iterations}
+            \begin{definition}[Lanczos Iterations]
+                \begin{align}
+                    & \text{Given arbitrary: } q_1 \text{ s.t: } \Vert q_1\Vert = 1
+                    \\
+                    & \text{set: }\beta_0 = 0
+                    \\
+                    & \text{For } j = 1, 2, \cdots 
+                    \\
+                    &\hspace{1.1em}\begin{aligned}
+                        & \tilde{q}_{j + 1} := Aq_j - \beta_{j - 1}q_{j - 1}
+                        \\
+                        & \alpha_j := \langle q_j,\tilde{q}_{j + 1}\rangle
+                        \\
+                        & \tilde{q}_{j + 1} \leftarrow \tilde{q}_{j + 1} - \alpha_j q_j
+                        \\
+                        & \beta_j = \Vert \tilde{q}_{j + 1}\Vert
+                        \\
+                        & q_{j + 1} := \tilde{q}_{j + 1}/\beta_j
+                    \end{aligned}
+                \end{align}
+            \end{definition}
+            Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. 
         
+
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
     \subsection{Terminations Conditions of RACG}
     \subsection{Terminations Conditions of The Lanczos Iterations}
