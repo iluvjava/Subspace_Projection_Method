@@ -382,13 +382,14 @@
                 \par
                 If $\mathcal K_{k - 1}$ is linear dependence, then by (3) $\mathcal K_{k - 1} = \mathcal K_k$, hence $k$ is not the minimum. Else assume $\mathcal K_{k - 1}$ is linear independence, however $\mathcal K_k$ is linear dependence, and $\mathcal K_k \setminus \mathcal K_{k - 1} = \text{span}(A^{k - 1}v)$; therefore, $A^{k -1}v$ is in the span of $\mathcal K_{k -1}$, hence $\mathcal K_{k -1} = \mathcal K_k$, contradicing again that $k$ is the minimum such $k$. 
             \end{proof}
-    \subsection{Minimal Polynomial of a Matrix}
-        \begin{definition}
-            A minimal polynomial is a polynomial $p_k(x)$ with degree k that is monic such that $p_k(A) = \mathbf{0}$. 
-        \end{definition}
-    \subsection{Useful Theorems}
+    
+    \subsection{Useful Theorems and Mathematical Entities}
+        \subsubsection{Minimal Polynomial of a Matrix}
+            \begin{definition}
+                A minimal polynomial is a polynomial $p_k(x)$ with degree k that is monic such that $p_k(A) = \mathbf{0}$. 
+            \end{definition}
         \subsubsection{Cauchy Interlace Theorem}
-
+            The cauchy's iterlace theorem describe the relations of eigenvalues between the submatrix of a Symmetric tridiagonal matrix and the matrix itself. The following theorem statement is borrow for \textit{Horn and Johnson} in their work \textit{Matrix Analysis}. 
         \subsubsection{Caley Hamilton's Theorem}
             \begin{theorem}
                 A matrix satisfies it's own characteristic equation, let $p(x)$ be the characteristic polynomial for the matrix $A$, then $p(A) = \mathbf 0$. 
@@ -835,7 +836,22 @@
                 \end{align}
             \end{prop}
             \begin{proof}
-                
+                The base case is simple: $q_1 \in \mathcal K_1(A|q_1)$, inductively assuming the proposition is true, using the polynomial property of Krylov Subspace we consider: 
+                $$
+                \begin{aligned}
+                    Q_k &\in \mathcal K_k(A|q_1)
+                    \\
+                    \iff w_k^+: \exists\; p_k(A|w_k^+)q_1 &= q_k
+                    \\
+                    \implies Aq_k &= \; Ap_k(A|w_k^+)q_1 \in \mathcal K_{k + 1}(A|w_k^+)
+                    \\
+                    q_{k + 1} &\in \mathcal K_{k + 1}(A|q_{1})
+                    \\
+                    \implies \text{ran}(Q_{k + 1}) &= \mathcal K_{k + 1}(A|q_1)
+                \end{aligned}
+                $$
+
+                The Arnoldi Algorithm terminates if the value $h_{k + 1, k}$ is set to be zero. This is the case because the normalization process is dividing by $h_{k + 1, k}$ to get $q_{k + 1}$. This only happens when $Aq_{k}\in \text{ran}(Q_k)$; because $h_{k +1, k}$ is given by the projector of $I - Q_kQ^H$ applied to $Aq_k$ and the null space of this projector is $\text{ran}(Q_k)$, resulging in $h_{k + 1, k} = 0$. 
             \end{proof}
         \subsubsection{The Lanczos Iterations}
             \begin{definition}[Lanczos Iterations]
@@ -858,11 +874,18 @@
                         & q_{j + 1} := \tilde{q}_{j + 1}/\beta_j
                     \end{aligned}
                 \end{align}
+                Here, let it be the case that $H_k$ is a Symmetric Tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product. 
             \end{definition}
-            Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. 
+            Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The lanczos algorithm produces an irreducible Symmetric Tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any Symmetric Tridiaogonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediate show here is the fact that Lanczos Algorithm will produce such a matrix. 
+            \begin{prop}
+                The Lanczos Iteration produces a Symmetric Tridiagonal Matrix that has no zero element on its super and sub-diagonal, and if $\beta_k$ is zero, then the algorithm must terminates, and $k$ would equal to $\text{grade}(A|q_1)$, the grade of the Krylov Subspace. 
+            \end{prop}
+            \begin{proof}
+                It's true because the $\beta_{k}$ in the Lanczos is equivalent to $h_{k + 1, k}$. It's been discussed previously that if $h_{k + 1, 1} = 0$ for the Arnoldi's Iteration, then the Krylov Subspace $\mathcal K_k(A|q_1)$ became an invariant subpace under $A$, and in that sense, the algorithm has to terminate due to a divides by zero error. 
+            \end{proof}
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
-    
     \subsection{Terminations Conditions of RACG}
+        
     \subsection{Terminations Conditions of The Lanczos Iterations}
     \subsection{Convergence Rate of RACG under Exact Arithematic}
     \subsection{The Equivalence between the Lanczos and RACG}
