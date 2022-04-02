@@ -63,21 +63,23 @@
 \section*{Notations}
 \begin{enumerate}
     \item $\text{ran}(A):=\{Ax :\forall x \; \in \mathbb R^n\}, A \in \mathbb R^{m\times n}$, The range of a matrix. 
+    \item $(A)_{i, j}$: The element in i th row and jth column of the matrix $A$.
+    \item $(A)_{i:j, i':j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to matlab's rules for indexing. 
+    
 \end{enumerate}
 \section*{Introduction}
 \newpage
 \section{Foundations}
-    This sections focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this sections cited from... 
+    This sections focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this sections cited from... (citations here)
 
     \subsection{Projectors}
-        A projector is a type of idempotent matrix. Its properties has theoretical importance under the context of subspace projection method. In this section, we go through 2 types of projectors, the orthgonal projector and the oblique projector. The oblique projector is made useful for the derivation of the classic CG algorithm, which is referred to as RACG in the context of this paper. The orthogonal projector is made useful for the interpretations of Arnoldi Iterations. 
+        A projector is a type of idempotent matrix. Its properties have importance for subspace projection method. In this section, we go through 2 types of projectors, the orthgonal projector and the oblique projector. The oblique projector is made useful for the derivation of the classic CG algorithm, which is referred to as RACG in the context of this paper. The orthogonal projector is made useful for the interpretations of Arnoldi Iterations. 
         \begin{definition}
             A matrix $P$ is a projector when: 
             \begin{align}
                 P^2 = P
             \end{align}    
         \end{definition}
-        
         This property is sometimes referred as \textit{idempotent}. As a consequence, $\text{ran}(I - P) = \text{null}(P)$ and here is the proof: 
         \begin{proof}
             \begin{align}
@@ -90,7 +92,7 @@
             \end{align}
         \end{proof}
         \noindent
-        This consequence states the fact that any vector $x$ can be represented in the form of: $x = Px + (I - P)x$, and every projector will be defined via the range of $I - P$ and $P$. 
+        This consequence states the fact that any vector $x$ can be represented as $x = Px + (I - P)x$, and every projector will be defined via a subspace equals to the range of $I - P$ and $P$. 
         
         \subsubsection{Orthogonal Projector}
             An orthogonal projector is a projector such that: 
@@ -106,7 +108,7 @@
                     \text{null}(P^H) = \text{ran}(P)^{\perp}
                     \\
                     \text{null}(P) = \text{ran}(P^H)^{\perp}
-                \end{align}    
+                \end{align}
             \end{lemma}
             \noindent
             Using \hyperref[a:1.1.4]{(1.1.4)} and consider the proof: 
@@ -149,7 +151,7 @@
                 Notice that using above statement together with Lemma 1 means $\text{null}(P) = \text{ran}(P)^\perp = \text{null}(P^H)$, and then $\text{ran}(P)=\text{null}(P)^\perp = \text{ran}(P^H)$. Therefore, $P^H$ is an projector such that: $\text{ran}(P) = \text{ran}(P^H) \wedge \text{null}(P) = \text{null}(P^H)$. The range and null space of $P^H$ and $P$ is the same therefore $P$ has to be Hermitian. 
             \end{proof}
             \subsubsection{Oblique Projector}
-                An oblique projector is not orthogonal, and vice versa. It's a projector that satisfies the following conditions: 
+                An oblique projector a projector but not an orthogonal projector, and vice versa. It's a projector that satisfies the following conditions: 
                 \begin{definition}
                     \begin{align}
                         Px \in M \quad (I - P)x \perp L \quad \text{where: } M \neq L
@@ -159,36 +161,38 @@
                 \par
                 A famous example of an orthogonal projector is $QQ^H$ where $Q$ is an Unitary Matrix. This is a Hermitian Matrix and it's idempotent, making it an orthogonal projector. 
             \subsubsection{Projector Geometric Intuitions}
-                A projector describes a given vector using some elements from another basis. The oblique projector creates a light sources in the form of the subspace $L$ and it shoots parrell light ray orthogonal to $L$, crossing vectors and projecting their shadow onto subspace $M$. 
+                A projector describes a given vector using some elements from another basis. The oblique projector creates a light sources in the form of the subspace $L$ and it shoots parallel light rays in the direction orthogonal to $L$, crossing vectors and projecting their shadow onto subspace $M$. 
         \subsubsection{Projector as a 2-Norm Minimizer}
-            An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the some matrix, say $A$, then $P_M$ as a projector onto the basis $M$ one example can be: $A(AA^T)^{-1}A^T$. Let's consider the claim: 
+            An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the matrix $A$, then $P_M$ as a projector onto the basis $M$ as an example can be: $A(AA^T)^{-1}A^T$. Let's consider the claim: 
             \begin{align}
                 \Vert P_Mx\Vert^2 \le \Vert x\Vert^2
             \end{align}
-            Proof: 
-            \begin{align}
-                x &= Px + (I - P)x 
-                \\
-                \Vert x\Vert^2 &= \Vert Px\Vert^2 + \Vert (I - P)x\Vert^2
-                \\
-                \Vert x\Vert^2 &\ge \Vert Px\Vert^2
-            \end{align}
+            \begin{proof}
+                For notational convenience, we simply denotes $P_M$ using $P$. 
+                \begin{align}
+                    x &= Px + (I - P)x 
+                    \\
+                    \Vert x\Vert^2 &= \Vert Px\Vert^2 + \Vert (I - P)x\Vert^2
+                    \\
+                    \Vert x\Vert^2 &\ge \Vert Px\Vert^2
+                \end{align}    
+            \end{proof}
             Using this property of the Orthogonal Projector, we consider the following minimizations problem: 
             \begin{align}
-                \min_{x\in M} \Vert y - x\Vert_2^2 = \Vert y - P_M(y)\Vert_2^2
+                \min_{x\in M} \Vert y - x\Vert_2^2 = \Vert y - Py\Vert_2^2
             \end{align}
             Proof:
             \begin{align}
                 \Vert y - x\Vert_2^2 &= 
-                \Vert y - P_My + P_My - x\Vert_2^2
+                \Vert y - Py + Py - x\Vert_2^2
                 \\
                 \Vert y - x\Vert_2^2 &= 
-                \Vert y - P_My\Vert_2^2 + \Vert P_My - x\Vert_2^2
+                \Vert y - Py\Vert_2^2 + \Vert Py - x\Vert_2^2
                 \\
                 \implies 
-                \Vert y - P_My\Vert_2^2 &\le \Vert y - x\Vert_2^2
+                \Vert y - Py\Vert_2^2 &\le \Vert y - x\Vert_2^2
             \end{align}
-            That concludes the proof. Observe that, $y - P_My\perp M$ and $P_My - x \in M$ because $P_My, x \in M$, which allows us to split the norm of $y - x$ into 2 components. In addition using the fact that the projector is orthogonal. That concludes the proof. 
+            That concludes the proof. Observe that, $y - Py\perp M$ and $Py - x \in M$ because $Py, x \in M$, which allows us to split the norm of $y - x$ into 2 components. In addition using the fact that the projector is orthogonal. That concludes the proof. 
     \subsection{Subspace Projection Methods}
         Let $\mathcal K, \mathcal L$ be subspaces where candidates soltuions are chosen and residuals are orthogonalized against. Under the idea case the 2 subspaces spans all dimensions, and it's able to approximate all solutions and forcing the residual vector ($b - Ax$) to be zero. This is a description of this framework: 
         \begin{align}
@@ -235,8 +239,8 @@
             \end{align}
             Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions. 
         
-        \subsubsection{Norm Minimizations using Subspace}\label{sec:1.4}
-            Other times, iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under certain norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, and we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$. 
+        \subsubsection{Energy Norm Minimization using Gradient}\label{sec:1.4}
+            Other times, iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under some norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, and we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$, then one may consider using gradient as a more direct approach instead of projector. 
             \begin{align}
                 &\hspace{0.6em} \min_{x\in x_0 + \mathcal{K}} \Vert b - Ax\Vert_B^2 
                 \\
@@ -248,7 +252,7 @@
                     r_0 - AKw
                 \Vert_B^2
             \end{align}
-            We take the derivative of it and set the derivative to zero, this translate the problem to a projection problem under the $A$ norm. 
+            We take the derivative of it and set the derivative to zero. The skip the proof that the derivative of $\nabla_x[\frac{1}{2}\Vert x\Vert_A^2] = Ax$, and for a crash course on derivative, the $\nabla_x[f(Ax)] = A^T\nabla [f(x)]$. 
             \begin{align}
                 \nabla_w \left[
                     \Vert r_0 - AKx\Vert_B^2
@@ -260,7 +264,47 @@
                 \\
                 (AK)^TBr_0 &= (AK)^TBAKx
             \end{align}
-            The above formulation is tremendously powerful. I used gradient instead of projector for the simplicity of the argument. One can derive the same using projector but the math is bit more hedious. 
+            The above formulation is tremendously powerful. I used gradient instead of projector for the simplicity of the argument. One can derive the same using orhtogonal projector to minimizes the 2 norm, but the math is bit more hedious. However, this minimization objective is minimizing the residual, which is fine for deriving subspace methods such as the GMRes, or the Minres and Orthomin, however, for the sake of the conjugate gradient, we have to consider the altenative. Let's this be a proposition that we proceed to prove. 
+            \begin{prop}[Conditions for Minimum Error Under Energy Norm]
+                Here, we let matrix $B$ be positive definite so it can induce a norm, we let $K$ be a matrix whose columns forms a basis for $\mathcal K$, we let $e_k$ denotes the error, given by: $A^{-1}b - x_k$, and we let $r_k$ denotes the residual given as $b - Ax_k$. 
+                \begin{align}
+                    \min_{x_k\in x_0 + \mathcal K}\Vert A^{-1}b - x\Vert_B^2
+                    \iff
+                    K^TBe_k - K^TBKw &= \mathbf 0
+                \end{align} 
+            \end{prop}
+            Next, we proceed to prove it and explain its interpretations and importance: 
+            \begin{proof}
+                \begin{align}
+                    \min_{x \in x_0 + \mathcal K}
+                    \Vert A^{-1}b - x\Vert_B^2
+                    &= 
+                    \min_{x\in \mathbb R} 
+                    \Vert A^{-1}b - x_0 - Kw\Vert_b^2
+                    \\
+                    &= \min_{x\in \mathbb R^k}
+                    \Vert e_k - Kw\Vert_b^2
+                \end{align}
+                To attain the minimum of the norm, we take the derivative and set it to be zero, giving us: 
+                \begin{align}
+                    \mathbf 0 &= \nabla_w[\Vert e_k - Kw\Vert_B^2]
+                    \\
+                    &= \nabla_w[e_k - Kw]^TB(e_k - Kw)
+                    \\
+                    &= 2K^TB(e_k - Kw)
+                    \\
+                    \implies 
+                    K^TBe_k - K^TBKw &= \mathbf 0
+                \end{align}
+            \end{proof}
+            This conditions is implicity describing the objective of a Preconditioned Conjugate Gradient algorithm, where $B$ is the $M^{-1}$ matrix, however this discussion right now it's a digression. Instead let's set $B$ to $A$, so that it's equivalent to the Energy Norm minimization of Conjugate Gradient, giving us this conditions: 
+            \begin{align}
+                K^TAA^{-1}r_k - K^TAKw &= \mathbf 0
+                \\
+                K^Tr_k - K^TAKw &= \mathbf 0
+            \end{align}
+            Here, we jsut made the substitution of $e_k = A^{-1}r_k$, and $B = A$. Later, we will see how this condition is linked to the idea of an Oblique Projector, similar to how an Orthogonal Projector is able to minimize the 2-Norm of the residual. 
+
     \subsection{Krylov Subspace}
         A Krylov Subspace is a sequence basis paramaterized by $A$, an linear operator, $v$ an initial vector, and $k$, which basis in the sequece of basis that we are looking at. 
         \begin{definition}[Krylov subspace]
@@ -783,6 +827,16 @@
                 Q_{k}^HAQ_{k} &= H_k
             \end{align}
             And here, we explicitly define $H_k$ to be the principal submatrix of $\tilde{H}_k$. Reader please immediately observe that, if $A$ is symmetric, then it has to be the case that $Q^H_kAQ_k$ is also symmetric, which will make $H_k$ to be symmetric as well, which implies that $H_k$ will be a Symmetric Tridiagonal Matrix. And under that assumption, we can develop the Lanczos Algorithm. Instead of orthogoalizing against all previous vectors, we have the option to simply orthogonalize against the previous $q_k, q_{k - 1}$ vector. And we can reuse the sub-diagonal elements for $q_{k - 1}$; giving us the Lanczos Algorithm. 
+        \subsubsection{Arnoldi Produces Orthogonal Basis for Krylov Subspace}
+            One important observations reader should make about the idea of Arnoldi Iteration is that, during each iteration, the matrix $Q_k$ spans the same range as $\mathcal K_k(A|q_1)$. 
+            \begin{prop}
+                \begin{align}
+                    \text{ran}(Q_k) &= \mathcal K_k(A|q_1)
+                \end{align}
+            \end{prop}
+            \begin{proof}
+                
+            \end{proof}
         \subsubsection{The Lanczos Iterations}
             \begin{definition}[Lanczos Iterations]
                 \begin{align}
@@ -806,9 +860,8 @@
                 \end{align}
             \end{definition}
             Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. 
-        
-
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
+    
     \subsection{Terminations Conditions of RACG}
     \subsection{Terminations Conditions of The Lanczos Iterations}
     \subsection{Convergence Rate of RACG under Exact Arithematic}
