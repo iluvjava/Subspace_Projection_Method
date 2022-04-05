@@ -14,22 +14,24 @@
 \contentsline {subsubsection}{\numberline {1.4.1}Minimal Polynomial of a Matrix}{10}{subsubsection.1.4.1}%
 \contentsline {subsubsection}{\numberline {1.4.2}Cauchy Interlace Theorem}{10}{subsubsection.1.4.2}%
 \contentsline {subsubsection}{\numberline {1.4.3}Caley Hamilton's Theorem}{10}{subsubsection.1.4.3}%
+\contentsline {subsubsection}{\numberline {1.4.4}The Chebyshev Polynomial}{10}{subsubsection.1.4.4}%
 \contentsline {subsection}{\numberline {1.5}Deriving Conjugate Gradient from First Principles}{10}{subsection.1.5}%
 \contentsline {subsubsection}{\numberline {1.5.1}CG Objective and Framework}{10}{subsubsection.1.5.1}%
 \contentsline {subsubsection}{\numberline {1.5.2}Using the Projector}{11}{subsubsection.1.5.2}%
 \contentsline {subsubsection}{\numberline {1.5.3}Assisted Conjugate Gradient}{12}{subsubsection.1.5.3}%
 \contentsline {subsubsection}{\numberline {1.5.4}Properties of Assisted Conjugate Gradient}{13}{subsubsection.1.5.4}%
-\contentsline {subsubsection}{\numberline {1.5.5}Residual Assisted Conjugate Gradient}{13}{subsubsection.1.5.5}%
+\contentsline {subsubsection}{\numberline {1.5.5}Residual Assisted Conjugate Gradient}{14}{subsubsection.1.5.5}%
 \contentsline {subsubsection}{\numberline {1.5.6}RACG and Krylov Subspace}{16}{subsubsection.1.5.6}%
 \contentsline {subsection}{\numberline {1.6}Arnoldi Iterations and Lanczos}{17}{subsection.1.6}%
 \contentsline {subsubsection}{\numberline {1.6.1}The Arnoldi Iterations}{17}{subsubsection.1.6.1}%
-\contentsline {subsubsection}{\numberline {1.6.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{18}{subsubsection.1.6.2}%
+\contentsline {subsubsection}{\numberline {1.6.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{19}{subsubsection.1.6.2}%
 \contentsline {subsubsection}{\numberline {1.6.3}The Lanczos Iterations}{19}{subsubsection.1.6.3}%
-\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{20}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Terminations Conditions of RACG}{20}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Terminations Conditions of The Lanczos Iterations}{20}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Convergence Rate of RACG under Exact Arithematic}{20}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}The Equivalence between the Lanczos and RACG}{20}{subsection.2.4}%
-\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{20}{section.3}%
-\contentsline {section}{\numberline {4}Appendix}{20}{section.4}%
-\contentsline {section}{\numberline {5}Biliography}{20}{section.5}%
+\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{21}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Terminations Conditions of RACG}{21}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Terminations Conditions of The Lanczos Iterations}{21}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Convergence Rate of RACG under Exact Arithematic}{21}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}From Conjugate Gradient to Lanczos}{21}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}From Lanczos to Conjugate Gradient}{21}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{21}{section.3}%
+\contentsline {section}{\numberline {4}Appendix}{21}{section.4}%
+\contentsline {section}{\numberline {5}Biliography}{21}{section.5}%

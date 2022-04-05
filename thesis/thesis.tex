@@ -389,12 +389,21 @@
                 A minimal polynomial is a polynomial $p_k(x)$ with degree k that is monic such that $p_k(A) = \mathbf{0}$. 
             \end{definition}
         \subsubsection{Cauchy Interlace Theorem}
-            The cauchy's iterlace theorem describe the relations of eigenvalues between the submatrix of a Symmetric tridiagonal matrix and the matrix itself. The following theorem statement is borrow for \textit{Horn and Johnson} in their work \textit{Matrix Analysis}. 
+            The cauchy's iterlace theorem describe the relations of eigenvalues between the submatrix of a Symmetric tridiagonal matrix and the matrix itself. In our caes, let $T_{k-1}\in \mathbb R^{(k - 1)\times (k - 1)}$ be the principal sub-matrix to the matrix $T_k$, then between every eigenvalue of $\mathcal T_{k}$, there must exists an eigenvalue of $T_{k-1}$ between them. 
         \subsubsection{Caley Hamilton's Theorem}
             \begin{theorem}
                 A matrix satisfies it's own characteristic equation, let $p(x)$ be the characteristic polynomial for the matrix $A$, then $p(A) = \mathbf 0$. 
             \end{theorem}
             The Calye's Hamilton's Theorem is important in the sense that, a direct consequence is the termination conditions for all krylov Subspace Methods (regardless of initial guess vectors). It's saying that all Krylov Subspace methods will terminates at step $n + 1$ at most, if $n$ is the size of the operator. However, the more important fact is that, when it terminates, the solution $x$ is a weighted sum of the Krylov Subspace vectors and the weights are related to the characterstic polynomial of the matrix. 
+        \subsubsection{The Chebyshev Polynomial}
+            The chebyshev polynomial is an orthogonal polynomials under a weighted space; it has amazing properties, for our sake, we focuses the Type T Chebyshev Polynomial which has the property of minimizing the infinitty norm over a closed interval: 
+            \begin{align}
+                T_k(x) = \arg\min_{p(x)}
+                \left\lbrace
+                    \Vert p(x) \Vert_\infty: \forall x \in [-1, 1]
+                \right\rbrace
+            \end{align}
+            This thereom is later used as a pivotal tools for the analysis for floating point error for the conjugate gradient algorithm. 
 
     \subsection{Deriving Conjugate Gradient from First Principles}
         \subsubsection{CG Objective and Framework}
@@ -434,7 +443,7 @@
             \end{align}
             Let this algorithm be the prototype. 
         \subsubsection{Using the Projector}
-            Here, we consider the simple algorithm from ????(hyperref needed). Please observe that $AP_kD_k^{-1}P_k$ is a projector, and so is $P_kD^{-1}_kP_k^TA$. 
+            Here, we consider the above prototype algorithm. Please observe that $AP_kD_k^{-1}P_k$ is a projector, and so is $P_kD^{-1}_kP_k^TA$. 
             \begin{proof}
                 \begin{align}
                     AP_kD^{-1}_kP_k^T(AP_kD^{-1}_kP_k^T) &= AP_kD^{-1}_kP_k^TAP_kD^{-1}_kP_k^T 
@@ -875,6 +884,35 @@
                     \end{aligned}
                 \end{align}
                 Here, let it be the case that $H_k$ is a Symmetric Tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product. 
+                Note that another equivalent algorithm wher I tweaked it to handle the base case of $T_k$ being a $1\times 1 $ matrix can be phrased in the following way: 
+                \begin{align}
+                    \begin{aligned}
+                        & \text{Given arbitrary: }q_1 \text{ s.t: } \Vert q_1\Vert = 1
+                        \\
+                        & \alpha_1 := \langle q_1, Aq_1\rangle
+                        \\
+                        & \beta_0 := 0
+                        \\
+                        & \text{Memorize}: Aq_1
+                        \\
+                        & \text{For }j = 1\cdots
+                        \\
+                        &\hspace{1.1em}
+                        \begin{aligned}
+                            & \tilde{q}_{j + 1} := Aq_j - \beta_{j - 1} q_{j - 1}
+                            \\
+                            & \tilde{q}_{j + 1} \leftarrow \tilde{q}_{j + 1} - \alpha_jq_j
+                            \\
+                            & \beta_j = \Vert \tilde{q}_{j + 1}\Vert
+                            \\
+                            & q_{j + 1}:= \tilde{q}_{j + 1}/\beta_j
+                            \\
+                            & \alpha_{j + 1} := \left\langle q_{j + 1}, Aq_{j + 1} \right\rangle
+                            \\
+                            & \text{Memorize: }Aq_{j + 1}
+                        \end{aligned}
+                    \end{aligned}
+                \end{align}
             \end{definition}
             Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The lanczos algorithm produces an irreducible Symmetric Tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any Symmetric Tridiaogonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediate show here is the fact that Lanczos Algorithm will produce such a matrix. 
             \begin{prop}
@@ -885,10 +923,14 @@
             \end{proof}
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
     \subsection{Terminations Conditions of RACG}
-        
+
     \subsection{Terminations Conditions of The Lanczos Iterations}
+
     \subsection{Convergence Rate of RACG under Exact Arithematic}
-    \subsection{The Equivalence between the Lanczos and RACG}
+
+    \subsection{From Conjugate Gradient to Lanczos}
+
+    \subsection{From Lanczos to Conjugate Gradient}
 
 \section{Effects of Floating Point Arithematic}
 \section{Appendix}
