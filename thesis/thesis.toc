@@ -23,15 +23,16 @@
 \contentsline {subsubsection}{\numberline {1.5.5}Residual Assisted Conjugate Gradient}{14}{subsubsection.1.5.5}%
 \contentsline {subsubsection}{\numberline {1.5.6}RACG and Krylov Subspace}{16}{subsubsection.1.5.6}%
 \contentsline {subsection}{\numberline {1.6}Arnoldi Iterations and Lanczos}{17}{subsection.1.6}%
-\contentsline {subsubsection}{\numberline {1.6.1}The Arnoldi Iterations}{17}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.1}The Arnoldi Iterations}{18}{subsubsection.1.6.1}%
 \contentsline {subsubsection}{\numberline {1.6.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{19}{subsubsection.1.6.2}%
 \contentsline {subsubsection}{\numberline {1.6.3}The Lanczos Iterations}{19}{subsubsection.1.6.3}%
-\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{21}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Terminations Conditions of RACG}{21}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Terminations Conditions of The Lanczos Iterations}{21}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Convergence Rate of RACG under Exact Arithematic}{21}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}From Conjugate Gradient to Lanczos}{21}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}From Lanczos to Conjugate Gradient}{21}{subsection.2.5}%
-\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{21}{section.3}%
-\contentsline {section}{\numberline {4}Appendix}{21}{section.4}%
-\contentsline {section}{\numberline {5}Biliography}{21}{section.5}%
+\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{20}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Conjugate Gradient and Matrix Polynomial}{20}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Terminations Conditions of RACG}{22}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Terminations Conditions of The Lanczos Iterations}{22}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Convergence Rate of RACG under Exact Arithematic}{22}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}From Conjugate Gradient to Lanczos}{22}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}From Lanczos to Conjugate Gradient}{22}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{22}{section.3}%
+\contentsline {section}{\numberline {4}Appendix}{22}{section.4}%
+\contentsline {section}{\numberline {5}Biliography}{22}{section.5}%

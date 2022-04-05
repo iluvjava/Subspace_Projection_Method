@@ -347,6 +347,7 @@
                 if the $k$ krylov subspace is linear dependent, then it stops expanding and the successive krylov subspace spans the same space. 
             \end{prop}
             \begin{theorem}[Existence of Grade for a Krylov Subspace]
+                \label{theorem:Existence_of_Grade_for_a_Krylov_Subspace}
                 Let $k$ be the minumum number when the krylov subspace stops expanding, then all successive krylov subspace spand the same space. $\mathcal K_k(A|v) = \mathcal K_{k + j}(A|v) \;\forall j \ge 0$. The number $k$ is regarded as the grade of krylov subspace wrt to v denoted using $\text{grade}(A|v)$. 
             \end{theorem}
             Proposition 2, 3 ensures that there exists a term in the sequence of krylov subspace stops expanding, and when that happens all subsequent Krylov Subspace will span the same subspace, this is by Proposition 4. 
@@ -389,9 +390,18 @@
                 A minimal polynomial is a polynomial $p_k(x)$ with degree k that is monic such that $p_k(A) = \mathbf{0}$. 
             \end{definition}
         \subsubsection{Cauchy Interlace Theorem}
-            The cauchy's iterlace theorem describe the relations of eigenvalues between the submatrix of a Symmetric tridiagonal matrix and the matrix itself. In our caes, let $T_{k-1}\in \mathbb R^{(k - 1)\times (k - 1)}$ be the principal sub-matrix to the matrix $T_k$, then between every eigenvalue of $\mathcal T_{k}$, there must exists an eigenvalue of $T_{k-1}$ between them. 
+            \begin{theorem}[Cauchy Interlace]\label{theorem:Cauchy_Interlace}
+                The cauchy's Iterlace Theorem describes the relations of eigenvalues between the submatrix of a Symmetric Tridiagonal matrix and the bigger matrix. In our caes, let $T_{k-1}\in \mathbb R^{(k - 1)\times (k - 1)}$ be the principal sub-matrix to the matrix $T_k$, then between every eigenvalue of $T_{k}$, there must exists an eigenvalue of $T_{k-1}$ between them. Let $\theta_i^{(k)}$ be the $i$ eigenvalues of $T_k$, let the eigenvalues be sorted then: 
+                \begin{align}
+                    \theta_{j}^{(k + 1)}
+                    \le \theta_{j}^{(k)}
+                    \le \theta_{j + 1}^{(k + 1)}
+                    \quad \forall  1 \le j \le k - 1
+                \end{align}
+            \end{theorem}
+
         \subsubsection{Caley Hamilton's Theorem}
-            \begin{theorem}
+            \begin{theorem}[Caley's Hamilton Theorem]\label{theorem:Caley_Hamilton}
                 A matrix satisfies it's own characteristic equation, let $p(x)$ be the characteristic polynomial for the matrix $A$, then $p(A) = \mathbf 0$. 
             \end{theorem}
             The Calye's Hamilton's Theorem is important in the sense that, a direct consequence is the termination conditions for all krylov Subspace Methods (regardless of initial guess vectors). It's saying that all Krylov Subspace methods will terminates at step $n + 1$ at most, if $n$ is the size of the operator. However, the more important fact is that, when it terminates, the solution $x$ is a weighted sum of the Krylov Subspace vectors and the weights are related to the characterstic polynomial of the matrix. 
@@ -710,7 +720,7 @@
                 We make use of the definition for $a_{k-1}$ in figured out for the $ACG$ algorithm. At this point, we have proven the RACG recurrences. 
             \end{proof}
             Up until this point we have proven the usual version of conjugate gradient, we started with the minimizations objective and the properties of $P_k$, then we define a recurrences for the residual (Simultaneously the solution $x_k$), and the A-Orthogonal vectors using a basis as assistance for the generations process. Next, we make the key changes of the assistance basis, making it equalto the set of residuals vector generated from the algorithm itself; after some proof, we uncovered the exact same parameters found in most of the definitions of the CG algorithm, which we refers to as Residual Assisted Conjugate Gradient. Here we proposed the RACG: 
-            \begin{definition}[RACG]
+            \begin{definition}[RACG]\label{def:RACG}
                 \begin{align}
                     & p^{(0)} = b - Ax^{(0)} 
                     \\&
@@ -766,9 +776,11 @@
                     &\in \mathcal K_{k + 2}(A|r_0)
                 \end{align}
                 This is true because $r_{k + 1}$ is already a member of the expanded subspace $\mathcal K_{k + 2}(A|r_0)$. And from this formulation of the algorithm, we can update the Petrov Galerkin's Conditions to be: 
-                \begin{align}
-                    \text{choose: } x_k\in x_0 + \mathcal K_{k}(A|r_0) \text{ s.t: } r_k \perp \mathcal K_{k}(A|r_0)
-                \end{align}
+                \begin{theorem}[CG and Krylov Subspace]\label{theorem:CG_and_Krylov_Subspace}
+                    \begin{align}
+                        \text{choose: } x_k\in x_0 + \mathcal K_{k}(A|r_0) \text{ s.t: } r_k \perp \mathcal K_{k}(A|r_0)
+                    \end{align}    
+                \end{theorem}
                 Take note that, $\text{ran}(P_k) = \mathcal K_k(A|r_0)$ because the index starts with zero. The above formulations gives theoretical importance for the Conjugate Gradient Algorithm. 
             \end{proof}
     \subsection{Arnoldi Iterations and Lanczos}
@@ -922,8 +934,101 @@
                 It's true because the $\beta_{k}$ in the Lanczos is equivalent to $h_{k + 1, k}$. It's been discussed previously that if $h_{k + 1, 1} = 0$ for the Arnoldi's Iteration, then the Krylov Subspace $\mathcal K_k(A|q_1)$ became an invariant subpace under $A$, and in that sense, the algorithm has to terminate due to a divides by zero error. 
             \end{proof}
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
+    \subsection{Conjugate Gradient and Matrix Polynomial}
+        One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace} is the connections to matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
+        \begin{prop}[CG Relative Energy Error]\label{prop:CG_Relative_Energy Error}
+            \begin{align}
+                x_k &\in x_0 + \text{span}\{A^jr_0\}_{j = 0}^{k - 1}
+                \\
+                x_k &= \mathcal{K}(r_0)w + x_0
+                \\
+                \frac{\Vert e_k\Vert_A^2}{\Vert e_0\Vert_A^2}
+                &= 
+                \min_{w\in \mathbb R^k} 
+                \Vert
+                    (I + Ap_k(A|w))A^{1/2}e_0
+                \Vert_2^2
+            \end{align}
+        \end{prop}
+        \begin{proof}
+            \begin{align}
+                \begin{aligned}
+                    \Vert e_k\Vert_A^2 & =
+                    \min_{x_k \in x_0 + \mathcal K_k(A|r_0)}
+                    \Vert 
+                        x^+ - x_k
+                    \Vert_A^2
+                    \\
+                    x_k \in x_0 + \mathcal K_k(A|r_0) 
+                    & \iff
+                    e_k = e_0 + p_k(A|w)r_0
+                    \\
+                    \implies  &=
+                    \min_{w\in \mathbb R^k}
+                    \Vert 
+                        e_0 + p_k(A|w)r_0
+                    \Vert_A^2
+                    \\
+                    &= \min_{w\in \mathbb R^k}
+                    \Vert 
+                        e_0 + Ap_k(A|w)e_0
+                    \Vert_A^2
+                    \\
+                    &= \min_{w\in \mathbb R^k}
+                    \Vert 
+                        A^{1/2}(I + Ap_k(A|w))e_0
+                    \Vert_2^2
+                    \\
+                    &\le
+                    \min_{w\in \mathbb R^k}
+                    \Vert 
+                        I + Ap_k(A|w)
+                    \Vert_2^2\Vert e_0\Vert_A^2 \quad \text{tight}
+                    \\
+                    & = 
+                    \min_{w\in \mathbb R^k}
+                    \left(
+                        \max_{i = 1, \dots, n}
+                        |1 + \lambda_ip_k(\lambda_i|w)|^2
+                    \right)\Vert e_0\Vert_A^2
+                    \quad
+                    \\
+                    & \le 
+                    \min_{w\in \mathbb R^k}
+                    \left(
+                        \max_{x\in [\lambda_{\min}, \lambda_{\max}]}
+                        |1 + \lambda_ip_k(\lambda_i|w)|^2
+                    \right)\Vert e_0\Vert_A^2
+                    \quad \text{still tight}
+                    \\
+                    &= \min_{p_{k + 1}: p_{k + 1}(0) = 1}
+                    \max_{x\in [\lambda_{\min}, \lambda_{\max}]}| p_{k + 1}(x)|^2 \Vert e\Vert_A^2
+                    \\
+                    \implies
+                    \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} &\le 
+                    \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k + 1}(x)|
+                \end{aligned}
+            \end{align}
+            We proceed with writing up the affine subspace where $x_k$ is from: $x_0 + \mathcal K_k(A|r_0)$, putting it in terms of matrix polynomial mulitplied by $r_0$ and then use $A^{-1}b$ to subtract both side. From the 3rd line to the 4th, we use the fact that $r_0 = Ae_0$, allowing us to extract out a factor $A$. Next, on the 4th line to the next, we use the fact that every Definite Matrix $A$ has the factorization of $A^{1/2}A^{1/2}$ where $A^{1/2}$ is also a Definite Matrix. After that we moved the $A^{1/2}$ to $e_0$ to get $\Vert e_0\Vert_A^2$ and the matrix polynomial part is left with the 2-norm. Next we use the eigendecompoition of  $A$ which diagonalizable and can have unitary eigenvectors, giving us the form of $Q\Lambda Q^T = A$ where $Q$ is an Unitary Matrix and diagonals of $\Lambda$ are the eigenvalues of $A$. Allow me to explain: 
+            \begin{align}
+                \Vert I + Ap_k(A|w)\Vert_2^2
+                &= \Vert Q(I + \Lambda p_k(\Lambda|w))Q^T\Vert_2^2
+                \\
+                &= \Vert I + \Lambda p_k(\Lambda|w)\Vert_2^2
+                \\
+                &= \max_{i=1,\cdots, n}|1 + \lambda_ip_k(\lambda_i|w)|^2
+            \end{align}
+            Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between theminimum and the maximum of the eigenvalues for the matrix $A$. Finally, please notice thta we use an monic $p_{k+1}(x)$ at the and to simplify things. 
+        \end{proof}
+        The above results will be useful for proving the convergence and terminations properties of the CG. 
     \subsection{Terminations Conditions of RACG}
+        Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Existence of Grade for a Krylov Subspace}. However, this bound is true for all matrix $A$, however, there are conditions where the termination of the CG algorithm comes much early and it depends on the grade of $\mathcal K_k(A|r_0)$, which depends on the initial guess $r_0$ and the eigenvalues of matrix $A$. Next we wish to quantify that better. The claim that we are going to make is: 
+        \begin{prop}
+            The $\text{grade}(A|r_0)$ determines the number maximum number of iterations required before the terminations of the conjugate gradient. More precisely, if we know $r_0$, then the number of iterations is upper bounded by $\text{grade}(A|r_0)$, if we don't know $r_0$, then the maximum number of iteration is determined by the number of distinct eigenvalues of the matrix $A$. 
+        \end{prop}
+        Firstly,$\text{grade}(A|r_0)$ determines the maximum number of iterations for the algorithm because if $\mathcal K_{k + 1} = \mathcal K_k$, and the CG asserts that $r_{k + 1}\in \mathcal K_{k + 1}(A|r_0) = \mathcal K_{k}(A|r_0)$ and at the same time $r_{k + 1}\perp r_j \;\forall\; 0\le j \le k$, which is impossible because we have $k +1$ orthgonal vector in the subspace $\mathcal K_k(A|r_0)$ which has only a dimension of $k$. 
 
+        
     \subsection{Terminations Conditions of The Lanczos Iterations}
 
     \subsection{Convergence Rate of RACG under Exact Arithematic}
