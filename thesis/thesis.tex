@@ -65,6 +65,7 @@
     \item $\text{ran}(A):=\{Ax :\forall x \; \in \mathbb R^n\}, A \in \mathbb R^{m\times n}$, The range of a matrix. 
     \item $(A)_{i, j}$: The element in i th row and jth column of the matrix $A$.
     \item $(A)_{i:j, i':j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to matlab's rules for indexing. 
+    \item $\forall\; 0\le j \le k$: sometimes this indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
     
 \end{enumerate}
 \section*{Introduction}
@@ -326,7 +327,7 @@
             p_k(A|w)v = \sum_{j = 0}^{k - 1}w_jA^jv
         \end{align}
         \subsubsection{The Grade of a Krylov Subspace}
-            The most important porperty of the subspace is the idea of grade denoted as: $\text{grade}(A|v)$, indicating when the Krylov Subspace of $A$ wrt to $v$ stops expanding after a certain size. To show this idea, we consider 3 propositions about Krylov Subspace. And then we show that ir results in the existence of a grade of the Krylov Subspace, and then proceed to prove these 3 propositions we made. 
+            The most important porperty of the subspace is the idea of grade denoted as: $\text{grade}(A|v)$, indicating when the Krylov Subspace of $A$ wrt to $v$ stops expanding after a certain size: $k$. To show this idea, we consider 3 propositions about Krylov Subspace. And then we show that ir results in the existence of a grade of the Krylov Subspace, and then proceed to prove these 3 propositions we made. 
             \begin{prop}
                 \begin{align}
                     \exists 1 \le k \le m + 1: \mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v)
@@ -383,12 +384,43 @@
                 \par
                 If $\mathcal K_{k - 1}$ is linear dependence, then by (3) $\mathcal K_{k - 1} = \mathcal K_k$, hence $k$ is not the minimum. Else assume $\mathcal K_{k - 1}$ is linear independence, however $\mathcal K_k$ is linear dependence, and $\mathcal K_k \setminus \mathcal K_{k - 1} = \text{span}(A^{k - 1}v)$; therefore, $A^{k -1}v$ is in the span of $\mathcal K_{k -1}$, hence $\mathcal K_{k -1} = \mathcal K_k$, contradicing again that $k$ is the minimum such $k$. 
             \end{proof}
-    
+        \subsubsection{The Grade and Matrix Polynomial}
+            \begin{theorem}
+                Let $k$ be the grade of Krylov Subspace $A$ initialized with $v$, then exists $p_{k + 1}(A|w)v$ with $w\neq \mathbf 0$, and it must be the case that $w_0\neq 0$.
+            \end{theorem}
+            \begin{proof}
+                For contradiction suppose otherwise that such a polynomial exists then: 
+                \begin{align}
+                    \exists w &\neq \mathbf 0 : p_{k + 1}(A|w)v = \mathbf 0 
+                    \\
+                    \implies& w_0v + \sum_{j = 1}^{k} w_jA^jv = \mathbf 0
+                    \\
+                    \mathbf 0 &=\sum_{j = 1}^{k} w_jA^jv
+                    \\
+                    \mathbf 0 &= A\sum_{j = 0}^{k - 1} w_{j + 1}A^jv
+                    \\
+                    \implies \sum_{j = 0}^{k - 1} w_{j + 1}A^jv &= \mathbf 0 
+                \end{align}
+                From the second line to the third, I susbstitute $w_0 = 0$ for contradiction. On the last line, it suggest that $k$ is not the smallest, and $k - 1$ is actually the grade, contradicting the assumption that $k$ is the grade of the Krylov Subspace. Therefore, $w_0 \neq 0 $. 
+            \end{proof}
     \subsection{Useful Theorems and Mathematical Entities}
         \subsubsection{Minimal Polynomial of a Matrix}
             \begin{definition}
-                A minimal polynomial is a polynomial $p_k(x)$ with degree k that is monic such that $p_k(A) = \mathbf{0}$. 
+                A minimal polynomial $p_k(x)$ is monic such that $p_k(A) = \mathbf{0}$ and $k$ is as small as possible. 
             \end{definition}
+            One immediate property that might be useful for future constext is the fact that the constant term of the Minimal Polynomial has to have a non-zero coefficient. For contradiction suppose that is the not the case and $k-1$ is the lowest degree of a minimal polynomial then: 
+            \begin{align}
+                \forall x: \mathbf 0 &= \sum_{j = 0}^{k - 1}w_jA^jx
+                \\
+                w_0 &:= 0 
+                \\
+                \forall x: \mathbf 0 &= \sum_{j = 1}^{k - 1}w_jA^jx
+                \\
+                \forall x: \mathbf 0 &= A\sum_{j = 0}^{k - 2}w_jA^jx
+                \\
+                \implies \forall x : \mathbf 0 &= \sum_{j = 0}^{k - 2}w_jA^jx 
+            \end{align}
+            And we get another polynomial satisfying that conditions that has a degree of $k - 1$, contradicting the condition that $k$ is the minimal such parameter. 
         \subsubsection{Cauchy Interlace Theorem}
             \begin{theorem}[Cauchy Interlace]\label{theorem:Cauchy_Interlace}
                 The cauchy's Iterlace Theorem describes the relations of eigenvalues between the submatrix of a Symmetric Tridiagonal matrix and the bigger matrix. In our caes, let $T_{k-1}\in \mathbb R^{(k - 1)\times (k - 1)}$ be the principal sub-matrix to the matrix $T_k$, then between every eigenvalue of $T_{k}$, there must exists an eigenvalue of $T_{k-1}$ between them. Let $\theta_i^{(k)}$ be the $i$ eigenvalues of $T_k$, let the eigenvalues be sorted then: 
@@ -399,6 +431,7 @@
                     \quad \forall  1 \le j \le k - 1
                 \end{align}
             \end{theorem}
+
 
         \subsubsection{Caley Hamilton's Theorem}
             \begin{theorem}[Caley's Hamilton Theorem]\label{theorem:Caley_Hamilton}
@@ -1022,15 +1055,28 @@
         \end{proof}
         The above results will be useful for proving the convergence and terminations properties of the CG. 
     \subsection{Terminations Conditions of RACG}
-        Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Existence of Grade for a Krylov Subspace}. However, this bound is true for all matrix $A$, however, there are conditions where the termination of the CG algorithm comes much early and it depends on the grade of $\mathcal K_k(A|r_0)$, which depends on the initial guess $r_0$ and the eigenvalues of matrix $A$. Next we wish to quantify that better. The claim that we are going to make is: 
+        Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Existence of Grade for a Krylov Subspace}. However, this bound is true for all definite matrix $A$, however, there are conditions where the termination of the CG algorithm comes early and it depends on the grade of $\mathcal K_k(A|r_0)$, which depends on the initial guess $r_0$ and the eigenvalues of matrix $A$ and we make the claim: 
         \begin{prop}
             The $\text{grade}(A|r_0)$ determines the number maximum number of iterations required before the terminations of the conjugate gradient. More precisely, if we know $r_0$, then the number of iterations is upper bounded by $\text{grade}(A|r_0)$, if we don't know $r_0$, then the maximum number of iteration is determined by the number of distinct eigenvalues of the matrix $A$. 
         \end{prop}
-        Firstly,$\text{grade}(A|r_0)$ determines the maximum number of iterations for the algorithm because if $\mathcal K_{k + 1} = \mathcal K_k$, and the CG asserts that $r_{k + 1}\in \mathcal K_{k + 1}(A|r_0) = \mathcal K_{k}(A|r_0)$ and at the same time $r_{k + 1}\perp r_j \;\forall\; 0\le j \le k$, which is impossible because we have $k +1$ orthgonal vector in the subspace $\mathcal K_k(A|r_0)$ which has only a dimension of $k$. 
-
+        Firstly, $\text{grade}(A|r_0)$ determines the maximum number of iterations for the algorithm because if $\mathcal K_{k + 1} = \mathcal K_k$, and the CG asserts that $r_{k + 1}\in \mathcal K_{k + 1}(A|r_0) = \mathcal K_{k}(A|r_0)$ and at the same time $r_{k + 1}\perp r_j \;\forall\; 0\le j \le k$ (recall that $r_j\;\forall 0\le j \le k$ are in $\mathcal K_k(A|r_0)$), which is impossible because we have $k +1$ orthgonal vector in the subspace $\mathcal K_k(A|r_0)$ which has only a dimension of $k$. 
+        \par
+        The condition: $\langle p_{k},Ap_{k}\rangle = 0$ makes the Conjugate Gradient Terminates. Because $p_{k}\in \mathcal K_{k + 1} = \mathcal K_k$ by the non-expanding krylov subspace, but $p_k\perp \text{ran}(P_k)\in \mathcal K_k$ is asserted by the conjugate gradient, which would mean that $p_k = \mathbf 0$, therefore the algorithm will inevitably terminates due to an error of dividing by zero if such a case is not handled under exact arithemtic. And when that happens, there are 2 possibilities: 
+        \begin{enumerate}
+            \item [1.)] $k + 1 = \text{grade}(A|r_0)$ is reached. 
+            \item [2.)] Or the case that $k = n + 1$
+        \end{enumerate}
+        Next, we wanna see that when the grade is reached, there exists a monic polynomial the interpolates the eigenvalues of matrix $A$, which is exactly the same as the results of the bound we derived. Recalled from % TODO: 
         
-    \subsection{Terminations Conditions of The Lanczos Iterations}
-
+        \begin{prop}
+            If we know what $Q^Tr_0$ is, then the number of iterations is at most $k - m$, where $k$ is the degree of the minimal polynomial of $A$, and $m$ is the number of zeros in the vector $Q^Tr_0$. 
+        \end{prop}
+        This is true by considering a the index set $\mathcal I$ where $Q^Tr_0$ turns out to be zero, then above expression \hyperref[eqn:2.2.3]{(2.2.3)} can be simplified to: 
+        \begin{align}
+            \forall i \notin \mathcal I, w \neq \mathbf 0: p_k(\lambda_i|w)(Q^Tr_0)_i = 0
+        \end{align}
+        In the worst case, $\lambda_i$ are all unique for $i\in \mathcal I$, and there can be at most $k - m$ many of these eigenvalues. 
+        
     \subsection{Convergence Rate of RACG under Exact Arithematic}
 
     \subsection{From Conjugate Gradient to Lanczos}
