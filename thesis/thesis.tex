@@ -3,9 +3,9 @@
 \usepackage[english]{babel}
 \usepackage{amsthm}
 \theoremstyle{definition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{prop}{Proposition}
-\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}  % Theorem counter global 
+\newtheorem{prop}{Proposition}[section]  % proposition counter is section
+\newtheorem{lemma}{Lemma}[subsection]  % lemma counter is subsection
 \newtheorem{definition}{Definition}
 \usepackage[margin=1in,footskip=0.25in]{geometry}
 \usepackage{mathtools}
@@ -58,8 +58,10 @@
 
 \begin{document}
 \numberwithin{equation}{subsection}
+% \counterwithin*{equation}{subsubsection}
 \tableofcontents
 \newpage
+
 \section*{Notations}
 \begin{enumerate}
     \item $\text{ran}(A):=\{Ax :\forall x \; \in \mathbb R^n\}, A \in \mathbb R^{m\times n}$, The range of a matrix. 
@@ -236,7 +238,7 @@
                         \\
                         & x := x + Vy
                     \end{aligned}
-            \end{aligned}\tag{6}
+            \end{aligned}
             \end{align}
             Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions. 
         
@@ -327,34 +329,34 @@
             p_k(A|w)v = \sum_{j = 0}^{k - 1}w_jA^jv
         \end{align}
         \subsubsection{The Grade of a Krylov Subspace}
-            The most important porperty of the subspace is the idea of grade denoted as: $\text{grade}(A|v)$, indicating when the Krylov Subspace of $A$ wrt to $v$ stops expanding after a certain size: $k$. To show this idea, we consider 3 propositions about Krylov Subspace. And then we show that ir results in the existence of a grade of the Krylov Subspace, and then proceed to prove these 3 propositions we made. 
-            \begin{prop}
+            The most important porperty of the subspace is the idea of grade denoted as $\text{grade}(A|v)$, indicating when the Krylov Subspace of $A$ wrt to $v$ becomes invariant when the grade of the subspace is reached and it kept its invariance for all subsequent subspaces. To show this idea, we consider the following 3 statements about Krylov Subspace which we will proceed to prove. 
+            \begin{lemma}[Grade Lemma 1]
                 \begin{align}
                     \exists 1 \le k \le m + 1: \mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v)
                 \end{align}
-                There exists an natural number between $1$ and $m+ 1$ such that, the successive krylov subspace span the same space asthe previous one. 
-            \end{prop} 
-            \begin{prop}
+                There exists an natural number between $1$ and $m+ 1$ such that, the successive krylov subspace span the same space as the previous one. 
+            \end{lemma} 
+            \begin{lemma}[Grade Lemma 2]
                 \begin{align}
-                    \exists \min k \text{ s.t: }\mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v) \implies 
+                    \exists! k \text{ s.t: }\mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v) \implies 
                     \mathcal K_k(A|v) \text{ is Lin Ind} \wedge \mathcal K_{k + 1}(A|v) \text{ is Lin Dep}. 
                 \end{align}
-                There eixsts a minimum such $k$ where the immediate next krylov subspace is linear dependent. 
-            \end{prop}
-            \begin{prop}
+                There eixsts a minimum such $k$ that is unique where the immediate next krylov subspace is linear dependent, and $k - 1$ would be the grade. 
+            \end{lemma}
+            \begin{lemma}[Grade Lemma 3]
                 \begin{align}
                     \mathcal K_k(A|v) \text{ Lin Dep} \implies \mathcal K_{k + 1}(A|v) = \mathcal K_k(A|v)
                 \end{align}
-                if the $k$ krylov subspace is linear dependent, then it stops expanding and the successive krylov subspace spans the same space. 
-            \end{prop}
-            \begin{theorem}[Existence of Grade for a Krylov Subspace]
+                if the $k$ Krylov Subspace is linear dependent, then all successive Krylov Subspace is the same. 
+            \end{lemma}
+            \begin{theorem}[Unique Existence of Grade for a Krylov Subspace]
                 \label{theorem:Existence_of_Grade_for_a_Krylov_Subspace}
-                Let $k$ be the minumum number when the krylov subspace stops expanding, then all successive krylov subspace spand the same space. $\mathcal K_k(A|v) = \mathcal K_{k + j}(A|v) \;\forall j \ge 0$. The number $k$ is regarded as the grade of krylov subspace wrt to v denoted using $\text{grade}(A|v)$. 
+                Let $k$ be the minumum number when the krylov subspace becomes linear dependent, then all successive krylov subspace spand the same space. $\mathcal K_k(A|v) = \mathcal K_{k + j}(A|v) \;\forall j \ge 0$. The number $k$ is regarded as the grade of krylov subspace wrt to v denoted using $\text{grade}(A|v)$. 
             \end{theorem}
-            Proposition 2, 3 ensures that there exists a term in the sequence of krylov subspace stops expanding, and when that happens all subsequent Krylov Subspace will span the same subspace, this is by Proposition 4. 
+            Lemma 1, 2 ensures that there exists a term in the sequence of krylov subspace becomes linear dependence, and when that happens all subsequent Krylov Subspace will span the same subspace, this is by Lemma 3. As a results, the grade for the Krylov Subspace exists and it's unique. 
             \par
-            Next, let's consider the proof of theorem 1 by proving all proposition 2, 3, and 4. 
-            \begin{proof}[Proposition 2]
+            Next, let's consider the proof of theorem 1 by proving all 3 of the lemmas. 
+            \begin{proof}[Krylov Grade Lemma 1]
                 For notational simplicity, $\mathcal K_k$ now denotes $\mathcal K_k(A|v)$. Let's start the considerations from the definition of the Krylov Subspace: 
                 \begin{align}
                     \forall\; k: \mathcal K_k \subseteq \mathcal K_{k + 1}\implies \text{dim}(\mathcal K_{k})\le \text{dim}(\mathcal K_{k + 1})
@@ -365,43 +367,48 @@
                 \end{align}
                 Therefore, the dimension of the successive krylov subspace forms a sequence of positive integer that is monotonically increasing. By the Cayley's Hamilton's theorem (will be stated later), the sequence is bounded by $m$, since there are $m + 1$ terms, it must be the case that at least 2 of the krylov subspace has the same dimension (And the earliest such occurance will exist), implying the the fact that the new added vector from $k$ to $k + 1$ is in the span of the previous subspace. 
             \end{proof}
-            \begin{proof}[Proposition 4]
-                \begin{align}
-                    & \mathcal K_k \text{Lin Dep}
+            \begin{proof}[Krylov Grade Lemma 3]
+                The direction $\mathcal K_k(A|v) \subseteq \mathcal K_k(A|v)$ is trivial. 
+                
+                Assuming that $\mathcal K_{k + 1}(A|v)$ is linear dependence, we wish to prove that $\mathcal K_{k + 1}(A|v)\subseteq \mathcal K(A|v)$ by considering: 
+                $$
+                \begin{aligned}
+                    & \mathcal K_{k + 1}(A|v) \text{ is Lin dependent} 
                     \\
-                    \implies & \exists w_k \neq \mathbf 0 : p_k(A|w^+_k)v = \mathbf 0
+                    & \implies \exists w^{(k)}: A^kv  = p_k(A|w^{(k)})v
                     \\
-                    \implies & Ap_k(A|w_k^+)v = \mathbf 0
+                    & x \in \mathcal K_{k + 1}(A|v)\iff \exists w^{(k + 1)}: p_{k + 1}(A|w^{(k + 1)}) v = x
                     \\
-                    & p_{k + 1}(A| [0 \; (w_k^+)^T]) = \mathbf 0
+                    & x = w^{(k + 1)} A^kv + \sum_{j = 0}^{k - 1}w^{(k + 1)}_jA^jv
                     \\
-                    & \mathcal K_{k + 1} \text{ is Lin Dep}
-                \end{align}
-                The recurrence of multplying by $A$ allows the krylov subspace to grow and the new bigger subspace will contain the previous one. Therefore inheriting the linear dependence, we use the idea of matrix polynomial for the proof. 
+                    & x = w^{(k + 1)}_k p_k(A|w^{(k)})v + \sum_{j = 0}^{k - 1}w^{(k + 1)}_jA^jv
+                    \\
+                    & x \in \mathcal K_k(A|v)
+                \end{aligned}
+                $$
+                For notations, we used $w^{(k)}, w^{(k + 1)}$ to represents the vector containing all coefficients for the polynomial and their $i$ element is denoted as $w^{(k)}_i$. From the last line, we proved that for all $x$ in $\mathcal K_{k + 1}(A|v)$, it's must also be in $\mathcal K(A|v)$. The frist line is using the fact that $\mathcal K_{k + 1}(A|v)$ is linear dependent, giving us an polynomial for the term $A^kv$. The next line is saying that for any element in $\mathcal K_{k + 1}(A|v)$ there exists a matrix polynomial representing $x$. Doingsome algebra, we reduced the polynomial of max degree $k$ into degree $k - 1$, proving that $x$ must also be in $\mathcal K_k(A|v)$.
             \end{proof}
-            \begin{proof}[Proposition 3]
-                Assuming that prop 2, 4 are true. prop 3 implies the existence of the smallest such $k$. For contradiction, we only have one case to assume, that is $\mathcal K_k$ and $\mathcal K_{k + 1}$ are linear dependence. Then $\mathcal K_k$ is either Linear Dependence, or Independence. 
-                \par
-                If $\mathcal K_{k - 1}$ is linear dependence, then by (3) $\mathcal K_{k - 1} = \mathcal K_k$, hence $k$ is not the minimum. Else assume $\mathcal K_{k - 1}$ is linear independence, however $\mathcal K_k$ is linear dependence, and $\mathcal K_k \setminus \mathcal K_{k - 1} = \text{span}(A^{k - 1}v)$; therefore, $A^{k -1}v$ is in the span of $\mathcal K_{k -1}$, hence $\mathcal K_{k -1} = \mathcal K_k$, contradicing again that $k$ is the minimum such $k$. 
+            \begin{proof}[Krylov Grade Lemma 2]
+                The proof for Lemma 2 is direct from Lemma 1, 3. Lemma 2 asserts the existence of a unique minimum of $k$ and such k makes $\mathcal K_{k - 1}(A|v) = \mathcal K_k(A|v)$ and $\mathcal K_k(A|v)$ is linearly dependence. 
             \end{proof}
         \subsubsection{The Grade and Matrix Polynomial}
-            \begin{theorem}
-                Let $k$ be the grade of Krylov Subspace $A$ initialized with $v$, then exists $p_{k + 1}(A|w)v$ with $w\neq \mathbf 0$, and it must be the case that $w_0\neq 0$.
+            \begin{theorem}\label{theorem:2}
+                Let $k$ be the grade of Krylov Subspace $A$ initialized with $v$, then exists $p_{k}(A|w)v = x$ for all $x$ in the subspace $\mathcal K_k(A|v)$ with $w\neq \mathbf 0$, and it must be the case that $w_0\neq 0$.
             \end{theorem}
             \begin{proof}
-                For contradiction suppose otherwise that such a polynomial exists then: 
+                For contradiction suppose otherwise that we can represents $x\in \mathcal K_k(A|v)$  and such a polynomial with $w_0$ exists then: 
                 \begin{align}
-                    \exists w &\neq \mathbf 0 : p_{k + 1}(A|w)v = \mathbf 0 
+                    \exists w &\neq \mathbf 0 : p_{k}(A|w)v = \mathbf 0 
                     \\
-                    \implies& w_0v + \sum_{j = 1}^{k} w_jA^jv = \mathbf 0
+                    \implies& w_0v + \sum_{j = 1}^{k - 1} w_jA^jv = \mathbf 0
                     \\
-                    \mathbf 0 &=\sum_{j = 1}^{k} w_jA^jv
+                    \mathbf 0 &=\sum_{j = 1}^{k - 1} w_jA^jv
                     \\
-                    \mathbf 0 &= A\sum_{j = 0}^{k - 1} w_{j + 1}A^jv
+                    \mathbf 0 &= A\sum_{j = 0}^{k - 2} w_{j + 1}A^jv
                     \\
-                    \implies \sum_{j = 0}^{k - 1} w_{j + 1}A^jv &= \mathbf 0 
+                    \implies \sum_{j = 0}^{k - 2} w_{j + 1}A^jv &= \mathbf 0 
                 \end{align}
-                From the second line to the third, I susbstitute $w_0 = 0$ for contradiction. On the last line, it suggest that $k$ is not the smallest, and $k - 1$ is actually the grade, contradicting the assumption that $k$ is the grade of the Krylov Subspace. Therefore, $w_0 \neq 0 $. 
+                From the second line to the third, I susbstitute $w_0 = 0$ for contradiction. On the last line, it suggested that $k$ is not the smallest, and $k - 1$ might be the grade, contradicting the assumption that $k$ is the grade of the Krylov Subspace. Therefore, $w_0 \neq 0 $. 
             \end{proof}
     \subsection{Useful Theorems and Mathematical Entities}
         \subsubsection{Minimal Polynomial of a Matrix}
@@ -431,7 +438,6 @@
                     \quad \forall  1 \le j \le k - 1
                 \end{align}
             \end{theorem}
-
 
         \subsubsection{Caley Hamilton's Theorem}
             \begin{theorem}[Caley's Hamilton Theorem]\label{theorem:Caley_Hamilton}
@@ -750,7 +756,7 @@
                     &= 
                     r_k + \frac{\langle r_k, r_k\rangle}{\langle r_{k - 1}, r_{k - 1}\rangle}p_k
                 \end{align}
-                We make use of the definition for $a_{k-1}$ in figured out for the $ACG$ algorithm. At this point, we have proven the RACG recurrences. 
+                We make use of the definition for $a_{k-1}$ for the $ACG$ algorithm. At this point, we have proven the short RACG recurrences for $p_k$. 
             \end{proof}
             Up until this point we have proven the usual version of conjugate gradient, we started with the minimizations objective and the properties of $P_k$, then we define a recurrences for the residual (Simultaneously the solution $x_k$), and the A-Orthogonal vectors using a basis as assistance for the generations process. Next, we make the key changes of the assistance basis, making it equalto the set of residuals vector generated from the algorithm itself; after some proof, we uncovered the exact same parameters found in most of the definitions of the CG algorithm, which we refers to as Residual Assisted Conjugate Gradient. Here we proposed the RACG: 
             \begin{definition}[RACG]\label{def:RACG}
@@ -1063,15 +1069,15 @@
         \par
         The condition: $\langle p_{k},Ap_{k}\rangle = 0$ makes the Conjugate Gradient Terminates. Because $p_{k}\in \mathcal K_{k + 1} = \mathcal K_k$ by the non-expanding krylov subspace, but $p_k\perp \text{ran}(P_k)\in \mathcal K_k$ is asserted by the conjugate gradient, which would mean that $p_k = \mathbf 0$, therefore the algorithm will inevitably terminates due to an error of dividing by zero if such a case is not handled under exact arithemtic. And when that happens, there are 2 possibilities: 
         \begin{enumerate}
-            \item [1.)] $k + 1 = \text{grade}(A|r_0)$ is reached. 
+            \item [1.)] $k = \text{grade}(A|r_0)$ is reached.  
             \item [2.)] Or the case that $k = n + 1$
         \end{enumerate}
-        Next, we wanna see that when the grade is reached, there exists a monic polynomial the interpolates the eigenvalues of matrix $A$, which is exactly the same as the results of the bound we derived. Recalled from % TODO: 
-        
+        Next, we wanna see that when the grade is reached, there exists a monic polynomial that interpolates the eigenvalues of matrix $A$ when the grade of the Krylov Subspace is reached, which is exactly the same as the results of the bound we derived but with $r_0$. Recalled from \hyperref[theorem:2]{Theorem 2} that when the grade of Krylov Subspace $A$ wrt $v$ is reached, then for all element $x$ in $\mathcal K_k(A|v)$, the polynomial representing $x$ has to have a non-zero constant. Using it we can get: 
+    
         \begin{prop}
             If we know what $Q^Tr_0$ is, then the number of iterations is at most $k - m$, where $k$ is the degree of the minimal polynomial of $A$, and $m$ is the number of zeros in the vector $Q^Tr_0$. 
         \end{prop}
-        This is true by considering a the index set $\mathcal I$ where $Q^Tr_0$ turns out to be zero, then above expression \hyperref[eqn:2.2.3]{(2.2.3)} can be simplified to: 
+        
         \begin{align}
             \forall i \notin \mathcal I, w \neq \mathbf 0: p_k(\lambda_i|w)(Q^Tr_0)_i = 0
         \end{align}
