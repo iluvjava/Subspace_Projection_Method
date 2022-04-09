@@ -976,7 +976,7 @@
         One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace} is the connections to matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
         \begin{prop}[CG Relative Energy Error]\label{prop:CG_Relative_Energy Error}
             \begin{align}
-                x_k &\in x_0 + \text{span}\{A^jr_0\}_{j = 0}^{k - 1}
+                x_k &\in x_0 + \mathcal K_k(A|r_0)
                 \\
                 x_k &= \mathcal{K}(r_0)w + x_0
                 \\
@@ -985,8 +985,12 @@
                 \min_{w\in \mathbb R^k} 
                 \Vert
                     (I + Ap_k(A|w))A^{1/2}e_0
-                \Vert_2^2
+                \Vert_2^2 
+                \\
+                &\le
+                \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k + 1}(x)|
             \end{align}
+            Here we use the notation $e_k = A^{-1}b - x_k$ to denotes the error vector. 
         \end{prop}
         \begin{proof}
             \begin{align}
@@ -1059,15 +1063,14 @@
             Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between theminimum and the maximum of the eigenvalues for the matrix $A$. Finally, please notice thta we use an monic $p_{k+1}(x)$ at the and to simplify things. 
         \end{proof}
         The above results will be useful for proving the convergence and terminations properties of the CG. 
-    \subsection{Terminations Conditions of RACG}
-        Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Existence of Grade for a Krylov Subspace}. However, this bound is true for all definite matrix $A$, however, there are conditions where the termination of the CG algorithm comes early and it depends on the grade of $\mathcal K_k(A|r_0)$, which depends on the initial guess $r_0$ and the eigenvalues of matrix $A$ and we make the claim: 
+    \subsection{Termination Conditions of RACG}
+        Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Grade for a Krylov Subspace}. However, this bound is true for all definite matrix $A$, but there are conditions where the termination of the CG algorithm comes early and it depends on the grade of $\mathcal K_k(A|r_0)$, which then depends on the eigenvalues of the matrix $A$ and initial guess $r_0$. 
         \begin{prop}
-            The $\text{grade}(A|r_0)$ determines the number maximum number of iterations required before the terminations of the conjugate gradient, and by the time it terminates, the residual will be the zero vector. Further more, the upper bound for the grade of the subspace is the number of unique eigenvalues for the matrix $A$, There also exists initial guess $r_0$ where the iteration required might be shorter if it's projection onto some of the eigen vectors are zero. 
+            The $\text{grade}(A|r_0)$ determines the number maximum number of iterations required before the terminations of the CG, and by the time it terminates, the residual will be the zero vector. Further more, the upper bound for the grade of the subspace is the number of unique eigenvalues for the matrix $A$, There also exists initial guess $r_0$ where the number of iterations required might be shorter if it's projection onto some of the eigen vectors are zero. 
         \end{prop}
         For a justification, we consider the Krylov Subspace accumulated during the CG algorithm. The grade of the Krylov subspace $\mathcal K_k(A|r_0)$ determines when the CG algorithm is going to terminate. Suppose that $\text{grade}(A|r_0)$ is $k + 1$, then $\mathcal K_{k}(A|r_0) = \mathcal K_{k = 1}(A|v)$, and $\mathcal K_k$ would be linear independent while $\mathcal K_{k+1}$ would be dependent. The Conjugate Gradient asserts $r_{k - 1}\in \mathcal K_k(A|r_0)$ and $r_k \in \mathcal K_{k + 1}(A|r_0) = \mathcal K_k(A|r_0)$. But at the same time the CG algorithm asserts that $r_j \perp r_j \;\forall\; 0 \le j \le k - 1$. Observe that inductively CG asserts $r_j \in \mathcal K_{j + 1}(A|r_0)$ and all of them are mutually orthogonal, and there are k of them in total. Using the nesting property of Krylov Susbapce we know that $r_k\perp \mathcal K_k(A|r_0)$, therefore they must span the whole space. However, $r_k\in \mathcal K_k(A|r_0)$ because the subspace becomes invariant after $k - 1$, therefore it has to be the case that $r_k = \mathbf 0$. When it heppens, it will result in $b_{k - 1}$ being zero because of CG, which will give $p_k = \mathbf 0$. Which will terminaete the algorithm at step $k + 1$ due to a division of zero inside the expression for $a_k$. 
         \par
         Next, we wish to say more about the maximum grade of a Krylov Subspace. Recall from the Krylov Susbspace discussion, when the grade is reached, there exists non trivial polynomial expression where: 
-
         $$
         \begin{aligned}
             \mathbf 0 &= r_0 + \sum_{j = 1}^{k - 1}w_0^{-1}w_jA^jr_0
@@ -1077,10 +1080,129 @@
             \right)Q^Tr_0 
         \end{aligned}
         $$
-        We use the Eigen Factorization for the S.P.D matrix $A$. One of the immediate consequence of the above equation would imply that, if there exists a monoic polynomial interpolating all the eigenvalues of matrix $A$, then the grade of the Krylov Subspace is reached. As a consequence of that, for any initial vector, then CG must terminate as the same number of unique eigenvalues of matrix $A$. Finally, take notice that the projections of $r_0$ only covers a portion of the eigenspace then the CG algorithm will terminates earlier. This is true because $\mathcal K_k(A|r_0) = Q\mathcal K_k(\Lambda| r_0)Q^Tr_0$, and please observe that the maximum dimension equals to the number of non-zero elements in $Q^Tr_0$, which further shortens the number of number of iterations required. 
+        We use the eigen factorization for the S.P.D matrix $A$. One of the immediate consequence of the above equation would imply that, if there exists a monoic polynomial interpolating all the eigenvalues of matrix $A$, then the grade of the Krylov Subspace is reached. As a consequence of that, for any initial vector, then CG must terminate as the same number of unique eigenvalues of matrix $A$. Finally, take notice that the projections of $r_0$ only covers a portion of the eigenspace then the CG algorithm will terminates earlier. This is true because $\mathcal K_k(A|r_0) = Q\mathcal K_k(\Lambda| r_0)Q^Tr_0$, and please observe that the maximum dimension equals to the number of non-zero elements in $Q^Tr_0$, which further shortens the number of number of iterations required. 
 
     \subsection{Convergence Rate of RACG under Exact Arithematic}
-        
+        In this section we make heavy use of Greenbaum's Analysis for convergence rate of the algorithm. The core is idea is to use a Chebyshev Polynomial to establish a bound and it's applicable when the linear operator has extremely high dimension and we limit the number of iterations to $k$ where $k$ is much smaller than $n$, the size of the matrix. We will follow Greenbaum's Analysis but with some more details. 
+        \subsubsection{Uniformly Distributed Eigenvalues}
+            \begin{theorem}[CG Convergence Rate]
+                The relative error squared measured over the energy norm is bounded by: 
+                \begin{align}
+                    \frac{\Vert e_k\Vert_A^2}{\Vert e_k\Vert_A^2}
+                    \le 2 \left(
+                            \frac{\sqrt{\kappa} + 1}{\sqrt{\kappa} - 1}
+                    \right)^k
+                \end{align}
+                Where $k$ is the number of iterations, and $e_k = A^{-1}b - x_k$, the upper bound is the most genearl and it's able to bound the convergence given $\lambda_{\min}, \lambda_{\max}$ of the operator $A$. The bound is lose if there are some kind of clustering of the eigenvalue of matrix $A$, and the bound would be tighter given that $k<<n$ and the eigenvalues of $A$ are evenly spread out on the spectrum. 
+            \end{theorem}
+            Before the proof, I need to point out the analysis draws inspiration from the interpolating mononic polynomial for the spectrum of the matrix $A$, and we make use of the Inf Norm minimization property of the Chebyshev Polynomial. Here, we order all the eigenvalues of matrix $A$ so that $\lambda_1, \lambda_n$ denotes the maximum and the minimum eigenvalues for $A$. 
+            \begin{proof}
+                We start by adapting the Chebyshev Polynomial to the convex hull of the spectrum for matrix $A$, while also making it monic: 
+                \begin{align}
+                    T_k(x) &= \min_{
+                        \substack{
+                            p(x)\in \mathcal{P}_{k + 1}
+                            \\
+                            \text{s.t: } p(0)  = 1
+                            }
+                        }\max_{x\in [-1, 1]}|p(x)|
+                    \\
+                    p_k(x) &:= \frac{T_k(\varphi(x))}{T_k(\varphi(0))}
+                    \quad \text{where: } \varphi(x) := \frac{2x - \lambda_n - \lambda_1}{\lambda_n - \lambda_1}
+                    \\
+                    \text{then: } p_k(x) &= \min_{
+                        \substack{
+                            p(x)\in \mathcal{P}_{k + 1}
+                            \\
+                            \text{s.t: } p(0)  = 1
+                        }
+                    }\max_{x\in [\lambda_1, \lambda_n]}|p(x)|
+                \end{align}
+                At this point, we have defined a new polynomial $p_k$ that minimizes the inf norm over the convex hull of the eigenvalues and it's Monic. Note, here we use $T_k$ for the type T Chebyshev Polynomial of degree k and it's not the Tridiagoal Symmetric Matrix from lanczos. Next, we use the property that the range of the Chebyshev is bounded withint the interval $[-1, 1]$ to obtain inequality: 
+                \begin{align}
+                    \forall x \in [\lambda_1, \lambda_n]: \left|
+                    \frac{T_k(\varphi(x))}{T_k(\varphi(0))}
+                    \right|
+                    \le 
+                    \left|
+                        \frac{1}{T_k(\varphi(0))}
+                    \right|
+                \end{align}
+                Next, our objective is to find any upper bound for the quantities on the RHS in relations to the Condition number for matrix $A$ and the degree of the Chebyshev Polynomial. Firstly observe that $1 < \varphi(0) \not\in [\lambda_1, \lambda_n]$, because all Eigenvalues are larger than zero, therefore it's out of the range of the Cheb and we need to find the actual value of it by considering alterantive form of Chebyshev T for values outside of the $[-1,1]$: 
+                \begin{align}
+                    T_k(x) &= \cosh(k\text{ arccosh}(z)) \quad \forall z \ge 1
+                    \\
+                    \implies
+                    T_k(\cosh(\zeta)) &= \cosh(k\zeta) \quad z := \cosh(\zeta)
+                \end{align}
+                We need to match the form of the expression $T_k(\varphi(0))$ with the expression of the form $T_k(\cosh(\zeta))$ given the freedom of varying $\zeta$. 
+                \begin{align}
+                    \varphi(0) &= \cosh(\zeta) = \cosh(\ln(y)) \quad \ln(y) := \zeta
+                    \\
+                    \text{recall: } \cosh(x) &= (\exp(-x) + \exp(x))/2
+                    \\
+                    \implies 
+                    \cosh(\ln(y)) &= (y + y^{-1})/2
+                    \\
+                    \varphi(0) &= (y + y^{-1})/2
+                \end{align}
+                Recall the definition of $\varphi(x)$ and then simplifies: 
+                $$
+                \begin{aligned}
+                    \varphi(0) &= \frac{-\lambda_n - \lambda_1}{\lambda_n - \lambda_1}
+                    \\
+                    &= \frac{-\lambda_n/\lambda_1 - 1}{\lambda_n/\lambda_1 - 1}
+                    \\ 
+                    &= - 
+                    \frac{\lambda_n/\lambda_1 + 1}{\lambda_n/\lambda_1 - 1} 
+                    \\
+                    \implies \varphi(0) &=
+                    -\frac{\kappa + 1}{\kappa - 1}
+                \end{aligned}
+                $$
+                Our objective is now simple. We know what $\varphi(0)$ is, we want it to form match with $\cosh(\ln(y))$, and hence we simply solve for $y$: 
+                \begin{align}
+                    -\frac{\kappa + 1}{\kappa - 1} &= 
+                    \frac{1}{2}(y + y^{-1})
+                    \\
+                    y = \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
+                \end{align}
+                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us 2 roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can susbtitute and get the value of $T_k(\varphi(0))$ interms of $y$ and then $\kappa$: 
+                \begin{align}
+                    \varphi(0)&= \frac{1}{2}(y + y^{-1})
+                    \\
+                    \implies 
+                    T_k(\varphi(0)) &= 
+                    T_k(\cosh(\ln(y)))
+                    \\
+                    &= \cosh(k\ln(y))
+                    \\
+                    &= (y^k + y^{-k})/2
+                \end{align}
+                Then, substituting the value of $y$, and invert the quantity we have: 
+                \begin{align}
+                    \frac{1}{T_k(\varphi(0))} &= 2(y^k + y^{-k})^{-1}
+                    \\
+                    &= 
+                    2\left(
+                        \left(
+                            \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
+                        \right)^{k} + 
+                        \left(
+                            \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
+                        \right)^{-k}
+                    \right)^{-1}
+                    \\
+                    & \le 2 \left(
+                        \frac{\sqrt{\kappa} - 1}{\sqrt{\kappa} + 1}
+                    \right)^k
+                \end{align}
+                Which completes the proof. 
+            \end{proof}
+        \subsubsection{Outlier Eigenvalues}
+            Using the derived theorem, we can extend it to other type of distributions of eigenvalues. Imagine one of the extreme case where some matrices that have one group of eigenvalues that are close together and one signle eigenvalue that is far away from the cluster. In that case, we can use Chebyshev differently by focusing its minimizing power across the clustered eigenvalues and use a simple polynomial to interpolate the outlier eigenvalue. 
+
+
 
     \subsection{From Conjugate Gradient to Lanczos}
 
