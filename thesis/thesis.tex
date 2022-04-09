@@ -994,62 +994,60 @@
         \end{prop}
         \begin{proof}
             \begin{align}
-                \begin{aligned}
-                    \Vert e_k\Vert_A^2 & =
-                    \min_{x_k \in x_0 + \mathcal K_k(A|r_0)}
-                    \Vert 
-                        x^+ - x_k
-                    \Vert_A^2
-                    \\
-                    x_k \in x_0 + \mathcal K_k(A|r_0) 
-                    & \iff
-                    e_k = e_0 + p_k(A|w)r_0
-                    \\
-                    \implies  &=
-                    \min_{w\in \mathbb R^k}
-                    \Vert 
-                        e_0 + p_k(A|w)r_0
-                    \Vert_A^2
-                    \\
-                    &= \min_{w\in \mathbb R^k}
-                    \Vert 
-                        e_0 + Ap_k(A|w)e_0
-                    \Vert_A^2
-                    \\
-                    &= \min_{w\in \mathbb R^k}
-                    \Vert 
-                        A^{1/2}(I + Ap_k(A|w))e_0
-                    \Vert_2^2
-                    \\
-                    &\le
-                    \min_{w\in \mathbb R^k}
-                    \Vert 
-                        I + Ap_k(A|w)
-                    \Vert_2^2\Vert e_0\Vert_A^2 \quad \text{tight}
-                    \\
-                    & = 
-                    \min_{w\in \mathbb R^k}
-                    \left(
-                        \max_{i = 1, \dots, n}
-                        |1 + \lambda_ip_k(\lambda_i|w)|^2
-                    \right)\Vert e_0\Vert_A^2
-                    \quad
-                    \\
-                    & \le 
-                    \min_{w\in \mathbb R^k}
-                    \left(
-                        \max_{x\in [\lambda_{\min}, \lambda_{\max}]}
-                        |1 + \lambda_ip_k(\lambda_i|w)|^2
-                    \right)\Vert e_0\Vert_A^2
-                    \quad \text{still tight}
-                    \\
-                    &= \min_{p_{k + 1}: p_{k + 1}(0) = 1}
-                    \max_{x\in [\lambda_{\min}, \lambda_{\max}]}| p_{k + 1}(x)|^2 \Vert e\Vert_A^2
-                    \\
-                    \implies
-                    \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} &\le 
-                    \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k + 1}(x)|
-                \end{aligned}
+                \Vert e_k\Vert_A^2 & =
+                \min_{x_k \in x_0 + \mathcal K_k(A|r_0)}
+                \Vert 
+                    x^+ - x_k
+                \Vert_A^2
+                \\
+                x_k \in x_0 + \mathcal K_k(A|r_0) 
+                & \iff
+                e_k = e_0 + p_k(A|w)r_0
+                \\
+                \implies  &=
+                \min_{w\in \mathbb R^k}
+                \Vert 
+                    e_0 + p_k(A|w)r_0
+                \Vert_A^2
+                \\
+                &= \min_{w\in \mathbb R^k}
+                \Vert 
+                    e_0 + Ap_k(A|w)e_0
+                \Vert_A^2
+                \\
+                &= \min_{w\in \mathbb R^k}
+                \Vert 
+                    A^{1/2}(I + Ap_k(A|w))e_0
+                \Vert_2^2
+                \\
+                &\le
+                \min_{w\in \mathbb R^k}
+                \Vert 
+                    I + Ap_k(A|w)
+                \Vert_2^2\Vert e_0\Vert_A^2 \quad \text{tight}
+                \\
+                & = 
+                \min_{w\in \mathbb R^k}
+                \left(
+                    \max_{i = 1, \dots, n}
+                    |1 + \lambda_ip_k(\lambda_i|w)|^2
+                \right)\Vert e_0\Vert_A^2
+                \quad
+                \\
+                & \le 
+                \min_{w\in \mathbb R^k}
+                \left(
+                    \max_{x\in [\lambda_{\min}, \lambda_{\max}]}
+                    |1 + \lambda_ip_k(\lambda_i|w)|^2
+                \right)\Vert e_0\Vert_A^2
+                \quad \text{still tight}
+                \\
+                &= \min_{p_{k + 1}: p_{k + 1}(0) = 1}
+                \max_{x\in [\lambda_{\min}, \lambda_{\max}]}| p_{k + 1}(x)|^2 \Vert e\Vert_A^2
+                \\
+                \implies
+                \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} &\le 
+                \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k + 1}(x)|
             \end{align}
             We proceed with writing up the affine subspace where $x_k$ is from: $x_0 + \mathcal K_k(A|r_0)$, putting it in terms of matrix polynomial mulitplied by $r_0$ and then use $A^{-1}b$ to subtract both side. From the 3rd line to the 4th, we use the fact that $r_0 = Ae_0$, allowing us to extract out a factor $A$. Next, on the 4th line to the next, we use the fact that every Definite Matrix $A$ has the factorization of $A^{1/2}A^{1/2}$ where $A^{1/2}$ is also a Definite Matrix. After that we moved the $A^{1/2}$ to $e_0$ to get $\Vert e_0\Vert_A^2$ and the matrix polynomial part is left with the 2-norm. Next we use the eigendecompoition of  $A$ which diagonalizable and can have unitary eigenvectors, giving us the form of $Q\Lambda Q^T = A$ where $Q$ is an Unitary Matrix and diagonals of $\Lambda$ are the eigenvalues of $A$. Allow me to explain: 
             \begin{align}
@@ -1088,7 +1086,7 @@
             \begin{theorem}[CG Convergence Rate]
                 The relative error squared measured over the energy norm is bounded by: 
                 \begin{align}
-                    \frac{\Vert e_k\Vert_A^2}{\Vert e_k\Vert_A^2}
+                    \frac{\Vert e_k\Vert_A}{\Vert e_k\Vert_A}
                     \le 2 \left(
                             \frac{\sqrt{\kappa} + 1}{\sqrt{\kappa} - 1}
                     \right)^k
@@ -1189,19 +1187,50 @@
                             \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
                         \right)^{k} + 
                         \left(
-                            \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
+                            \frac{\sqrt{\kappa}\mp 1}{\sqrt{\kappa}\pm 1}
                         \right)^{-k}
+                    \right)^{-1}
+                    \\
+                    &= 2\left(
+                        \underbrace{\left(
+                            \frac{\sqrt{\kappa}+ 1}{\sqrt{\kappa}- 1}
+                        \right)^{k}}_{> 1} + 
+                        \underbrace{\left(
+                            \frac{\sqrt{\kappa}- 1}{\sqrt{\kappa}+ 1}
+                        \right)^{-k}}_{ < 1}
                     \right)^{-1}
                     \\
                     & \le 2 \left(
                         \frac{\sqrt{\kappa} - 1}{\sqrt{\kappa} + 1}
                     \right)^k
                 \end{align}
-                Which completes the proof. 
+                Which completes the proof. Recall from the previous discussion for the squared of the relative error, we have: 
+                \begin{align}
+                    \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} &\le 
+                    \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{1}, \lambda_{n}]} |p_{k + 1}(x)| \le 
+                    2 \left(
+                        \frac{\sqrt{\kappa} - 1}{\sqrt{\kappa} + 1}
+                    \right)^k
+                \end{align}
+
             \end{proof}
         \subsubsection{Outlier Eigenvalues}
-            Using the derived theorem, we can extend it to other type of distributions of eigenvalues. Imagine one of the extreme case where some matrices that have one group of eigenvalues that are close together and one signle eigenvalue that is far away from the cluster. In that case, we can use Chebyshev differently by focusing its minimizing power across the clustered eigenvalues and use a simple polynomial to interpolate the outlier eigenvalue. 
-
+            Using the derived theorem, we can extend it to other type of distributions of eigenvalues. Imagine one of the extreme case where some matrices that have one group of eigenvalues that are close together and one signle eigenvalue that is far away from the cluster. In that case, we can use Chebyshev differently by focusing its minimizing power across the clustered eigenvalues and use a simple polynomial to interpolate the outlier eigenvalue. Consider the following proposition: 
+            \begin{prop}[Big Outlier CG Convergence Rate]
+                If, there exists a $\lambda_n$ that is much later than all previous $n - 1$ eigenvalues for the matrix $A$, then a tigher convergence bound that being only paramaterized by the range of clustered eigenvalues can be obtained and it is: 
+                \begin{align}
+                    \frac{\Vert e^{(k)}\Vert_A}{\Vert e^{(0)}\Vert_A} \le 
+                    2 \left(
+                        \frac{\sqrt{\kappa_{n - 1}} - 1}{\sqrt{\kappa_{n - 1} + 1}}
+                    \right)^{k - 1}\quad 
+                    \kappa_{n - 1} =  \frac{\lambda_{n - 1}}{\lambda_1}
+                \end{align}
+                Reader please observe that, the outlier eigenvalue $\kappa_n$ plays a smaller role in determining the convergence rate of the algorithm compare to the previous bound. 
+            \end{prop}
+            \begin{proof}
+                Here, we wish to show that a more focused use of the Chebyshve Bound will introduce a better convergence rate for the Conjugate Gradient. 
+            \end{proof}
+            
 
 
     \subsection{From Conjugate Gradient to Lanczos}
