@@ -1605,10 +1605,33 @@
             \begin{align}
                 P_k = Q_k U_k^{-1}
             \end{align}
-            Where $T_k = L_kU_k$, representing the LU decomposition of the tridiagonal matrix $T_k$ from the Lanczos Iterations. 
+            Where $T_k = L_kU_k$, representing the LU decomposition of the tridiagonal matrix $T_k$ from the Lanczos Iterations. Because of the Tridiagonal nature of the matrix $T_k$, $L_k$ will be a unit bi-diagonal matrix and $U_k$ will be an upper bi-diagonal matrix. 
         \end{prop}
         \begin{proof}
-            
+            To prove it, we start by considering the $x_k$ at step k of the iterations: 
+            \begin{align}
+                x_k &= x_0 + Q_k y_k 
+                \\
+                &= x_0 + Q_k T_{k}^{-1} \beta \xi_1
+                \\
+                &= x_0 + Q_k U_k^{-1}L_k^{-1}\beta \xi_1
+                \\
+                &= x_0 + P_k L_k^{-1}\beta\xi_1
+            \end{align}
+            So far we have written the solution vector $x_k$. Next, we are going to prove that the matrix $P_k$ indeed consists of vectors that are A-orthgonal. To show that we consider: 
+            \begin{align}
+                & P_k^TAP_k
+                \\
+                &= (Q_k U_k^{-1})^T AQ_kU_k^{-1}
+                \\
+                &= U_k^{-T}Q_k^{T}AQ_k U_k^{-1}
+                \\
+                &= U_k^{-T}T_kU_k^{-1}
+                \\
+                &= U^{-T}_kL_k
+            \end{align}
+            Reader please observe that $U_k$ is upper triangular, therefore, it's inverse it's also upper triangular, therefore, $U_k^{-T}$ is lower triangular, and because $L_k$ is also lower triangular, their product is a lower triangular matrix, and therefore, the resulting matrix above is lower triangular, however, given that $P_k^TAP_k$ is symmetric, therefore, $U_k^{-T}L_k$ will have to be symmetric as well, and a matrix that is lower triangular and symmetric has to be diagonal. Therefore, the columns of $P_k$ are conjugate vectors. 
+
         \end{proof}
 
 
