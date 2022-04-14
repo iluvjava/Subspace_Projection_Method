@@ -1,40 +1,43 @@
 \babel@toc {english}{}
-\contentsline {section}{\numberline {1}Foundations}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Projectors}{3}{subsection.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.1}Orthogonal Projector}{3}{subsubsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.2}Oblique Projector}{4}{subsubsection.1.1.2}%
-\contentsline {subsubsection}{\numberline {1.1.3}Projector Geometric Intuitions}{5}{subsubsection.1.1.3}%
-\contentsline {subsubsection}{\numberline {1.1.4}Projector as a 2-Norm Minimizer}{5}{subsubsection.1.1.4}%
-\contentsline {subsection}{\numberline {1.2}Subspace Projection Methods}{5}{subsection.1.2}%
-\contentsline {subsubsection}{\numberline {1.2.1}Prototype Algorithm}{6}{subsubsection.1.2.1}%
-\contentsline {subsubsection}{\numberline {1.2.2}Energy Norm Minimization using Gradient}{6}{subsubsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.3}Krylov Subspace}{8}{subsection.1.3}%
-\contentsline {subsubsection}{\numberline {1.3.1}The Grade of a Krylov Subspace}{8}{subsubsection.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.3.2}The Grade and Matrix Polynomial}{10}{subsubsection.1.3.2}%
-\contentsline {subsection}{\numberline {1.4}Useful Theorems and Mathematical Entities}{10}{subsection.1.4}%
-\contentsline {subsubsection}{\numberline {1.4.1}Minimal Polynomial of a Matrix}{10}{subsubsection.1.4.1}%
-\contentsline {subsubsection}{\numberline {1.4.2}Cauchy Interlace Theorem}{11}{subsubsection.1.4.2}%
-\contentsline {subsubsection}{\numberline {1.4.3}Caley Hamilton's Theorem}{11}{subsubsection.1.4.3}%
-\contentsline {subsubsection}{\numberline {1.4.4}The Chebyshev Polynomial}{11}{subsubsection.1.4.4}%
-\contentsline {subsection}{\numberline {1.5}Deriving Conjugate Gradient from First Principles}{12}{subsection.1.5}%
-\contentsline {subsubsection}{\numberline {1.5.1}CG Objective and Framework}{12}{subsubsection.1.5.1}%
-\contentsline {subsubsection}{\numberline {1.5.2}Using the Projector}{13}{subsubsection.1.5.2}%
-\contentsline {subsubsection}{\numberline {1.5.3}Assisted Conjugate Gradient}{14}{subsubsection.1.5.3}%
-\contentsline {subsubsection}{\numberline {1.5.4}Properties of Assisted Conjugate Gradient}{14}{subsubsection.1.5.4}%
-\contentsline {subsubsection}{\numberline {1.5.5}Residual Assisted Conjugate Gradient}{15}{subsubsection.1.5.5}%
-\contentsline {subsubsection}{\numberline {1.5.6}RACG and Krylov Subspace}{18}{subsubsection.1.5.6}%
-\contentsline {subsection}{\numberline {1.6}Arnoldi Iterations and Lanczos}{19}{subsection.1.6}%
-\contentsline {subsubsection}{\numberline {1.6.1}The Arnoldi Iterations}{19}{subsubsection.1.6.1}%
-\contentsline {subsubsection}{\numberline {1.6.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{20}{subsubsection.1.6.2}%
-\contentsline {subsubsection}{\numberline {1.6.3}The Lanczos Iterations}{21}{subsubsection.1.6.3}%
-\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{22}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Conjugate Gradient and Matrix Polynomial}{22}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Termination Conditions of RACG}{23}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Convergence Rate of RACG under Exact Arithematic}{24}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Uniformly Distributed Eigenvalues}{25}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Outlier Eigenvalues}{27}{subsubsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.4}From Conjugate Gradient to Lanczos}{28}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}From Lanczos to Conjugate Gradient}{28}{subsection.2.5}%
-\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{28}{section.3}%
-\contentsline {section}{\numberline {4}Appendix}{28}{section.4}%
-\contentsline {section}{\numberline {5}Biliography}{28}{section.5}%
+\contentsline {section}{\numberline {1}Foundations}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Projectors}{4}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Orthogonal Projector}{4}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Oblique Projector}{5}{subsubsection.1.1.2}%
+\contentsline {subsubsection}{\numberline {1.1.3}Projector Geometric Intuitions}{6}{subsubsection.1.1.3}%
+\contentsline {subsubsection}{\numberline {1.1.4}Projector as a 2-Norm Minimizer}{6}{subsubsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.2}Subspace Projection Methods}{6}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Prototype Algorithm}{7}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Energy Norm Minimization using Gradient}{7}{subsubsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.3}Krylov Subspace}{9}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}The Grade of a Krylov Subspace}{9}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}The Grade and Matrix Polynomial}{11}{subsubsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.4}Useful Theorems and Mathematical Entities}{11}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}Minimal Polynomial of a Matrix}{11}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Cauchy Interlace Theorem}{12}{subsubsection.1.4.2}%
+\contentsline {subsubsection}{\numberline {1.4.3}Caley Hamilton's Theorem}{12}{subsubsection.1.4.3}%
+\contentsline {subsubsection}{\numberline {1.4.4}The Chebyshev Polynomial}{12}{subsubsection.1.4.4}%
+\contentsline {subsection}{\numberline {1.5}Deriving Conjugate Gradient from First Principles}{13}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}CG Objective and Framework}{13}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Using the Projector}{14}{subsubsection.1.5.2}%
+\contentsline {subsubsection}{\numberline {1.5.3}Assisted Conjugate Gradient}{15}{subsubsection.1.5.3}%
+\contentsline {subsubsection}{\numberline {1.5.4}Properties of Assisted Conjugate Gradient}{15}{subsubsection.1.5.4}%
+\contentsline {subsubsection}{\numberline {1.5.5}Residual Assisted Conjugate Gradient}{16}{subsubsection.1.5.5}%
+\contentsline {subsubsection}{\numberline {1.5.6}RACG and Krylov Subspace}{19}{subsubsection.1.5.6}%
+\contentsline {subsection}{\numberline {1.6}Arnoldi Iterations and Lanczos}{20}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}The Arnoldi Iterations}{20}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{21}{subsubsection.1.6.2}%
+\contentsline {subsubsection}{\numberline {1.6.3}The Lanczos Iterations}{22}{subsubsection.1.6.3}%
+\contentsline {section}{\numberline {2}Analysis of Conjugate Gradient and Lanczos Iterations}{23}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Conjugate Gradient and Matrix Polynomial}{23}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Termination Conditions of RACG}{25}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Convergence Rate of RACG under Exact Arithematic}{26}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Uniformly Distributed Eigenvalues}{26}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}One Outlier Eigenvalue}{28}{subsubsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.4}From Conjugate Gradient to Lanczos}{29}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}The Base Case}{31}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}The Inductive Case}{31}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Fixing the Sign}{33}{subsubsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.5}From Lanczos to Conjugate Gradient}{33}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{35}{section.3}%
+\contentsline {section}{\numberline {4}Appendix}{35}{section.4}%
+\contentsline {section}{\numberline {5}Biliography}{35}{section.5}%

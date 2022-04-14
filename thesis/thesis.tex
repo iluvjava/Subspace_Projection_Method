@@ -66,16 +66,18 @@
 \begin{enumerate}
     \item $\text{ran}(A):=\{Ax :\forall x \; \in \mathbb R^n\}, A \in \mathbb R^{m\times n}$, The range of a matrix. 
     \item $(A)_{i, j}$: The element in i th row and jth column of the matrix $A$.
-    \item $(A)_{i:j, i':j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to matlab's rules for indexing. 
-    \item $\forall\; 0\le j \le k$: sometimes this indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
+    \item $(A)_{i:i', j:j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to matlab's rules for indexing. 
+    \item $\forall\; 0\le j \le k$: under certain context it indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
+    \item Boldface $\mathbf 0$ denotes the zero vector. 
+    \item The $\hat{}$ decorator is reserved for denoting the unit vector of some vector. For example $\hat{x}:= x/\Vert x\Vert$. 
 \end{enumerate}
 \section*{Introduction}
 \newpage
 \section{Foundations}
-    This sections focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this sections cited from... (citations here)
+    This section focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this section cited from... (citations here)
 
     \subsection{Projectors}
-        A projector is a type of idempotent matrix. Its properties have importance for subspace projection method. In this section, we go through 2 types of projectors, the orthgonal projector and the oblique projector. The oblique projector is made useful for the derivation of the classic CG algorithm, which is referred to as RACG in the context of this paper. The orthogonal projector is made useful for the interpretations of Arnoldi Iterations. 
+        The properties of projector have importance for subspace projection method. In this section, we go through 2 types of projectors, the orthgonal projector and the oblique projector. The oblique projector is made useful for the derivation of the classic CG algorithm, which is referred to as RACG in the context of this paper. The orthogonal projector is useful for orthogonalizing the Krylov Subspace. 
         \begin{definition}
             A matrix $P$ is a projector when: 
             \begin{align}
@@ -94,17 +96,14 @@
             \end{align}
         \end{proof}
         \noindent
-        This consequence states the fact that any vector $x$ can be represented as $x = Px + (I - P)x$, and every projector will be defined via a subspace equals to the range of $I - P$ and $P$. 
-        
         \subsubsection{Orthogonal Projector}
-            An orthogonal projector is a projector such that: 
             \begin{definition}
+                An orthogonal projector is a projector $P$ which: 
                 \begin{align}
                     \text{null}(P) \perp \text{ran}(P)
                 \end{align}    
             \end{definition}
-            
-            This property is in fact, very special. A good example of an orthogonal projector would be the Householder Reflector Matrix. Or just any $\hat{u}\hat{u}^H$ where $\hat{u}$ is being an unitary vector. For convenience of proving, assume subspace $M = \text{ran}(P)$. Consider the following lemma: 
+            This property is in fact, very special. A good example of an orthogonal projector would be the Householder Reflector Matrix. Or just any $\hat{u}\hat{u}^H$ where $\hat{u}$ is a unitary vector. For convenience of proving, assume subspace $M = \text{ran}(P)$. Consider the following lemma: 
             \begin{lemma}
                 \begin{align}
                     \text{null}(P^H) = \text{ran}(P)^{\perp}
@@ -778,7 +777,7 @@
                 \end{align}
             \end{definition}
             That is the algorithm, stated with all the iteration number listed as a super script inside of a parenthesis. Which is equivalent to what we have proven for the Residual Assisted Conjugate Gradient. 
-        \subsubsection{RACG and Krylov Subspace}
+        \subsubsection{RACG and Krylov Subspace}\label{sec:RACG_and_Krylov_Subspace}
             The conjugate Gradient Algorithm is actually a residual assisted conjugate gradient, a special case of the algorithm we derived at the start of the excerp. The full algorithm can be seem by the short recurrence for the residual and the conjugation vector. This part is trivial. Next, we want to show the relations to the Krylov Subspace, which only occurs for the Residual Assisted Conjugate Gradient algorithm. 
             \begin{prop}
                 \begin{align}
@@ -934,7 +933,7 @@
                     \end{aligned}
                 \end{align}
                 Here, let it be the case that $H_k$ is a Symmetric Tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product. 
-                Note that another equivalent algorithm wher I tweaked it to handle the base case of $T_k$ being a $1\times 1 $ matrix can be phrased in the following way: 
+                Note that another equivalent algorithm where I tweaked it to handle the base case of $T_k$ being a $1\times 1 $ matrix can be phrased in the following way: 
                 \begin{align}
                     \begin{aligned}
                         & \text{Given arbitrary: }q_1 \text{ s.t: } \Vert q_1\Vert = 1
@@ -945,7 +944,7 @@
                         \\
                         & \text{Memorize}: Aq_1
                         \\
-                        & \text{For }j = 1\cdots
+                        & \text{For }j = 1, 2, \cdots
                         \\
                         &\hspace{1.1em}
                         \begin{aligned}
@@ -964,6 +963,36 @@
                     \end{aligned}
                 \end{align}
             \end{definition}
+            The algorithm generates the following 2 matrices, $Q_k$ which is orthogonal and it spans $\mathcal K_k(A|q_1)$, and a Symmetric Tridiagonal Matrix: 
+            \begin{align}
+                Q_k &= \begin{bmatrix}
+                    q_1 & q_2 & \cdots & q_k
+                \end{bmatrix}
+                \\
+                T_k &= 
+                \begin{bmatrix}
+                    \alpha_1 & \beta_1 & & 
+                    \\[0.8em]
+                    \beta_1 & \ddots & \ddots & 
+                    \\[0.8em]
+                    &\ddots &\ddots & \beta_{k - 1}
+                    \\[0.8em]
+                    & & \beta_{k - 1} & \alpha_k
+                \end{bmatrix}
+            \end{align}
+            Similar to the recurrence from the Arnoldi Algorithm, the lanczos also create a recurrence between $Aq_k$ and $Q_k$ and $q_{k + 1}$, but the recurrence is shorter as it simply make use of the previous 2 vectors: 
+            \begin{theorem}[Lanczos Recurrenes]
+                \begin{align}
+                    AQ_k &= Q_kT_k + \beta_k q_{k + 1}\xi_k^T = Q_{k + 1}\tilde{T}_k
+                    \\
+                    \implies Aq_k
+                    &= \beta_{j - 1}q_{j - 1} + \alpha_j q_j + \beta_{j}q_{j + 1} \quad \forall\; 2\le j\le k
+                    \\
+                    \implies Aq_1 &= \alpha_1q_1 + \beta_1 q_2
+                \end{align}    
+            \end{theorem}
+            
+            \par
             Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The lanczos algorithm produces an irreducible Symmetric Tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any Symmetric Tridiaogonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediate show here is the fact that Lanczos Algorithm will produce such a matrix. 
             \begin{prop}
                 The Lanczos Iteration produces a Symmetric Tridiagonal Matrix that has no zero element on its super and sub-diagonal, and if $\beta_k$ is zero, then the algorithm must terminates, and $k$ would equal to $\text{grade}(A|q_1)$, the grade of the Krylov Subspace. 
@@ -1214,7 +1243,7 @@
                 \end{align}
 
             \end{proof}
-        \subsubsection{Outlier Eigenvalues}
+        \subsubsection{One Outlier Eigenvalue}
             Using the derived theorem, we can extend it to other type of distributions of eigenvalues. Imagine one of the extreme case where some matrices that have one group of eigenvalues that are close together and one signle eigenvalue that is far away from the cluster. In that case, we can use Chebyshev differently by focusing its minimizing power across the clustered eigenvalues and use a simple polynomial to interpolate the outlier eigenvalue. Consider the following proposition: 
             \begin{prop}[Big Outlier CG Convergence Rate]
                 If, there exists a $\lambda_n$ that is much later than all previous $n - 1$ eigenvalues for the matrix $A$, then a tigher convergence bound that being only paramaterized by the range of clustered eigenvalues can be obtained and it is: 
@@ -1228,14 +1257,362 @@
                 Reader please observe that, the outlier eigenvalue $\kappa_n$ plays a smaller role in determining the convergence rate of the algorithm compare to the previous bound. 
             \end{prop}
             \begin{proof}
-                Here, we wish to show that a more focused use of the Chebyshve Bound will introduce a better convergence rate for the Conjugate Gradient. 
+                Here, we wish to show that a more focused use of the Chebyshev will introduce a better convergence rate for the Conjugate Gradient. We define the notation for the adapted k-th degree Chebyshev Polynomial over an closed interval: $[a, b]$ as: 
+                \begin{align}
+                    \hat{T}_{[a, b]}^{(k)}(x) := 
+                    T_k\left(
+                        \frac{2x - b - a}{b - a}
+                    \right)
+                \end{align} 
+                Next, we consider the following polynomial: 
+                \begin{align}
+                    p_k(z) := 
+                    \frac
+                    {
+                        \hat{T}_{[\lambda_1, \lambda_{n - 1}]}^{(k - 1)}
+                        \left(
+                            z
+                        \right)
+                    }{
+                        T^{(k - 1)}_{[\lambda_1, \lambda_{n - 1}]}
+                        \left(
+                            0
+                        \right)
+                    }\frac{\lambda_n - z}{\lambda_n}
+                \end{align}
+                Where, we use an $k-1$ degree polynomial for the clustered eigenvalues, and then we multiply that by a linear function $(\lambda_n - z)/\lambda_n$ which is zero at right boundary $\lambda_n$ and it's less than one at the left boundary $\lambda_1$. Next, observe the following facts about the above polynomials: 
+                \begin{align}
+                    &
+                    \frac{\lambda_n - z}{\lambda_n} \in [0, 1]
+                    \quad \forall z \in [\lambda_1, \lambda_n]
+                    \\
+                    &
+                    \frac{\lambda_n - z}{\lambda_n} <1
+                    \quad  \forall z \in 
+                    [\lambda_1, \lambda_{n-1}]
+                    \\
+                    & 
+                    |p_k(x)| \le
+                    \left|
+                        \frac{
+                            \hat{T}_{[\lambda_1, \lambda_{n-1}]}^{(k - 1)}(x)
+                        }{
+                            \hat{T}_{[\lambda_1, \lambda_{n - 1}]}^{(k - 1)}(0)
+                        }
+                        \frac{\lambda_n - z}{\lambda_n}
+                    \right|
+                    \le 
+                    \frac{1}{
+                    \left|
+                        \hat{T}_{[\lambda_1, \lambda_{n - 1}]}^{(k - 1)}(0)
+                    \right|}
+                \end{align}
+                As a result, we can apply the convergence rate we proven for the uniform case, giving us: 
+                \begin{align}
+                    T^{(k - 1)}_{[\lambda_1, \lambda_{n - 1}]}
+                    \left(
+                        0
+                    \right)
+                    &= \left|
+                        T_{k-1}\left(
+                            \frac{
+                                -\lambda_{n-1} - \lambda_1
+                            }
+                            {\lambda_{n-1}- \lambda_1}
+                        \right)
+                    \right|
+                    \\ 
+                    &=
+                    \frac{1}{2}(y^{k - 1} + y^{-(k - 1)})
+                    \\
+                    \text{ where: } y &= \frac{\sqrt{\kappa_{n - 1}} + 1}{\sqrt{\kappa_{n - 1}} - 1}, \kappa_{n - 1} = \frac{\lambda_{n - 1}}{\lambda_1}
+                \end{align}
+                Substituting the value for $y$ we obtain the bound: 
+                \begin{align}
+                    \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} \le 
+                    2\left(
+                        \frac{\sqrt{\kappa_{n - 1}} - 1}{\sqrt{\kappa_{n - 1}} + 1}
+                    \right)^{k - 1}
+                \end{align}
             \end{proof}
-            
-
-
     \subsection{From Conjugate Gradient to Lanczos}
-
+        Up until this point of disucssion, we had been brewing the fact that, the Iterative Lanczos Algorithm and the Conjugate gradient algorithm are pretty much the same thing. From the previous discussion we can observe that: 
+        \begin{enumerate}
+            \item [1.)] Both Lanczos and CG terminates when the grade of Krylove subspace is reached. For lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$
+            \item [2.)] Both Lanczos and CG generates orthogonal vectors, for Lanczos they are the $q_i$ vector and for CG they are the $r_i$ vectors. 
+        \end{enumerate}
+        These 2 properties in particular, is hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived as RACG in the first section, and yet it doesn't make use of any orthogonal projector. Further more, one might also notice that Iterative Lanczos are for General Symmetric Matrices whie CG are only for positive definite matrices. To see how everything ties together, we have to go both directions way to show the connections between these 2 iterative algorithms, which are what this section and the subsequent section about. Here, we refers Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
+        \par
+        For this subsection, our objective is to establish the equivalence between the parameters from the lanczos algorithm: $\alpha_k, \beta_k, q_k$ and the $a_j, b_j, r_j$ from the conjugate gradient algorithm. We establish it by going from the conjugate gradient to the Lanczos Algorithm. 
+        \begin{prop}
+            The residual and the lanczos vectors have the following relations: 
+            \begin{align}
+                q_1 &= \hat r_0\\
+                q_2 &= -\hat r_1
+                \\
+                \vdots
+                \\
+                q_j &= (-1)^{j + 1}\hat r_{j + 1}
+            \end{align}
+            Here, $\hat{r}_j:= r_j/\Vert r_j\Vert$ and we can fill in the Lancozs Tridiagonal matrix using the CG parameters to obtain the tridiagonalization of the Positive definite matrix $A$: 
+            \begin{align}
+                \begin{cases}
+                    \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                    & \forall 1 \le j \le k - 1
+                    \\
+                    \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                    & \forall 2 \le j \le k - 2 
+                    \\
+                    \alpha_1 = a_0^{-1} & 
+                    \\
+                    \beta_1 = \frac{\sqrt{b_0}}{\alpha_0}
+                \end{cases}
+            \end{align}
+            Where $\alpha_j$ for $1\le j \le n - 1$ are the diagonal of the tridiagonal matrix $T_k$ generated by Lanczos, and $\beta_j$ for $2\le j \le k - 2$ are the lower and upper subdiagonals of the matrix $T_k$. 
+        \end{prop}
+        We will break the proof into several parts. Firstly we address the base case, and then we address the inductive case to establish the parameters between the Tridiaogonal matrix and $a_k, b_k$, finall we resolve the sign problem between the Lanczos vectors and the residual vectors. 
+        \subsubsection{The Base Case}
+            Right from the start of the CG iteration we have: 
+            \begin{align}
+                r_0 &= p_0
+                \\
+                r_1 &= r_0 - a_0Ar_0
+                \\
+                Ar_0 &= a_0^{-1}(r_0 - r_1)
+                \\
+                Ar_0 &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}(r_0 - r_1)
+            \end{align}
+            Consider susbtituting $r_0 = \Vert r_0\Vert q_1, r_1 = -\Vert r_1\Vert q_2$, then: 
+            \begin{align}
+                A\Vert r_0\Vert q_1 
+                &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\left(
+                    \Vert r_0\Vert q_1 + \Vert r_1\Vert q_2
+                \right)
+                \\
+                &= 
+                \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\Vert r_0\Vert q_1 + 
+                    \frac{\Vert r_1\Vert}{\Vert r_0\Vert} q_2
+            \end{align}
+            And from this relation, using the Lanczos recurrence theoremit would imply that $\alpha_1 = a_0^{-1}$; $\beta_1 = \frac{\sqrt{b_0}}{\alpha_0}$. So far so good, we have shown that there is an equivalence between the Lancozs and the CG for the first iterations of the CG algorithm. 
+        \subsubsection{The Inductive Case}
+            \begin{lemma}
+                Inductively we wish to show the relation that: 
+                \begin{align}
+                    \begin{cases}
+                        \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                        & \forall 1 \le j \le n - 1
+                        \\
+                        \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                        & \forall 2 \le j \le n - 2 
+                    \end{cases}
+                \end{align}
+            \end{lemma}
+            \begin{proof}
+                We start by consiering: 
+                \begin{align}
+                    r_j &= r_{j - 1} - a_{j -1 }Ap_{j - 1}
+                    \\
+                    & =r_{j - 1} - a_{j - 1} A(r_{j - 1} + b_{j - 2}p_{j - 1})
+                    \\
+                    &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 1}
+                \end{align}
+                We make use of the recurrence asserted by the CG algorithm, giving us: 
+                \begin{align}
+                    r_{j - 1} &= r_{j - 1} - a_{j - 2}Ap_{j - 1}
+                    \\
+                    r_{j - 1} - r_{j - 1} &= a_{j - 2} Ap_{j - 1}
+                    \\
+                    Ap_{j - 1} &= a^{-1}_{j -2} 
+                    \left(
+                        r_{j - 2} - r_{j - 1}
+                    \right)
+                \end{align}
+                Here, we can susbtitute the results of for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
+                \begin{align}
+                    r_{j} &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 2}
+                    \\
+                    &= 
+                    r_{j - 1} - a_{j - 1}Ar_{j - 1} - \frac{a_{j-1}b_{j-2}}{a_{j-2}}\left(
+                        r_{j - 2} - r_{j - 1}
+                    \right)
+                    \\
+                    &= \left(
+                        1 + \frac{a_{j - 1}b_{j -2}}{a_{j - 2}}r_{j - 1}
+                    \right)- a_{j - 1}Ar_{j - 1} - \frac{a_{j-1}b_{j-2}}{a_{j-2}}r_{j - 2}
+                    \\
+                    a_{j - 1}Ar_{j - 1} &= 
+                    \left(
+                        1 + \frac{a_{j - 1}b_{j -2}}{a_{j - 2}}r_{j - 1}
+                    \right)
+                    - \frac{a_{j-1}b_{j-2}}{a_{j-2}}r_{j - 2}
+                    \\
+                    Ar_{j - 1} &=
+                    \left(
+                        \frac{1}{a_{j - 1}} + \frac{b_{j - 2}}{a_{j- 2}}
+                    \right)r_{j - 1} + 
+                    \frac{r_{j}}{a_{j-1}} - 
+                    \frac{b_{j - 2}}{a_{j - 2}}r_{j - 2}
+                \end{align}
+                Finally, we increment the index $j$ by one for notational convenience, and therefore we establish the following relations between the residuals of the conjugate gradient algorithm: 
+                \begin{align}
+                    Ar_{j} &=
+                    \left(
+                        \frac{1}{a_{j}} + \frac{b_{j - 1}}{a_{j-  1}}
+                    \right)r_{j} + 
+                    \frac{r_{j + 1}}{a_{j}} - 
+                    \frac{b_{j - 1}}{a_{j - 1}}r_{j - 1}
+                \end{align}
+                Reader please observe that, this is somewhat similar to the recurrence relations between the Lanczos vectors, however it's failing to match the sign, at the same time, it's not quiet matching the form of the recurrence of $\beta_k$ from the lanczos algorithm. To match it, we need the coeffcients of $r_{j - 1}$ and $r_{j + 1}$ to be in the same form, paramaterized by the same iterations parameter: $j$. To do that, consider the doing this:  
+                \begin{align}
+                    q_{j + 1} &:= \frac{r_{j}}{\Vert r_j\Vert}
+                    \\
+                    q_{j} &:= -\frac{r_{j - 1}}{\Vert r_{j - 1}\Vert} \quad 
+                    \text{Note: This is Negative}
+                    \\
+                    q_{j + 2} &:= \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
+                    \\
+                    \implies 
+                    A\Vert r_j\Vert q_{j + 1} 
+                    &= 
+                    \left(
+                        \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                    \right)\Vert r_j\Vert q_{j + 1}
+                    + 
+                    \frac{\Vert r_{j + 1}\Vert q_{j + 2}}{a_j}
+                    +
+                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}}q_{j}
+                    \\
+                    Aq_{j + 1} &= 
+                    \left(
+                        \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}} 
+                    \right)
+                    q_{j + 1}
+                    + 
+                    \frac{\Vert r_{j + 1}\Vert}{a_j \Vert r_j\Vert}q_{j + 2} + 
+                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}\Vert r_j\Vert}q_j
+                \end{align}
+                Recall that parameters from Conjugate Gradient, $\sqrt b_j = \Vert r_{j + 1}\Vert/\Vert r_j\Vert$, and $a_j = \frac{\Vert r_j\Vert^2}{\Vert p_j\Vert_A^2}$, and we can use the substitution to match the coefficients for $q_{j + 2}$ and $q_j$, giving us: 
+                \begin{align}
+                    \frac{\Vert r_{j + 1}\Vert}{a_j\Vert r_j\Vert} &= 
+                    \frac{1}{a_j}\sqrt{b_j}
+                    \\
+                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}\Vert r_j \Vert}
+                    &= 
+                    \frac{b_{j - 1}}{a_{j - 1}}\frac{1}{\sqrt{b_{j - 1}}}
+                    = 
+                    \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                    \\
+                    \implies& 
+                    \begin{cases}
+                        \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                        & \forall 1 \le j \le n - 1
+                        \\
+                        \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                        & \forall 2 \le j \le n - 2 
+                    \end{cases}
+                \end{align}
+                Take notes that the form is now matched, but the expression for $\alpha_{j + 1}$ has an extra $b_{j - 1}/a_{j - 1}$, to resolve that, we take the audacity to make $b_0$ so that it's consistent with the base case. 
+            \end{proof}
+        \subsubsection{Fixing the Sign}
+            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalcne residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially 2 susbstitution possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
+            \begin{align}
+                \begin{cases}
+                    q_{j + 1} := \pm \frac{r_j}{\Vert r_j\Vert}
+                    \\
+                    q_{j} := \mp \frac{r_{j - 1}}{\Vert r_{j - 1}\Vert}
+                    \\
+                    q_{j + 2} := \pm \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
+                \end{cases}
+            \end{align}
+            Under the context, the operations $\pm, \mp$ are correlated, choose a sign for one, the other must be of opposite sign. In this case both substitutions work the same because multiplying the equation by negative one would give the same equality, and we can always mulitply by and other negative sign to get it back. The key here is that, the sign going from $q_{j}$ to the next $q_{j - 1}$ will have to alternate. To find out precisely which one it is, we consider the base case for the Lanczos Vectors and Residuals: 
+            \begin{align}
+                q_1 &= \hat r_0\\
+                q_2 &= -\hat r_1
+                \\
+                \vdots
+                \\
+                q_j &= (-1)^{j + 1}\hat r_{j + 1}
+            \end{align}
+            And at this point, we have established the equivalence going from the Conjugate Gradient algorithm to the Lanczos Algorithm. And the moral of the story is, CG is a special case of applying the Lanczos Iterations with $q_1 = r_0$ to a positive definite matrix. However, something is still off and one can ask the following questions to inquiry further, leading us to more discussion between these 2 algorithms. 
+            \begin{enumerate}
+                \item [1.)] How are the solutions $x_k$ generated by CG relates to the Lanczos Iterations? 
+                \item [2.)] How are the A-Orthogonal vectors $p_k$ from CG relates to Lancozs? 
+            \end{enumerate}
     \subsection{From Lanczos to Conjugate Gradient}
+        In this section, we go from the Iterative Lanczos algorithm to the Conjugate Gradient algorithm and we seek to establish a link between the solution $x_k, p_k$ from CG with the lanczos vectors and the symmetric tridiagonal matrix generated by Lanczos. This section will also play an important role for the analysis for the backwards analysis for the floating point behaviors for the CG algorithm. 
+        \begin{prop}[Lanczos Vectors and Residuals]
+            The $Q_k$ is the orthogonal matrix generated by Lanczos Iteration. To match the Krylov Subspace generated by the Lanczos iterations and CG, we initialize $q_1 = \hat{r}_0$, then the following relationship between Lanczos and CG occurs between their parameters: 
+            \begin{align}
+                \begin{cases}
+                    y_k = T^{-1}_k \beta\xi_1
+                    \\
+                    x_k = x_0 + Q_k y_k
+                    \\
+                    r_k = -\beta_{k}\xi_k^T y_k q_{k +1}
+                \end{cases}
+            \end{align}
+        \end{prop}
+        The quantities $\alpha, \beta$ are the diaognal and the sub or super diagonal of the matrix $T_k$ from the Iterative Lanczos Algorithm, and $r_k$ is the residual from the Conjugate Gradient Algorithm, and $Q_k$ is the orthogonal matrix generated from the Lanczos Algorithm. For notations, we use $\xi_i$ to denote the ith canonical basis vector. $\beta$  without the subscript for denoting $\Vert r_0\Vert$.
+        \begin{proof}
+            To start recall that the Lanczos Algorithm Asserts the following recurrences:
+            \begin{align}
+                AQ_k = Q_{k + 1} \begin{bmatrix}
+                    T_k
+                    \\
+                    \beta_k \xi_k^T
+                \end{bmatrix}
+            \end{align}
+            Recall that the Conjugate Gradient algorithm takes the guesses from the affine span of $x_0 + \mathcal{K}_k(A|r_0)$, and that means: 
+            \begin{align}
+                x_{k + 1} &= x_0 + Q_ky_k
+                \\
+                r_{k + 1} &= r_0 - AQ_k y_k
+                \\
+                Q^H_kr_{k + 1} &= Q_k^H r_0 - Q_k^HAQ_k y_k
+                \\
+                \implies
+                0 &= \beta\xi_1 - T_k y_k
+                \\
+                y_k &= T_k^{-1}\beta \xi_1
+            \end{align}
+            Reader please recall from section \hyperref[sec:RACG_and_Krylov_Subspace]{RACG and Krylov Subspace} that: $p_k \in \mathcal K_{k + 1}(A|r_0)$, which is implying a link between the $p_k$ A-orthogonal vectors and the Lanczos Orthogonal matrix: $Q_k$. Now to get the residual we simply consider: 
+            \begin{align}
+                r_{k + 1} &= r_0 - AQ_k y_k
+                \\
+                &= r_0 - AQ_k T_k^{-1}\beta \xi_1
+                \\
+                \implies
+                &= \beta q_1 - AQ_k T_k^{-1} \beta\xi_1
+                \\
+                &= \beta q_1 - Q_{k + 1}\begin{bmatrix}
+                    T_k \\ \beta_k \xi_k^T
+                \end{bmatrix}T_k^{-1} \beta\xi_1
+                \\
+                &= \beta q_1 - 
+                (Q_k T_k + \beta_k q_{k + 1}\xi_k^T)T_k^{-1} \beta\xi_1
+                \\
+                &= 
+                \beta q_1 - (Q_k \beta \xi_1 + \beta_k q_{k + 1}\xi_{k + 1}T_k^{-1}\beta \xi_1)
+                \\
+                &= -\beta_k q_{k + 1}\xi_k^TT_k^{-1} \beta \xi_1
+            \end{align}
+            On the third line we racall the fact that $q_1 = \hat{r}_0$ which initialized the Krylov Subspace for the Lanczos Iteration. At the 4th line, we make use of the Lanczos Vector recurrences and we simply substituted it.
+
+            By observing the fact that $\xi^T_kT^{-1}_k\xi_1$ the $(k, 1)$ element of the matrix $T_k^{-1}$ which is a scalar, we can conclude that the residual from CG and the Lanczos vector are scalar multiple of each other, therefore, $r_k$ from the CG must be orthgonal as well. 
+        \end{proof}
+        \begin{prop}[Lanczos Vectors and Conjugate Vectors]
+            The $P_k$ matrix as derived in the RACG algorithm can be related to the Lanczos iterations by the formula: 
+            \begin{align}
+                P_k = Q_k U_k^{-1}
+            \end{align}
+            Where $T_k = L_kU_k$, representing the LU decomposition of the tridiagonal matrix $T_k$ from the Lanczos Iterations. 
+        \end{prop}
+        \begin{proof}
+            
+        \end{proof}
+
+
+        
 
 \section{Effects of Floating Point Arithematic}
 \section{Appendix}
