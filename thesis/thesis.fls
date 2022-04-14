@@ -745,8 +745,8 @@ INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
-OUTPUT /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.toc
 INPUT /usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+OUTPUT /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.toc
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/ecrm0800.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/ecrm0600.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm

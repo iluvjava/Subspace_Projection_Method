@@ -38,6 +38,7 @@
 \contentsline {subsubsection}{\numberline {2.4.2}The Inductive Case}{31}{subsubsection.2.4.2}%
 \contentsline {subsubsection}{\numberline {2.4.3}Fixing the Sign}{33}{subsubsection.2.4.3}%
 \contentsline {subsection}{\numberline {2.5}From Lanczos to Conjugate Gradient}{33}{subsection.2.5}%
-\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{35}{section.3}%
-\contentsline {section}{\numberline {4}Appendix}{35}{section.4}%
-\contentsline {section}{\numberline {5}Biliography}{35}{section.5}%
+\contentsline {subsection}{\numberline {2.6}CG Via Lanczos}{35}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Effects of Floating Point Arithematic}{36}{section.3}%
+\contentsline {section}{\numberline {4}Appendix}{36}{section.4}%
+\contentsline {section}{\numberline {5}Biliography}{36}{section.5}%
