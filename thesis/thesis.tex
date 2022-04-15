@@ -7,6 +7,7 @@
 \newtheorem{prop}{Proposition}[section]  % proposition counter is section
 \newtheorem{lemma}{Lemma}[subsection]  % lemma counter is subsection
 \newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}[subsection]
 \usepackage[margin=1in,footskip=0.25in]{geometry}
 \usepackage{mathtools}
 \usepackage{hyperref}
@@ -68,7 +69,7 @@
     \item $(A)_{i, j}$: The element in i th row and jth column of the matrix $A$.
     \item $(A)_{i:i', j:j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to matlab's rules for indexing. 
     \item $\forall\; 0\le j \le k$: under certain context it indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
-    \item Boldface $\mathbf 0$ denotes the zero vector. 
+    \item Boldface $\mathbf 0$ denotes the zero vector or matrix, depending on the context it can be either a zero row/column vector, or a zero matrix.
     \item The $\hat{}$ decorator is reserved for denoting the unit vector of some vector. For example $\hat{x}:= x/\Vert x\Vert$. 
 \end{enumerate}
 \section*{Introduction}
@@ -1335,6 +1336,71 @@
                     \right)^{k - 1}
                 \end{align}
             \end{proof}
+            Another case that is worth considering is when there is one eigenvalue that is smaller than all the other eigenvalues which are clustered at a way larger value than it, by we I mean the value of $\lambda_1$ is much smaller than all other eigenvalues and the other eigenvalues are clutered closed together in an interval uniformaly in some interval. 
+            \begin{prop}[Small Outlier CG Convergence Rate]
+                The convergence rate is: 
+                \begin{align}
+                    \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} \le 
+                    2\left(
+                        \frac{\lambda_n - \lambda_1}{\lambda_1}
+                    \right)
+                    \left(
+                        \frac{\sqrt{\kappa_0} - 1}{\sqrt{\kappa_0} + 1}
+                    \right)^{k - 1}
+                \end{align}
+                Where $\kappa_0$ is $\lambda_n/\lambda_2$. 
+            \end{prop}
+            \begin{proof}
+                \begin{align}
+                    w(z) &:=  \frac{\lambda_1 - z}{\lambda_1} 
+                    \\
+                    p_k(z) &:= w(z)\left(
+                        \frac{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(z)}
+                        {
+                            \hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(z)
+                        }
+                    \right)
+                    \\\implies
+                    \max_{x\in[\lambda_2, \lambda_n]} |w(x)| &=
+                    \frac{\lambda_n - \lambda_1}{\lambda_1}
+                \end{align}
+                In this case, the maximal value of the weight function $w$ is achieved via $x = \lambda_1$, and the absolute value swapped the sign of the function. Therefore, we have: 
+                \begin{align}
+                    |p_k(z)| &= 
+                    \left|
+                        w(z) 
+                        \frac{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(z)}
+                        {
+                            \hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(0)
+                        }
+                    \right|
+                    \\
+                    &\le 
+                    \left|
+                        \frac{w(z)}{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(0)}
+                    \right|
+                    \\
+                    & \le
+                    \left| 
+                        \left(
+                            \frac{\lambda_n - \lambda_1}{\lambda_1}
+                        \right)
+                        \hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(0)
+                    \right|
+                    \\
+                    \implies 
+                    & \le   
+                    \left(
+                        \frac{\lambda_n - \lambda_1}{\lambda_1}
+                    \right)
+                    2\left(
+                        \frac{\sqrt{\kappa_0} + 1}{\sqrt{\kappa_0} - 1}
+                    \right)^{k - 1}
+                \end{align}
+                We applied the Chebyshev Bound theorem proved in the previous part. And $\kappa_0 = \lambda_n/\lambda_2$, and that is the maximal bound for the absolute value of the polynomial.
+                \par
+                Take notice that it's not immediately clear which type of outlier eigenvalue make the convergence better or worse, but in this case, the weight $w(x)$ introduces a term that grows inversely proportional to $\lambda_1$, making it clearn that if $\lambda_1$ is close to zero the convergence rate is going to be terrible. 
+            \end{proof}
     \subsection{From Conjugate Gradient to Lanczos}
         Up until this point of disucssion, we had been brewing the fact that, the Iterative Lanczos Algorithm and the Conjugate gradient algorithm are pretty much the same thing. From the previous discussion we can observe that: 
         \begin{enumerate}
@@ -1633,14 +1699,146 @@
             Reader please observe that $U_k$ is upper triangular, therefore, it's inverse it's also upper triangular, therefore, $U_k^{-T}$ is lower triangular, and because $L_k$ is also lower triangular, their product is a lower triangular matrix, and therefore, the resulting matrix above is lower triangular, however, given that $P_k^TAP_k$ is symmetric, therefore, $U_k^{-T}L_k$ will have to be symmetric as well, and a matrix that is lower triangular and symmetric has to be diagonal. Therefore, the columns of $P_k$ are conjugate vectors. 
         \end{proof}
     \subsection{CG Via Lanczos}
-        Similar to how we can generate the tridiagonal matrix for the Lanczos iterations with $q_1 = \hat{r}_0$, we can also generate the parameters $a_k, b_k$ in the CG algorithm using parameters from the Lanczos Iterations. To achieve it, one can simply build up the recurrences for the $y_k$ vectors using the elements from the $L_k, U_k$ matrix which comes from $LU$ decomposition of the $T_k$ matrix. This will come at the expense of losing some degree of accuracy because it's equivalent to doing the LU decomposition of $T_k$ without pivoting, but it comes at the advantange computing $\xi_k^TT_k^{-1}\xi_1$  with as little efforts as possible. 
-
-
-
-
+        Similar to how we can generate the tridiagonal matrix for the Lanczos iterations with $q_1 = \hat{r}_0$, we can also generate the parameters $a_k, b_k$ in the CG algorithm using parameters from the Lanczos Iterations. To achieve it, one can simply build up the recurrences for the $y_k$ vectors using the elements from the $L_k, U_k$ matrix which comes from $LU$ decomposition of the $T_k$ matrix. This will come at the expense of losing some degree of accuracy because it's equivalent to doing the LU decomposition of $T_k$ without pivoting, but it comes at the advantange computing $\xi_k^TT_k^{-1}\xi_1$  with as little efforts as possible. Let's take a look. 
+        \par
+        For discussion in this section, we briefly switch the indexing and let it start counting from one instead of zero. 
+        \begin{align}
+            P_k = \begin{bmatrix}
+                p_1 & p_2& \cdots & p_k
+            \end{bmatrix} \quad
+            Q_k = \begin{bmatrix}
+                q_1 & q_2 & \cdots & q_k
+            \end{bmatrix}
+        \end{align}
+        We consider the LU decomposition of the symmetric tridiagonal matrix: 
+        \begin{align}
+            T_k = L_k U_k =
+            \begin{bmatrix}
+                1 & & & \\
+                l_1 & 1 & & \\
+                & \ddots& \ddots & 
+                \\
+                & & l_{k - 1} & 1
+            \end{bmatrix}\begin{bmatrix}
+                u_1& \beta_1 & & \\
+                & u_2 &\beta_2 & \\
+                & &\ddots & \beta_{k - 1}\\
+                & & & u_k
+            \end{bmatrix}
+        \end{align}
+        Reader should agree with some considerations that the upper diagonal of $U_k$ are indeed the same as the upper diagonal of the SymTridiagonal matrix $T_k$. And reacall the expression for $x_k$ from the previous section, we have: 
+        \begin{align}
+            x_k &= x_0 + P_k L_k^{-1}\beta \xi_1 \\ 
+            x_{k} - x_{k - 1} &= 
+            P_k L_k^{-1} \beta \xi_1 - P_{k - 1}L^{-1}_{k - 1}\beta \xi_1
+            \\
+            &= P_k \beta(L^{-1}_k)_{:, 1} - P_{k - 1}\beta(L^{-1}_{k - 1})_{:, 1}
+            \\
+            &= \beta(L^{-1}_k)_{k, 1}P_k
+            \\
+            \implies x_k &= x_{k - 1} + \beta(L^{-1}_k)_{k, 1}p_k
+        \end{align}
+        On the third line, we factor out the last column for the matrix $P_k$. Next, we wish to derive the recurrence between $p_{k + 1}$ and $p_k$. Which is: 
+        \begin{align}
+            P_k &= Q_k U^{-1}_k
+            \\
+            P_kU_k &= Q_k
+            \\\implies
+            \beta_{k - 1}p_{k - 1} + u_k p_k &= q_k 
+            \\
+            u_k p_k &= q_k - \beta_{k - 1}p_{k - 1}
+            \\
+            p_k &= u^{-1}_k(q_k - \beta_{k - 1}p_{k - 1})
+        \end{align}
+        We made use of the fact that the matrix $U_k$ is unit upper bidiagonal. Next, we seek for the recurrences of the parameters $u_k, l_k$. Let's consider the recurrence using the block structure of the matrices: 
+        \begin{align}
+            T_k &= L_kU_k
+            \\
+            T_{k + 1} &= \begin{bmatrix}
+                T_k & \beta_k \xi_k \\
+                \beta_k \xi^T_k & \alpha_{k + 1}
+            \end{bmatrix} = 
+            \begin{bmatrix}
+                L_k & \mathbf{0} \\ l_k \xi_k^{-1} & 1
+            \end{bmatrix}
+            \begin{bmatrix}
+                U_k & \eta_k \xi_k \\
+                \mathbf{0} & u_{k + 1}
+            \end{bmatrix}
+            \\
+            &= 
+            \begin{bmatrix}
+                L_kU_k & \eta_k L_k \xi_k 
+                \\
+                l_k \xi_k^TU_k & \eta_k l_k \xi_k^T \xi_k + u_{k + 1}\alpha_k
+            \end{bmatrix}
+            \\
+            &= 
+            \begin{bmatrix}
+                T_k & \eta_k (L_k)_{:, k} \\ 
+                l_k(U_k)_{k, :} & \eta_k l_k + u_{k + 1}
+            \end{bmatrix}
+            \\
+            &= 
+            \begin{bmatrix}
+                T_k & \eta_k \\
+                l_k u_k & \eta_k l_k + u_{k + 1}
+            \end{bmatrix}
+        \end{align}
+        Note that I changed the upper diagonal of matrix $U$ at the top to be $\eta_k$ instead of $\beta_k$ so we have a chance to convince ourselves that $\beta_k$ for the upper diagonal of $T_k$ are indeed the same as the $\eta_k$ for the upper diagonal of matrix $U_k$. From the results above, $\eta_k = \beta_k$ as expected, and $l_k = \beta_k/u_k$, $u_{k + 1} = \alpha_{k +1} - \beta_{k}l_k$, and hence, to sum up the recurrence relation we have: 
+        \begin{align}
+            \begin{cases}
+                u_{k + 1} &= \alpha_{k + 1} - \beta_k^2/u_k
+                \\
+                l_k &= \beta_k/u_k
+            \end{cases}
+        \end{align}
+        The base case is $u_1 = \alpha_1$. The recurrence of the parameter $u_k$ is immediately useful for figuring out the recurrence for $x_k$, And to figure out the recurrence relations of $(L^{-1}_k)_{k, 1}$, we consider the following fact: 
+        \begin{align}
+            L^{-1}_k L_k &= I 
+            \\
+            \begin{bmatrix}
+                L^{-1}_k & \mathbf{0} \\
+                s_k^T & d_{k + 1}
+            \end{bmatrix}
+            \begin{bmatrix}
+                L_k & \mathbf{0} \\
+                l_k \xi_k^T & 1
+            \end{bmatrix} &= I
+            \\
+            \begin{bmatrix}
+                I & \mathbf{0} \\ 
+                s^TL_k + d_{k + 1}l_k \xi_k^T &d_{k + 1}
+            \end{bmatrix} &= I
+        \end{align}
+        It equals to the identity matrix therefore $d_{k + 1} = 1$, and it has to be that the the lower diagonal sub vector in the results has to be zero. For the bi-lower unit diagonal matrix $L_k$, we cannot predict the structure, most of the time it's likely to be dense and unit lower  triangular. We are interested in look for the first element of the vector $s_k^T$, the equality will assert: 
+        \begin{align}
+            s^TL_k + d_{k + 1}l_k \xi_k^T &= \mathbf{0}
+            \\
+            L_k^{T}s_k + d_{k + 1}l_k \xi_k &= \mathbf{0}
+            \\
+            s_k + L^{-T} d_{k + 1}l_k \xi_k &= \mathbf{0}
+            \\
+            (s_k)_1 + d_{k + 1}l_k (L^{-1}_k)\xi_k &= 0
+            \\
+            (s_k)_1 + d_{k + 1}l_k(L^{-1}_k)_{k , 1} &= 0
+            \\\implies
+            (s_k)_1 &= - l_k(L^{-1}_k)_{k, 1} 
+            \\
+            (s_k)_1 &= (L^{-1}_{k + 1})_{k + 1, 1}
+            \\
+            \implies
+            (L^{-1}_{k + 1})_{k + 1, 1} &=
+            -l_k(L^{-1}_k)_{k, 1}
+        \end{align}
+        Therefore the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm at the same time. 
+        \begin{remark}
+            The derivation might seems out of place for the discussion, but it's part of the analysis of the Conjugate Gradient. The Lanczos algorithm is a special case of Arnoldi when the matrix $A$ is symmetric, drawing a parallel between the FOM algorithm and the above formulation of CG using Lanczos Iterations. 
+        \end{remark}
         
-
 \section{Effects of Floating Point Arithematic}
+    In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
+
 \section{Appendix}
 \section{Biliography}
             
