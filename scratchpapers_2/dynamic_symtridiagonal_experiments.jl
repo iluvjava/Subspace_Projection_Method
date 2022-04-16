@@ -50,11 +50,11 @@ function ViewConvergence(n=2048)
             Idx*ones(dynamicEigs |> length),  
             markershape=:cross
         )
-        converedRitz = GetConverged(dynamicT)
+        convergedRitz = GetConverged(dynamicT)
         scatter!(
             fig1,
-            converedRitz,
-            Idx*(converedRitz |> length |> ones),
+            convergedRitz,
+            Idx*(convergedRitz |> length |> ones),
             markershape=:square
         )
         if dynamicT.converged_this_step |> length >= 1
