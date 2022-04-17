@@ -1850,7 +1850,11 @@
         
 \section{Effects of Floating Point Arithematic}
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
-    \subsection*{Numerical Experiments}
+    \subsection{Partial Orthogonalization and Full Orthogonalization}
+        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. 
+
+
+    \subsection{Numerical Experiments}
         Under exact arithmetic, the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part (2.2) of the discussion. However in practice, this is not always the case. Similar experiments are conducted in Greenbaum's works (\textbf{CITATION NEEDED}). In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. 
     
     

@@ -7,7 +7,6 @@
 ###     choosing a fixed number of vectors to store by. 
 
 
-
 mutable struct CGPO{T <: Number}
     A::Function             # Linear opeartor
     b::AbstractArray{T}     # RHS vector
@@ -145,6 +144,13 @@ function Reset!(this::CGPO)
     this.r = this.b - ComputeVec(this, this.x)
     this.p = this.r
     empty!(this.P)
+return end
+
+function StorageLimit!(this::CGPO, limit::Int)
+    if limit < 1
+        return # simply ignore. 
+    end
+    this.storage_limit = limit
 return end
 
 function UpdatePR!(this::CGPO, new_p, new_r)

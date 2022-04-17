@@ -21,7 +21,7 @@ using LinearAlgebra, SparseArrays, Logging, Plots, ProgressMeter
 function GetNastyPSDMatrix(
     N=20, 
     rho::Number=0.9, 
-    eigen_min=1e-3, 
+    eigen_min=1e-4, 
     eigen_max=1, 
     inverted=false
 )
@@ -77,7 +77,8 @@ end
 """
 function TheoreticalErrorBound(A::AbstractMatrix, k)
     κ = cond(A)
-    return 2*((sqrt(κ) - 1)/(sqrt(κ) + 1))^k
+    y = (sqrt(κ) - 1)/(sqrt(κ) + 1)
+    return 2*(y^k + y^(-k))^(-1)
 end
 
 

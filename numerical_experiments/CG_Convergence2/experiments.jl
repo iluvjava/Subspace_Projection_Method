@@ -5,13 +5,21 @@ function PerformCGFor(
     A::AbstractMatrix, 
     b::AbstractVecOrMat;
     epsilon=1e-2,
-    immitate_exact::Bool=true
+    exact::Bool=true, 
+    partial_ortho=nothing,
 )
     cg = CGPO(A, b)
     
-    if !immitate_exact 
-        TurnOffReorthgonalize!(cg)
+    if exact
+        
+    else
+        if partial_ortho === nothing
+            cg |> TurnOffReorthgonalize!
+        else
+            StorageLimit!(cg, partial_ortho)
+        end
     end
+
     ẋ = A\b
     ė = ẋ - cg.x
     ėAė = dot(ė, A*ė)
@@ -30,53 +38,68 @@ end
 E = PerformCGFor(Diagonal(rand(10)), rand(10))
 
 function PerformExperiment1()
-    N = 128
-    A = GetNastyPSDMatrix(N, 0.95)
+    N = 256
+    A = GetNastyPSDMatrix(N, 0.9)
     b = rand(N)
     A = convert(Matrix{Float16}, A)
     b = convert(Vector{Float16}, b)
-    RelErr = PerformCGFor(A, b, epsilon=1e-2)
-    k = length(RelErr)
-    ErrorsBound = [TheoreticalErrorBound(A, idx) for idx in 1: k]
+    # TODO: Make the plot distinguishable without colors. 
 
-    fig1 = plot(log10.(RelErr), label="Relative Energy (exact)", legend=:bottomleft)
+    # ==========================================================================
+    # The exact computations
+    # ==========================================================================
+
+    RelErr = PerformCGFor(A, b, epsilon=1e-3, exact=true)
+    k = length(RelErr)
+    fig1 = plot(
+        log10.(RelErr), 
+        label="Relative Energy (exact)", 
+        legend=:bottomleft
+    )
+
+    # ==========================================================================
+    # No-Orthogonalizations
+    # ==========================================================================
+
+    RelErr = PerformCGFor(A, b, exact=false, epsilon=1e-3)
+    k = length(RelErr)
+    plot!(
+        fig1, 
+        log10.(RelErr), 
+        label="Relative Energy (floats)",
+        linestyle=:dash
+    )
+
+    # ==========================================================================
+    # Theoretical Bounds
+    # ==========================================================================
+    ErrorsBound = [TheoreticalErrorBound(A, idx) for idx in 1: k]
     plot!(
         fig1, 
         log10.(ErrorsBound), 
         label="Theoretical Bound (exact)",
         xlabel="iteration count", 
-        ylabel="relative error energy norm."
+        ylabel="relative error energy norm.",
+        linestyle=:dot
     )
 
-
-    # ==============================================================================
-    # Floating Points Error Bound.
-    # ==============================================================================
-
-    # A = GetUniformPSDMatrix(N)
-    # b = rand(N)
-    RelErr = PerformCGFor(A, b, immitate_exact=false, epsilon=1e-2)
+    # ==========================================================================
+    # Floating Points Partially Orthogonalized
+    # ==========================================================================
+    RelErr = PerformCGFor(A, b, exact=false, epsilon=1e-3, partial_ortho=div(N, 8))
     k = length(RelErr)
-    ErrorsBound = [TheoreticalErrorBound(A, idx) for idx in 1: k]
-
-    # fig2 = plot(log10.(RelErr), label="Relative Energy (floats)", legend=:bottomleft)
-    # plot!(
-    #     fig1, 
-    #     log10.(ErrorsBound), 
-    #     label="Theoretical Error Bound (exact)", 
-    #     xlabel="iteration count", 
-    #     ylabel="relative error energy norm"
-    # )
-    # display(fig2)
-    # SaveFigToCurrentScriptDir(fig2, "fig2.png")
     plot!(
         fig1, 
         log10.(RelErr), 
-        label="Relative Energy (floats)",
-        legend=:bottomleft
+        label="Relative Energy (partial)",
+        legend=:bottomleft, 
+        linestyle=:dashdot
     )
+
     display(fig1)
     SaveFigToCurrentScriptDir(fig1, "fig1.png")
+
+    
 return end
 
 PerformExperiment1()
