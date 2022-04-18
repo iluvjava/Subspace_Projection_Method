@@ -1,15 +1,25 @@
 \documentclass[]{article}
-\usepackage{amsmath}\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsfonts} 
 \usepackage[english]{babel}
 \usepackage{amsthm}
-\theoremstyle{definition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{prop}{Proposition}
-\newtheorem{lemma}{Lemma}
-\newtheorem{definition}{Definition}
-\usepackage[margin=1in,footskip=0.25in]{geometry}
 \usepackage{mathtools}
 \usepackage{hyperref}
+% \usepackage{minted}
+
+% Basic Type Settings ----------------------------------------------------------
+\usepackage[margin=1in,footskip=0.25in]{geometry}
+\linespread{1}  % double spaced or single spaced
+\usepackage[fontsize=12pt]{fontsize}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}       % Theorem counter global 
+\newtheorem{prop}{Proposition}[section]  % proposition counter is section
+\newtheorem{lemma}{Lemma}[subsection]  % lemma counter is subsection
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}[subsection]
+
+
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
@@ -21,9 +31,9 @@
 \usepackage{courier}
 \lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
 \newcommand{\indep}{\perp \!\!\! \perp}
-% \usepackage{wrapfig}
+\usepackage{wrapfig}
 \graphicspath{{.}}
-% \usepackage{fancyvrb}
+\usepackage{fancyvrb}
 
 %%
 %% Julia definition (c) 2014 Jubobs
@@ -43,7 +53,6 @@
    morestring=[s]{"}{"},%
    morestring=[m]{'}{'},%
 }[keywords,comments,strings]%
-
 \lstset{%
     language         = Julia,
     basicstyle       = \ttfamily,
@@ -53,10 +62,9 @@
     showstringspaces = false,
 }
 
-\linespread{1}
-\usepackage[fontsize=12pt]{fontsize}
+
+
 \begin{document}
 \numberwithin{equation}{subsection}
-
-
+\LaTeX Template
 \end{document}

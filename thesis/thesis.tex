@@ -22,9 +22,9 @@
 \usepackage{courier}
 \lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
 \newcommand{\indep}{\perp \!\!\! \perp}
-% \usepackage{wrapfig}
+\usepackage{wrapfig}
 \graphicspath{{.}}
-% \usepackage{fancyvrb}
+\usepackage{fancyvrb}
 
 %%
 %% Julia definition (c) 2014 Jubobs
@@ -78,7 +78,7 @@ In this paper we establish some of the foundations for subspace iterative method
     \item The $\hat{}$ decorator is reserved for denoting the unit vector of some vector. For example $\hat{x}:= x/\Vert x\Vert$. 
 \end{enumerate}
 \section{Introduction}
-
+    ???? 
 
 \newpage
 \section{Foundations}
@@ -1857,13 +1857,18 @@ In this paper we establish some of the foundations for subspace iterative method
 \section{Effects of Floating Point Arithematic}
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
-        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the $ACG$ algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both persisted for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea. 
+        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the ACG algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both persisted for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea. Inductively, consider the case where the newest residual vector $r_{k + 1}$ are given and it breaks the orhogonality conditions $r_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$.
 
 
     \subsection{Numerical Experiments}
         Under exact arithmetic, the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part (2.2) of the discussion. However in practice, this is not always the case. Similar experiments are conducted in Greenbaum's works (\textbf{CITATION NEEDED}). In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. 
-    
-    
+        \begin{figure}\label{fig:1}
+            \centering
+            \includegraphics[width=10cm]{fig1.png}
+            \caption{
+                The relative energy norm error for different   methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthgonalized with previous vectors. organed dashed: the Original conjugate gradient. Green dot: The tighter theretical upper bound derived by chebyshev (4.3.20). }
+        \end{figure}
+            
 
         
         
