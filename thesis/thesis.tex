@@ -62,8 +62,13 @@
 %\counterwithin*{equation}{subsubsection}
 \tableofcontents
 \newpage
+\begin{center}
+    Abstract
+\end{center}
+In this paper we establish some of the foundations for subspace iterative methods for linear systems in general. We start with deriving the method of Conjugate Gradient using projectors and its properties. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm in details. Using the relations to reveal inspirations in the area of symmetric indefinite solvers. We then analyze the behaviors under floating points arithematic of these algorithms. The foundational ideas include projectors, optimizing on the error norm of a linear system, conjugate vectors method, Krylov Subspace and matrix polynomials, and the Chebyshv Polynomial. 
 
-\section*{Notations}
+
+\section{Notations}
 \begin{enumerate}
     \item $\text{ran}(A):=\{Ax :\forall x \; \in \mathbb R^n\}, A \in \mathbb R^{m\times n}$, The range of a matrix. 
     \item $(A)_{i, j}$: The element in i th row and jth column of the matrix $A$.
@@ -72,7 +77,9 @@
     \item Boldface $\mathbf 0$ denotes the zero vector or matrix, depending on the context it can be either a zero row/column vector, or a zero matrix.
     \item The $\hat{}$ decorator is reserved for denoting the unit vector of some vector. For example $\hat{x}:= x/\Vert x\Vert$. 
 \end{enumerate}
-\section*{Introduction}
+\section{Introduction}
+
+
 \newpage
 \section{Foundations}
     This section focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this section cited from... (citations here)
@@ -454,8 +461,9 @@
             This thereom is later used as a pivotal tools for the analysis for floating point error for the conjugate gradient algorithm. 
 
     \subsection{Deriving Conjugate Gradient from First Principles}
+        By the time this is being written, it's been 70 years since the first time Conjugate Gradient algorithm is proposed by Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}). Upon their first discussion of the algorithm, numerious perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iterations. Here, we use the exact same idea but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the Petrov Galerkin Conditions to derive it. The ideas are rehashed and in the end we point out its relations to Krylov Subspace, which ultimately, leads to other important new ideas that are not yet present back in 1952. In most time under classroom settings or textbook, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so we can move on and talk about other things. In this section of the paper, we take a different approach that similar in spirit to a coursenotes by Shewchuk (\textbf{CITATION NEEDED}) where we focuses more on that inspirations behind the algorithm and disregard Lanczos Algorithms and Krylov Subspace until the very end.  
         \subsubsection{CG Objective and Framework}
-            We introduce the algorithm as an attempt to minimize the energy norm of the error for a linear equation $Ax = b$, here we make the assumptions: 
+            We introduce the algorithm as an attempt to minimize the energy norm of the error for a system of linear equations $Ax = b$ and we make the assumptions: 
             \begin{itemize}
                 \item [1)] The matrix $A$ is symmetric semi-positive definite.  
                 \item [2)] Further assume another matrix $P_k = [p_0 \;p_1\;\cdots p_{k-1}]$ as a matrix whose columns is a basis.
@@ -465,7 +473,7 @@
                     A^{-1}b - (x_0 + P_kw)
                 \Vert_A^2 \iff P^T_kr_0 = P_k^TAP_kw
             \end{align}
-            Refer back to \hyperref[sec:1.4]{(1.4)} for how to deal with the above minimization objective. Using the matrix form for the Petrov Galerkin Conditions where $W, V$ are both $P_k$, we reformulate the Norm Minimizations conditions under the framework of Petrov Galarkin conditions: 
+            Refer back to \hyperref[sec:1.4]{1.2.2} for how to deal with the above minimization objective. Using the matrix form for the Petrov Galerkin Conditions where $W, V$ are both $P_k$, we reformulate the Norm Minimizations conditions under the framework of Petrov Galarkin conditions: 
             \begin{align}
                 \text{choose: }x \in x_0 + \text{ran}(P_k) \text{ s.t: } b - Ax \perp \text{ran}(P_k)    
             \end{align}
@@ -479,7 +487,7 @@
                 \\
                 w &= D^{-1}_kP_k^Tr_0
             \end{align}
-            The idea here is: Accumulating vectors $p_j$ into the matrix $P_k$ and then iterative improve the solution $x_k$, by reducing the error denote as $e_k$ which is defined as $A^{-1}b - x_k$. Then, we can derive the following expression for the solution at step k $x_k$ and the residual at step $r_k = b - Ax_k$ for the algorithm: 
+            The idea here is: Accumulating vectors $p_j$ into the matrix $P_k$ and then iteratively improve the solution $x_k$, by reducing the error denote as $e_k$ defined as $A^{-1}b - x_k$. Then, we can derive the following expression for the solution at step k: $x_k$ and the residual at step $r_k = b - Ax_k$ for the algorithm: 
             \begin{align}
                 \begin{cases}
                     x_k = x_0 + P_kD^{-1}_kP^T_kr_0
@@ -570,6 +578,9 @@
                 \end{cases}
             \end{align}
             With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Assisted Conjugate Gradient}. 
+            \begin{remark}
+                This ACG method is nothing new, in the original paper from Hestenes and Stiefel back in 1952, they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
+            \end{remark}
         \subsubsection{Properties of Assisted Conjugate Gradient}
             Here we setup several useful lemma and propositions that can derive the short recurrences of A-Orthogonal vectors 
             \begin{prop}
@@ -582,9 +593,8 @@
                     \\
                     &= p_{k + j}^Tr_0    
                 \end{align}
-                This made the recurrence between successive residual from the ACG possible. 
             \end{prop}
-            Next, we wish to use this property to find out a recurrences for the residuals of ACG, and here is how we do it: 
+            As a consequence of the above proposition, we obtained a short recurrence for the residuals and solution $x$ of ACG: 
             \begin{align}
                     r_k - r_{k - 1} &= r_0 - A\overline{P}_kr_0 - (r_0 - A\overline{P}_{k - 1}r_0)
                     \\
@@ -603,10 +613,10 @@
                         \langle p_{k - 1}, Ap_{k - 1}\rangle
                     }
             \end{align}
-            We define the value of $a_{k - 1}$, and in above, we have 2 equivalent representation. Please take note that, Proposition still remains true for the ACG algorithm we just developed here. 
+            We define the value of $a_{k - 1}$, and in above, we have 2 equivalent representation. Please take note that, this proposition remains true for the future RACG algorithm that we are going to develop. 
         \subsubsection{Residual Assisted Conjugate Gradient}
             Now, consider the case where, the set of basis vector: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the ACG itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ during each iteration arised and residuals are all orthgonal. We wish to proceed to prove that part. 
-            \begin{lemma}
+            \begin{lemma}\label{lemma:1.5.1}
                 \begin{align}
                     \langle p_{k + j}, Ap_k\rangle
                     &=\langle r_k, Ap_{k + j}\rangle
@@ -625,7 +635,7 @@
                     = \langle p_{k + j}, Ar_k\rangle
                 \end{align}
             \end{proof}
-            \begin{lemma}
+            \begin{lemma}\label{lemma:1.5.2}
                 \begin{align}
                     \langle r_k, p_k\rangle &= \langle r_k, r_k\rangle
                 \end{align}
@@ -641,7 +651,7 @@
                 \end{align}
                 From the first line to the second line, we make use of the definition proposed. 
             \end{proof}
-            \begin{prop}[Residual Assisted CG Generates Orthogonal Residuals]
+            \begin{prop}[Residual Assisted CG Generates Orthogonal Residuals]\label{prop:1.6}
                 \begin{align}
                     \langle r_k , r_j \rangle = 0 \quad \forall\; 0 \le j \le k - 1 
                 \end{align}
@@ -682,8 +692,8 @@
                     {\Vert r_{k - 1}\Vert_2^2}
                 \end{align}
             \end{prop}
-            The proof is direct and we start with the definition of ACG, which is given as: 
             \begin{proof}
+                The proof is direct and we start with the definition of ACG, which is given as: 
                 \begin{align}
                     p_k &= (I - \overline{P}_kA)r_k
                     \\
@@ -692,7 +702,7 @@
                     \\
                     &= r_k - P_kD^{-1}_k(AP_k)^Tr_k
                 \end{align}
-                Observe that the term $(AP_k)^{T}$ can be expanded and we can make use of the Symmetric Property of the operator $A_k$. 
+                Observe:
                 \begin{align}
                     (AP_k)^Tr_k &= 
                     \begin{bmatrix}
@@ -705,20 +715,18 @@
                         \langle p_{k - 1}, Ar_k\rangle
                     \end{bmatrix}
                 \end{align}
-                Next, we can make use of Lemma 2 to get rid of $Ar_k$. Please consider: 
+                Next, we can make use of \hyperref[lemma:1.5.1]{lemma 1.5.1} to get rid of $Ar_k$: 
                 \begin{align}
-                    (AP_k)^Tr_k &= 
-                    \begin{bmatrix}
-                        \langle p_0, Ar_k\rangle
-                        \\
-                        \langle p_1, Ar_k\rangle
-                        \\
-                        \vdots
-                        \\
-                        \langle p_{k - 1}, Ar_k\rangle
-                    \end{bmatrix}
+                    \langle p_j, Ar_k\rangle& \quad \forall\; 0 \le j \le k -2 
+                    \\
+                    \langle p_j, Ar_k\rangle&= \langle r_k, Ap_j\rangle
+                    \\
+                    &= \langle r_k, a_j^{-1}(r_j - r_{j + 1})\rangle
+                    \\
+                    &= a_j^{-1}\langle r_k, (r_j - r_{j + 1})\rangle = 0
                 \end{align}
-                The second line is using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual of ACG, and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in Claim 1. Therefore we have: 
+                The second line is using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for ACG, and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:1.6]{proposition 1.6}. Therefore we have: 
+                
                 \begin{align}
                     (AP_k)^Tr_k &= 
                     \begin{bmatrix}
@@ -733,7 +741,7 @@
                     = 
                     a_{k - 1}^{-1}\langle r_k, (r_{k - 1} - r_{k})\rangle \xi_k
                 \end{align}
-                Take note that the vector $\xi_k$ is the k th standard basis vector in $\mathbb{R}^k$. And using this we can simplify the expression for $p_k$ into: 
+                Take note that the vector $\xi_k$ is the k th standard basis vector in $\mathbb{R}^k$, keep in minde that $r_k\perp r_{k - 1}$ as well. Using these facts we can simplify the expression for $p_k$ into: 
                 \begin{align}
                     p_k &= r_k - P_kD^{-1}_k(AP_k)^Tr_k
                     \\
@@ -755,9 +763,9 @@
                     &= 
                     r_k + \frac{\langle r_k, r_k\rangle}{\langle r_{k - 1}, r_{k - 1}\rangle}p_k
                 \end{align}
-                We make use of the definition for $a_{k-1}$ for the $ACG$ algorithm. At this point, we have proven the short RACG recurrences for $p_k$. 
+                We make use of the definition for $a_{k-1}$ for the ACG algorithm. At this point, we have proven the short RACG recurrences for $p_k$. 
             \end{proof}
-            Up until this point we have proven the usual version of conjugate gradient, we started with the minimizations objective and the properties of $P_k$, then we define a recurrences for the residual (Simultaneously the solution $x_k$), and the A-Orthogonal vectors using a basis as assistance for the generations process. Next, we make the key changes of the assistance basis, making it equalto the set of residuals vector generated from the algorithm itself; after some proof, we uncovered the exact same parameters found in most of the definitions of the CG algorithm, which we refers to as Residual Assisted Conjugate Gradient. Here we proposed the RACG: 
+            Up until this point we have proven the usual of conjugate gradient proposed by Hestenes \& Stiefe (\textbf{CITATION NEEDED}), we started with the minimizations objective and the properties of $P_k$, then we define a recurrences for the residual (Simultaneously the solution $x_k$), and the A-Orthogonal vectors using a basis as assistance for the generations process. Next, we make the key changes of the assistance basis, making it equal to the set of residuals vector generated from the algorithm itself; after some proof, we uncovered the exact same parameters found in most of the definitions of the CG algorithm, which we refers to as Residual Assisted Conjugate Gradient. Here we proposed the RACG: 
             \begin{definition}[RACG]\label{def:RACG}
                 \begin{align}
                     & p^{(0)} = b - Ax^{(0)} 
@@ -821,8 +829,6 @@
                 \end{theorem}
                 Take note that, $\text{ran}(P_k) = \mathcal K_k(A|r_0)$ because the index starts with zero. The above formulations gives theoretical importance for the Conjugate Gradient Algorithm. 
             \end{proof}
-        \subsubsection{A Remark on Its Importance}
-            STILL WORKING ON THIS PART. 
     \subsection{Arnoldi Iterations and Lanczos}
         In this section, we introduce another important algorithm: The Lanczos Algorithm. However, to give more context for the discussion, the Arnoldi iteration is considered as well and it's used to amphasize that Lanczos Iterations is just Arnoldi but with the matrix $A$ being a symmetric matrix. Finally we make the link between Lanczos Iterations and Krylov Subspace, which wil inevitably linked back to RACG and plays an important role for the analysis of RACG. 
         \subsubsection{The Arnoldi Iterations}
@@ -1851,7 +1857,7 @@
 \section{Effects of Floating Point Arithematic}
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
-        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. 
+        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the $ACG$ algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both persisted for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea. 
 
 
     \subsection{Numerical Experiments}
