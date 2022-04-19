@@ -105,19 +105,23 @@ function (this::CGPO)()
     this.p = this.rnew + b*p   
     
     # partial orthogonalizations only errors on r, p is fixed here. 
-    Ar = ComputeVec(this, this.rnew)
+    
     δp = zeros(size(this.r))
     δr = zeros(size(this.r))
+    Ar = ComputeVec(this, this.rnew)
     if this.orthon_on
+        
         for p̄ in this.P[1: end - 1]
             Ap̄ = ComputeVec(this, p̄)
             δp -= (dot(p̄, Ar)/dot(p̄,Ap̄))*p̄
         end
-        this.p += δp
-        for r̄ in this.R[1: end - 1]
+        for r̄ in this.R[1: end]
             δr += dot(r̄, this.rnew)*r̄
         end
+        δp -= (dot(this.r, this.rnew)/dot(this.r, this.r))*this.P[end]
         this.rnew -= δr
+        this.p += δp
+        
     end
 
     this.r = copy(this.rnew)
