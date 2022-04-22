@@ -105,7 +105,7 @@ In this paper we establish some of the foundations for subspace iterative method
                 \forall x \in \text{null}(P): Px &= \mathbf{0} \implies (I - P)x = x \implies x \in \text{ran}(I - P)
                 \\
                 \implies \text{ran}(I - P) &= \text{null}(P)
-                \label{a:1.1.4}
+                \label{3.1.4}
             \end{align}
         \end{proof}
         \noindent
@@ -125,22 +125,20 @@ In this paper we establish some of the foundations for subspace iterative method
                 \end{align}
             \end{lemma}
             \noindent
-            Using \hyperref[a:1.1.4]{(1.1.4)} and consider the proof: 
+            Using \hyperref[3.1.4]{(3.1.4)} and consider the proof: 
             \begin{proof}
                 \begin{align}
-                    \langle P^Hx, y\rangle &= \langle x, Py\rangle 
+                    \text{Observe}: &
+                    \langle P^Hx, y\rangle = \langle x, Py\rangle 
                     \\
-                    \forall  x &\in \text{null}(P^H), y\in \mathbb{C}^n
+                    & \implies \forall  x \in \text{null}(P^H), y\in \mathbb{C}^n: \langle P^Hx ,y\rangle = 0 = \langle x, Py\rangle
                     \\
-                    \implies \langle P^Hx ,y\rangle &= 0 = \langle x, Py\rangle
+                    &\quad 
+                    \implies \text{null}(P^H) \perp \text{ran}(P)
                     \\
-                    \implies \text{null}(P^H) \perp& \text{ran}(P)
+                    & \forall y \in \text{null}(P), x \in \mathbb{C}^n: \langle x, Py\rangle = 0 = \langle P^Hx, y\rangle
                     \\
-                    \forall y \in& \text{null}(P), x \in \mathbb{C}^n: 
-                    \\
-                    \langle x, Py\rangle &= 0 = \langle P^Hx, y\rangle
-                    \\
-                    \implies \text{ran}(P^H) \perp& \text{null}(P)
+                    & \implies \text{ran}(P^H) \perp \text{null}(P)
                 \end{align}
             \end{proof}
             
@@ -148,7 +146,7 @@ In this paper we establish some of the foundations for subspace iterative method
                 A projector is orthogonal iff it's Hermitian. 
             \end{prop}
             \begin{proof}
-                $\impliedby$ Assuming the matrix is Hermitian and it's a projector, then we wish to prove that it's an orthogonal projector. Let's recall: 
+                $\impliedby$ Assuming the matrix is Hermitian and it's a projector, then we wish to prove that it's an orthogonal projector. Let's recall the results of previous lemma: 
                 \begin{align}
                     \text{null}(P^H) = \text{ran}(P)^{\perp}
                     \\
@@ -177,7 +175,7 @@ In this paper we establish some of the foundations for subspace iterative method
             \subsubsection{Projector Geometric Intuitions}
                 A projector describes a given vector using some elements from another basis. The oblique projector creates a light sources in the form of the subspace $L$ and it shoots parallel light rays in the direction orthogonal to $L$, crossing vectors and projecting their shadow onto subspace $M$. 
         \subsubsection{Projector as a 2-Norm Minimizer}
-            An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the matrix $A$, then $P_M$ as a projector onto the basis $M$ as an example can be: $A(AA^T)^{-1}A^T$. Let's consider the claim: 
+            An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the matrix $A$, then $P_M$ as a projector onto the basis $M$ as an example can be: $A(AA^T)^{-1}A^T$. What exactly the projector is doesn't matter in the future disucssions. Let's consider the claim: 
             \begin{align}
                 \Vert P_Mx\Vert^2 \le \Vert x\Vert^2
             \end{align}
@@ -320,7 +318,7 @@ In this paper we establish some of the foundations for subspace iterative method
             Here, we jsut made the substitution of $e_k = A^{-1}r_k$, and $B = A$. Later, we will see how this condition is linked to the idea of an Oblique Projector, similar to how an Orthogonal Projector is able to minimize the 2-Norm of the residual. 
 
     \subsection{Krylov Subspace}
-        A Krylov Subspace is a sequence basis paramaterized by $A$, an linear operator, $v$ an initial vector, and $k$, which basis in the sequece of basis that we are looking at. 
+        A Krylov Subspace is a sequence of basises paramaterized by $A$, the linear operator. $v$ is an initial vector. For each basis in the sequence, it's a gotten by applying the linear operator to the previous basis in the sequence. In this part we prove some of the properties of Krylov Subspace. The term ``grade" we used is originated from the textbook (\textbf{CITATION NEEDED}) from Y.Saad. 
         \begin{definition}[Krylov subspace]
             \begin{align}
                 \mathcal{K}_k(A|b) = \text{span}( b, Ab, A^2b, \cdots A^{k - 1}b)
@@ -567,7 +565,7 @@ In this paper we establish some of the foundations for subspace iterative method
                 \end{align}
             \end{prop}
             For above propositions, we used the immediate consequence of the range of these oblique projectors. 
-        \subsubsection{Assisted Conjugate Gradient}
+        \subsubsection{Assisted Conjugate Gradient (Conjugate Directions)}
             So far, we have this particular scheme of solving the optimization problem, coupled with the way to computing the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
             \begin{align}
                 \begin{cases}
@@ -585,6 +583,9 @@ In this paper we establish some of the foundations for subspace iterative method
             With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Assisted Conjugate Gradient}. 
             \begin{remark}
                 This ACG method is nothing new, in the original paper from Hestenes and Stiefel back in 1952, they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
+            \end{remark}
+            \begin{remark}[Geometric Intutions of Assisted CG]
+                What is happening in geometrically is that the A-Orthogonal vectors are orthogonal if desribe it under the alternative eigensubspaces. Intuition one should think of a hyper dimensional ellipsoid that sits along the standard basis vector, and transformation of $A$ is stretching and rotating's axis, resulting in a new ellipsoid in a different orientations; if such a transformation is also applied to the axis of ellipsoid then the transformed axis are conjugate vectors. Tracing along the direction of these vectors will ensure minimum redundancy of search directions. 
             \end{remark}
         \subsubsection{Properties of Assisted Conjugate Gradient}
             Here we setup several useful lemma and propositions that can derive the short recurrences of A-Orthogonal vectors 
@@ -1618,9 +1619,14 @@ In this paper we establish some of the foundations for subspace iterative method
                 \item [2.)] How are the A-Orthogonal vectors $p_k$ from CG relates to Lancozs? 
             \end{enumerate}
     \subsection{From Lanczos to Conjugate Gradient}
+            In this section, we show the equivalence of the Conjugate Gradient and Lanczos iterations by deriving the CG using the Lanczos. 
+            \par
+            The goal is to show that CG is a special case of Lanczos. In the end we discuss the key that it can inspire solvers for symmetric indefinite systems of linear equations. 
+            \par
+            We start of by considering the LU decomposition of the the Tridiagonal matrix of Lanczos and us its entries to express the scalars $a_k, b_k$ in CG. In addition, we express the conjugate vectors $p_k$ as a short recurrence of the lanczos vectors $q_k$. 
         \subsubsection{Matching the Residual and Conjugate Vectors}
             In this section, we go from the Iterative Lanczos algorithm to the Conjugate Gradient algorithm and we seek to establish a link between the solution $x_k, p_k$ from CG with the lanczos vectors and the symmetric tridiagonal matrix generated by Lanczos. This section will also play an important role for the backwards analysis for the floating point behaviors for the CG algorithm in the later parts of the paper. At the end, we highlight some of the hidden insights that this particular derivation of quivalence leads to, and how it inspires algorithms that directly solves symmetric indefinite systems. 
-            \begin{prop}[Lanczos Vectors and Residuals]
+            \begin{prop}[Lanczos Vectors and Residuals]\label{prop:Lanczos_Vectors_and_Residuals}
                 The $Q_k$ is the orthogonal matrix generated by Lanczos Iteration. To match the Krylov Subspace generated by the Lanczos iterations and CG, we initialize $q_1 = \hat{r}_0$, then the following relationship between Lanczos and CG occurs between their parameters: 
                 \begin{align}
                     \begin{cases}
@@ -1822,7 +1828,7 @@ In this paper we establish some of the foundations for subspace iterative method
                 \\
                 \begin{bmatrix}
                     I & \mathbf{0} \\ 
-                    s^TL_k + d_{k + 1}l_k \xi_k^T &d_{k + 1}
+                    s_k^TL_k + d_{k + 1}l_k \xi_k^T &d_{k + 1}
                 \end{bmatrix} &= I
             \end{align}
             It equals to the identity matrix therefore $d_{k + 1} = 1$, and it has to be that the the lower diagonal sub vector in the results has to be zero. For the bi-lower unit diagonal matrix $L_k$, we cannot predict the structure, most of the time it's likely to be dense and unit lower  triangular. We are interested in look for the first element of the vector $s_k^T$, the equality will assert: 
@@ -1833,18 +1839,21 @@ In this paper we establish some of the foundations for subspace iterative method
                 \\
                 s_k + L^{-T} d_{k + 1}l_k \xi_k &= \mathbf{0}
                 \\
-                (s_k)_1 + d_{k + 1}l_k (L^{-1}_k)\xi_k &= 0
+                (s_k)_1 + d_{k + 1}l_k ((L^{-1}_k)\xi_k)_1 &= 0
                 \\
                 (s_k)_1 + d_{k + 1}l_k(L^{-1}_k)_{k , 1} &= 0
                 \\\implies
                 (s_k)_1 &= - l_k(L^{-1}_k)_{k, 1} 
                 \\
-                (s_k)_1 &= (L^{-1}_{k + 1})_{k + 1, 1}
+                (s_k)_1 &= (L^{-1}_{k + 1})_{k + 1, 1}  \quad \text{by definition}
                 \\
                 \implies
                 (L^{-1}_{k + 1})_{k + 1, 1} &=
                 -l_k(L^{-1}_k)_{k, 1}
             \end{align}
+            To assert the fact that $L_k^{-1}L_k$ is identity, we carefully consider the last row excluding the bottom right element vector: $s^TL_k + d_{k + 1}l_k\xi_k^T$ which will have to be a zero vector. From the first line to the second line, we took the transpose of the vector. From the second to the third line we multiplied both side by inverse of $L_k^{T}$. And from the third to the forth line, we took out only the first element in the vector. Observe that the first element of the vector $L_k^{-1}\xi_k$ is just $(L_k^{-1})_{k, 1}$. 
+            \par
+            % TODO: CHECK THIS PART OF THE PROOFS AND EXPLAIN IT BETTER. 
             Therefore the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm at the same time. 
             \begin{remark}
                 The derivation might seems excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite providing potential to new algorithm that can solve symmetric indefinite system directly. The Lanczos Algorithm for linear system (we refer to the method derived in the above section) is a special case of FOM (\textbf{CITATION NEEDED}) when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrences for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithemtic, CG can be applied to symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the RACG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. However there are 2 problems solving Symmetric Indefinite using the CG is that, the following recurrence doesn't hold anymore and it should be restated as: 
@@ -1900,13 +1909,84 @@ In this paper we establish some of the foundations for subspace iterative method
                 The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthgonalized with previous 32 residual and conjugate vectors. organed dashed: the Original conjugate gradient. Green dot: The tighter theretical upper bound derived by chebyshev (4.3.20). For this plot: $\rho = 0.9$, the matrix is $256\times 256$. 
             }
         \end{figure}
-        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues are not perfectly uniform. The partially orthogonalized 
-
-            
-
+        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues are not perfectly uniform. The partially orthogonalized methods diverges from the exact error after more steps of iterations compare to the relative error without any orthogonalizations. These are seemed in \hyperref[fig:1]{(fig 1)}. 
+        \begin{remark}
+            The convergence is disappointing under floating point arithematic and the promised efficiency of the algorithm is not there anymore if the matrix is ill-conditioned. If we were to use a fully re-orthogonalized variant of the CG, the memory needed and the totaly complexity for a fixed tolerance is going to be on the same scale of solving it by direct methods. 
+        \end{remark}
+    \subsection{Greenbaum's Backward Analysis and Paige's Floating Point Analysis}
+        In this section we present the backwards analysis of the algorithm in a more thoroughly manner and exam its consequences. When floating point arithematic is used, the eigenvalues of the Tridiagonal matrices might inttroduces ghost eigenvectors for the Lanczos Iterations, and using the equivalence of the Lanczos iterations and CG, we can capture a posteri bound on how much the error is exactly during the iterations of CG. 
+        \subsubsection*{The residual}
+            Recall from proposition \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} that the residual of the CG can be expressed interms of the lanczos vector. However, the Lanczos Algorithm under floating doesn't produces perfectly orthogonal Lanczos Vectors, $\tilde{Q}_k$ is not quiet orthogonal, which would also means that $\tilde{Q}_k^HA\tilde{Q}_k\approx T_k$ where $T_k$ is the results from the Lanczos Algorithm, which is only the truncation of the tridiagonal parts of the matrix $\tilde{Q}_k^HA\tilde{Q}_k$. However when we solve for $y_k$ using the expression $y_k = \beta T^{-1}_k\xi_1$, and this is what the CG algorithm does faithflly. The algorithm still thought $T_k$ produced by itself is still perfectly tridiagonal, but it's actually off because $Q_k$ is not quiet orthogonal, hence the algorithm never quiet find the optimal under the conjugate basis. At this point it might seems that tiny errors to the Lanczos vector is very problematic, but in fact
+            using the foolishness of CG and assume that the computation of $y_k$ is exact and it's computed as: $y_k = \beta T^{-1}\xi_1$. That only left us with fewer type of floating errors to keep track of. Next, we proceed to look for the residual of the CG algorithm by assuming that the lanczos recurrences has floating point errors: 
+            \begin{align}
+                AQ_k = Q_{k + 1} \begin{bmatrix}
+                    T_k
+                    \\
+                    \beta_k \xi_k^T
+                \end{bmatrix} + F_k
+            \end{align}
+            Reader please reflect on the fact that, right now the $Q_k$ and is the EXACT and $T_k$ is produced by the Lanczos Algorithm, and we are fixing the recurrences with $F_k$, a matrix full of floating error to correct it so that the equality holds true. 
+            \begin{align}
+                r_k &= r_0 - AQ_ky_k
+                \\
+                r_k &= r_0 - 
+                    \left(
+                        Q_{k + 1} \begin{bmatrix}
+                            T_k
+                            \\
+                            \beta_k \xi_k^T
+                        \end{bmatrix}
+                        + 
+                        F_k
+                    \right)
+                y_k
+                \\
+                r_k &= 
+                \underbrace{\left(
+                    r_0 - Q_{k + 1}\begin{bmatrix}
+                        T_k
+                        \\
+                        \beta_k \xi_k^T
+                    \end{bmatrix}y_k
+                \right)}_{= -\beta_k\xi_k^Ty_kq_{k + 1}} + F_k \beta T_k^{-1}\xi_1
+                \\
+                \implies
+                \frac{\Vert r_{k + 1}\Vert}
+                {
+                    \Vert r_0\Vert
+                } &\le
+                \beta_k \Vert
+                    \xi_k^T T_k^{-1}\xi_1 q_{k + 1}
+                \Vert + 
+                \Vert F_kT_k^{-1}\xi_1 \Vert
+                \\
+                \frac{\Vert r_{k + 1}\Vert}
+                {
+                    \Vert r_0\Vert
+                } &= 
+                \le 
+                \beta_k |
+                    \xi_k^T T_k^{-1}\xi_1
+                | + 
+                \Vert F_k\Vert  \Vert T_k^{-1}\xi_1\Vert
+            \end{align}
+            Here, because of the assumption of exactness for the $Q_k$ matrices we are able to reuse \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} to regaudge it and obtain a similar expression but this time, taking the floating error into account. 
         
+        \subsubsection{Convergence Rate and Paige's Theorem}
+            Now, we introduce a new theorem poposed paige. Which gives a bound to the floating point errors for the Lanczos Algorithm. The theorem goes as follow: 
+            \begin{theorem}[Paige's Theorem]
+                The eigenvalues $\tau_i^{(j)}, i = 1, \cdots, j$ of the tridiagonal matix $T_j$ satisfies: 
+                \begin{align}
+                    \lambda_1 - j^{5/2}\epsilon_2\Vert A\Vert 
+                    \le \theta_i^{(j)}
+                    \le 
+                    \lambda_n + j^{5/2}\epsilon_2\Vert A\Vert
+                \end{align}
+            \end{theorem}
+            
         
 \section{Appendix}
+\newpage
 \section{Biliography}
             
             

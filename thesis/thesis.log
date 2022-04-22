@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  18 APR 2022 21:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  22 APR 2022 15:55
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -510,50 +510,46 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write5
 \openout5 = `thesis.toc'.
 
- [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35]
+ [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1715.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1715.
+(hyperref)                removing `math shift' on input line 1721.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1715.
+(hyperref)                removing `subscript' on input line 1721.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1715.
+(hyperref)                removing `subscript' on input line 1721.
 
-[36] [37] [38] [39]
-<fig1.png, id=821, 602.25pt x 401.5pt>
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1721.
+
+[37] [38] [39] [40]
+<fig1.png, id=839, 602.25pt x 401.5pt>
 File: fig1.png Graphic file (type png)
 <use fig1.png>
-Package pdftex.def Info: fig1.png  used on input line 1898.
+Package pdftex.def Info: fig1.png  used on input line 1907.
 (pdftex.def)             Requested size: 284.52756pt x 189.69136pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[40] [41 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/fig1.png>] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
+ [41 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/fig1.png>] [42] [43] [44] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 14C1EA3E907BA7FCA84F346F19FD2311;9997.
+(rerunfilecheck)             Checksum: 9D0CA62BCEBF460429948F87E5940BFD;10788.
  ) 
 Here is how much of TeX's memory you used:
- 14904 strings out of 478994
- 223678 string characters out of 5858183
- 583910 words of memory out of 5000000
- 31688 multiletter control sequences out of 15000+600000
+ 14921 strings out of 478994
+ 223914 string characters out of 5858183
+ 583968 words of memory out of 5000000
+ 31691 multiletter control sequences out of 15000+600000
  417562 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  81i,22n,117p,1500b,468s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
-Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf (41 pages, 444648 bytes).
+Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf (44 pages, 456675 bytes).
 PDF statistics:
- 1002 PDF objects out of 1200 (max. 8388607)
- 929 compressed objects within 10 object streams
- 476 named destinations out of 1000 (max. 500000)
- 390 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1039 PDF objects out of 1200 (max. 8388607)
+ 963 compressed objects within 10 object streams
+ 490 named destinations out of 1000 (max. 500000)
+ 406 words of extra memory for PDF output out of 10000 (max. 10000000)
 
