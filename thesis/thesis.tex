@@ -4,7 +4,7 @@
 \usepackage{amsthm}
 \usepackage{listings}
 \usepackage{courier}
-\usepackage{wrapfig}
+
 \usepackage{fancyvrb}
 \usepackage{beramono}
 \usepackage{mathtools}
@@ -15,7 +15,10 @@
 \usepackage[margin=1in,footskip=0.25in]{geometry}  % margin, foot skip
 \usepackage[fontsize=12pt]{fontsize}
 \usepackage[font=tiny]{caption}
+\usepackage{wrapfig}
+\usepackage{float}
 \usepackage[final]{graphicx}
+
 
 \lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
 \newcommand{\indep}{\perp \!\!\! \perp}
@@ -1853,7 +1856,6 @@ In this paper we establish some of the foundations for subspace iterative method
             \end{align}
             To assert the fact that $L_k^{-1}L_k$ is identity, we carefully consider the last row excluding the bottom right element vector: $s^TL_k + d_{k + 1}l_k\xi_k^T$ which will have to be a zero vector. From the first line to the second line, we took the transpose of the vector. From the second to the third line we multiplied both side by inverse of $L_k^{T}$. And from the third to the forth line, we took out only the first element in the vector. Observe that the first element of the vector $L_k^{-1}\xi_k$ is just $(L_k^{-1})_{k, 1}$. 
             \par
-            % TODO: CHECK THIS PART OF THE PROOFS AND EXPLAIN IT BETTER. 
             Therefore the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm at the same time. 
             \begin{remark}
                 The derivation might seems excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite providing potential to new algorithm that can solve symmetric indefinite system directly. The Lanczos Algorithm for linear system (we refer to the method derived in the above section) is a special case of FOM (\textbf{CITATION NEEDED}) when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrences for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithemtic, CG can be applied to symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the RACG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. However there are 2 problems solving Symmetric Indefinite using the CG is that, the following recurrence doesn't hold anymore and it should be restated as: 
@@ -1869,6 +1871,7 @@ In this paper we establish some of the foundations for subspace iterative method
         
 \section{Effects of Floating Point Arithematic}
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
+    % ADD SOME MORE STUFF HERE. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
         In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the ACG algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both persisted for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea. Firstly recall the proof for proposition 3.7. Next, we inductively consider the case where the newest residual vector involving round off error $\overline{r}_{k + 1}$ are given and it breaks the orhogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
         \begin{align}
@@ -1894,7 +1897,7 @@ In this paper we establish some of the foundations for subspace iterative method
         \end{align}
         Here, we generate the conjuate vectors $p_k$ correctly by faithfully reproducing the term $(AP_k)^T\overline{r}_k$, and then we upadate the residual $\overline{r}_k$ into $r_k$ by orthogonalizing it against all previous residual vectors. Doing ths require the expensive storage of previous vectors $p_k$. One can use alternative formulas to A-orthogonalize $p_k$ and re-orthogonalize $r_k$. In addition, we have the options for partially orthogonalizing the $r_k, p_k$ vectors for less memory usage. 
 
-    \subsection{Numerical Experiments}
+    \subsection{Relative Errors of CG Under Floating Points}
         Under exact arithmetic, the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part (2.2) of the discussion. However in practice, this is not always the case. Similar experiments are conducted in Greenbaum's works (\textbf{CITATION NEEDED}). In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. For testing the convergence of the algorithm we use a 16 digits floats to exagerate the floating point roud off error. The spectrum of the matrix we are using are taken to be the same from Greenbaum's works (\textbf{CITATION NEEDED}): 
         \begin{align}
             \lambda_{\min} + \left(
@@ -1915,9 +1918,10 @@ In this paper we establish some of the foundations for subspace iterative method
         \end{remark}
     \subsection{Greenbaum's Backward Analysis and Paige's Floating Point Analysis}
         In this section we present the backwards analysis of the algorithm in a more thoroughly manner and exam its consequences. When floating point arithematic is used, the eigenvalues of the Tridiagonal matrices might inttroduces ghost eigenvectors for the Lanczos Iterations, and using the equivalence of the Lanczos iterations and CG, we can capture a posteri bound on how much the error is exactly during the iterations of CG. 
-        \subsubsection*{The residual}
-            Recall from proposition \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} that the residual of the CG can be expressed interms of the lanczos vector. However, the Lanczos Algorithm under floating doesn't produces perfectly orthogonal Lanczos Vectors, $\tilde{Q}_k$ is not quiet orthogonal, which would also means that $\tilde{Q}_k^HA\tilde{Q}_k\approx T_k$ where $T_k$ is the results from the Lanczos Algorithm, which is only the truncation of the tridiagonal parts of the matrix $\tilde{Q}_k^HA\tilde{Q}_k$. However when we solve for $y_k$ using the expression $y_k = \beta T^{-1}_k\xi_1$, and this is what the CG algorithm does faithflly. The algorithm still thought $T_k$ produced by itself is still perfectly tridiagonal, but it's actually off because $Q_k$ is not quiet orthogonal, hence the algorithm never quiet find the optimal under the conjugate basis. At this point it might seems that tiny errors to the Lanczos vector is very problematic, but in fact
-            using the foolishness of CG and assume that the computation of $y_k$ is exact and it's computed as: $y_k = \beta T^{-1}\xi_1$. That only left us with fewer type of floating errors to keep track of. Next, we proceed to look for the residual of the CG algorithm by assuming that the lanczos recurrences has floating point errors: 
+        \subsubsection{Bounding the The Relative Residuals}
+            Recall from proposition \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} that the residual of the CG can be expressed interms of the Lanczos vectors. However, the Lanczos Algorithm under floating doesn't produces perfectly orthogonal Lanczos Vectors (The lost of orthogonality is experimented and visualized in the next section), $\tilde{Q}_k$ is not quiet orthogonal, which would also means that $\tilde{Q}_k^HA\tilde{Q}_k\approx T_k$ where $T_k$ is the results from the Lanczos Algorithm will be the truncation of the tridiagonal parts of the matrix $\tilde{Q}_k^HA\tilde{Q}_k$. However when we solve for $y_k$ using the expression $y_k = \beta T^{-1}_k\xi_1$, and this is what the CG algorithm does faithfully. The algorithm still thought $T_k$ produced by itself is perfectly tridiagonal which is not true because $Q_k$ is not quiet orthogonal. As a results the algorithm never quiet find the optimal under the conjugate basis. At first glance, tiny round-off errors in the Lanczos vectors is very problematic. 
+            \par
+            Surprisingly, we can leverage what CG does and assume: $y_k = \beta T^{-1}\xi_1$ is at least, exact. Then it only left us with fewer type of floating errors to keep track of. Next, we proceed to look for the residual of the CG algorithm by assuming that the lanczos recurrences has a backwards errors: 
             \begin{align}
                 AQ_k = Q_{k + 1} \begin{bmatrix}
                     T_k
@@ -1925,7 +1929,7 @@ In this paper we establish some of the foundations for subspace iterative method
                     \beta_k \xi_k^T
                 \end{bmatrix} + F_k
             \end{align}
-            Reader please reflect on the fact that, right now the $Q_k$ and is the EXACT and $T_k$ is produced by the Lanczos Algorithm, and we are fixing the recurrences with $F_k$, a matrix full of floating error to correct it so that the equality holds true. 
+            Reader please reflect on the fact that, right now the $Q_k$ which is EXACT and $T_k$ is produced by the Lanczos Algorithm, and we are fixing the recurrences with $F_k$, a matrix full of floating error to correct it so that the equality holds true. 
             \begin{align}
                 r_k &= r_0 - AQ_ky_k
                 \\
@@ -1963,17 +1967,17 @@ In this paper we establish some of the foundations for subspace iterative method
                 \frac{\Vert r_{k + 1}\Vert}
                 {
                     \Vert r_0\Vert
-                } &= 
-                \le 
+                } 
+                &\le 
                 \beta_k |
                     \xi_k^T T_k^{-1}\xi_1
                 | + 
                 \Vert F_k\Vert  \Vert T_k^{-1}\xi_1\Vert
             \end{align}
-            Here, because of the assumption of exactness for the $Q_k$ matrices we are able to reuse \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} to regaudge it and obtain a similar expression but this time, taking the floating error into account. 
+            Here, because of the assumption of exactness for the $Q_k$ matrices we are able to reuse \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} to regaudge it and obtain a similar expression but this time, taking the floating error into account. In fact, this formula is elegant in the sense that it's determined by the scalar $\xi_k^T T_k^{-1}\xi_1$ and the floating point error $F_k$ produced by the Lanczos iterations. 
         
         \subsubsection{Convergence Rate and Paige's Theorem}
-            Now, we introduce a new theorem poposed paige. Which gives a bound to the floating point errors for the Lanczos Algorithm. The theorem goes as follow: 
+            Now, we introduce a new theorem poposed paige (\textbf{CITATION NEEDED}). Which gives a bound to the floating point errors for the Lanczos Algorithm, and consequently, giving us a bound on the relative error for CG under floating points. The theorem goes as follow: 
             \begin{theorem}[Paige's Theorem]
                 The eigenvalues $\tau_i^{(j)}, i = 1, \cdots, j$ of the tridiagonal matix $T_j$ satisfies: 
                 \begin{align}
@@ -1983,7 +1987,36 @@ In this paper we establish some of the foundations for subspace iterative method
                     \lambda_n + j^{5/2}\epsilon_2\Vert A\Vert
                 \end{align}
             \end{theorem}
-            
+        \subsubsection{Ghost Eigenvalues}
+            The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, the extremely closed eigenvalues are a single eigenvalues. More specifically, the eigenvalues in $T_k$ seems to cluster gruops of eigenvalues that are extemely close to the true eigenvalues of the original matrix $A$. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues (\textbf{NONTRIVIAL FACTS}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs Orthogonalization process. Here, we conducted the numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = (-1 + 2(i - 1)/(n - 1))^3$ where $A\in \mathbb R^{n\times n}$. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos Iterations and mark the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories during 64 iterations. The results can be seemed at \hyperref[fig:2]{(fig 2)}. 
+            \begin{figure}[H]\label{fig:2}
+                \centering
+                \includegraphics[width=14cm]{fig2.png}
+                \caption{The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their ranking, and plotted with their trajectories. }
+            \end{figure}
+            Recall from the Cauchy Interlace Theorem, the eigenvalues of the Tridiagonal Matrix $T_k$ from iterations to iterations will never crosses each other, which implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iterations will move monotonically moves upwards or downwards during the Lanczos Iterations. The ghoest eigenvalues on the figure heppens when some of the interior eigenvalues suddenly switched to another eigenvalue that is on the exterior of the spectrum. It appears as the matrix $T_k$ has repeated eigenvalues but in fact they are not and they are just very close. 
+            \par
+            However, judging from the eigenvalues of the matrix $T_k$ alone will not tells us whether 2 very close eigenvalues corresponds to the same eigenvalue of $A$, even if their trajectories seems to suggest it that way. We can't tell it because if I keep the matrix $T_k$ generated from an lanczos algorithm and all it $A$, which has eigenvalues that are extremely close to each other, and then ran another Lanczos iteations on it but with the initial vector $\xi_1$, then I will exactly reproduce the lanczos matrix vector itself. But in this case, the eigenvalues of $T_k$ is exactly the same as $A$, and in this case, all eigenvalues are actually presented in the original matrix $A$, which is just $T_k$, itself. 
+            \par
+            In fact, the ghost eigenvalues here is produced by floating point errors because firstly we know what the actual eigenvalues of $A$ is, we made $A$. To make sense of it better intuitive, we bear in mind the fact that ghost eigenvalues happens together with the lost of orhogonality of the $Q_k$ matrix. If $Q_k$ matrix is perfectly orthogonal, then there is no ghost eigenvalues, regardless of how the trajectories of the eigevalues of $T_k$ looks like. In fact, a corresponding plot of $\tilde{Q}_k^H\tilde{Q}_k$ are plotted in \hyperref[fig:3]{(fig 3)} where we plotted the heat map of the matrix $\tilde{Q}^H_k\tilde{Q}_k$ under the $\log2$ scale of the absolute values of its entries. 
+            \begin{figure}[H]\label{fig:3}
+                \centering
+                \includegraphics[width=10cm]{fig3.png}
+                \caption{The heatmap of the plot of log2 of the absolute values of the matrix $\tilde{Q}^H_k\tilde{Q}_k$. }
+            \end{figure}
+            In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $\tilde{Q}_kA\tilde{Q}_k$ which is plotted in \hyperref[fig:4]{(fig 4)}. 
+            \begin{figure}[H]\label{fig:4}
+                \centering
+                \includegraphics[width=10cm]{fig4.png}
+                \caption{The plot of the $T_k$ matrix as reproduced by $\tilde{Q}_kA\tilde{Q}_k$}
+            \end{figure}
+            \begin{remark}
+                As a final remark for these numerical experiments, I suggest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exerior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig 2)}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality corresondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
+            \end{remark}
+
+    \subsection{The Rizt Vector's View and Another Paige's Theorem}
+
+
         
 \section{Appendix}
 \newpage
