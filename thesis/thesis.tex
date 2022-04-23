@@ -68,12 +68,36 @@
 \begin{document}
 \numberwithin{equation}{subsection}
 %\counterwithin*{equation}{subsubsection}
-\tableofcontents
-\newpage
 \begin{center}
-    Abstract
+    \vspace*{1cm}
+    \textbf{Thesis Title}
+         
+    \vspace{1.5cm}
+
+    \textbf{Author Name}: Hongda Li
+
+    \vfill
+         
+    A thesis presented for the degree of: ???? 
+         
+    \vspace{0.8cm}
+         
+    Department Name: University of Washington Applied Mathematics\\
+
+    University Name: University of Washington\\
+
+    \begin{center}
+        Abstract
+    \end{center}
+
+    In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczos Iterations, look into their relations and analyze them in details. We start with deriving the method of Conjugate Gradient using projectors and its properties using the foundations established. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm and using the relations to reveal inspirations in the area of symmetric indefinite solvers and convergence rate anaysis. We then analyze algorithms behaviors under floating points arithematic, specifically how the floating point arithemtic slows down the convergence of CG and how it's related to the lost of orthogonality of Lanczos vectors, and then we present some theorems regarding which directions the Lanczos vectors are losing their orthogonality together with illustrative numerical experiments.
+    
+         
 \end{center}
-In this paper we establish some of the foundations for subspace iterative methods for linear systems in general. We start with deriving the method of Conjugate Gradient using projectors and its properties. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm in details. Using the relations to reveal inspirations in the area of symmetric indefinite solvers. We then analyze the behaviors under floating points arithematic of these algorithms. The foundational ideas include projectors, optimizing on the error norm of a linear system, conjugate vectors method, Krylov Subspace and matrix polynomials, and the Chebyshv Polynomial. 
+\newpage
+\tableofcontents
+
+\newpage 
 
 
 \section{Notations}
@@ -83,14 +107,20 @@ In this paper we establish some of the foundations for subspace iterative method
     \item $(A)_{i:i', j:j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to matlab's rules for indexing. 
     \item $\forall\; 0\le j \le k$: under certain context it indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
     \item Boldface $\mathbf 0$ denotes the zero vector or matrix, depending on the context it can be either a zero row/column vector, or a zero matrix.
-    \item The $\hat{}$ decorator is reserved for denoting the unit vector of some vector. For example $\hat{x}:= x/\Vert x\Vert$. 
+    \item The $\hat{}$ decorator is reserved for denoting the unit vector of some non zero vector. For example $\hat{x}:= x/\Vert x\Vert, x \neq \mathbf 0$. 
 \end{enumerate}
+
 \section{Introduction}
-    ???? 
+    ????
+
+\begin{center}\large
+    \textbf{Acknowledgement}
+\end{center}
+
 
 \newpage
 \section{Foundations}
-    This section focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this section cited from... (citations here)
+    This section focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this section cited from... (\textbf{CITATION NEEDED})
 
     \subsection{Projectors}
         The properties of projector have importance for subspace projection method. In this section, we go through 2 types of projectors, the orthgonal projector and the oblique projector. The oblique projector is made useful for the derivation of the classic CG algorithm, which is referred to as RACG in the context of this paper. The orthogonal projector is useful for orthogonalizing the Krylov Subspace. 
@@ -254,7 +284,7 @@ In this paper we establish some of the foundations for subspace iterative method
             \end{align}
             Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions. 
         
-        \subsubsection{Energy Norm Minimization using Gradient}\label{sec:1.4}
+        \subsubsection{Energy Norm Minimization using Gradient}\label{sec:Energy_Norm_Minimization_using_Gradient}
             Other times, iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under some norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, and we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$, then one may consider using gradient as a more direct approach instead of projector. 
             \begin{align}
                 &\hspace{0.6em} \min_{x\in x_0 + \mathcal{K}} \Vert b - Ax\Vert_B^2 
@@ -479,13 +509,13 @@ In this paper we establish some of the foundations for subspace iterative method
                     A^{-1}b - (x_0 + P_kw)
                 \Vert_A^2 \iff P^T_kr_0 = P_k^TAP_kw
             \end{align}
-            Refer back to \hyperref[sec:1.4]{1.2.2} for how to deal with the above minimization objective. Using the matrix form for the Petrov Galerkin Conditions where $W, V$ are both $P_k$, we reformulate the Norm Minimizations conditions under the framework of Petrov Galarkin conditions: 
+            Refer back to \hyperref[sec:Energy_Norm_Minimization_using_Gradient]{Energy Norm Minimization using Gradient} for how to obtain the above minimization objective. Using the matrix form for the Petrov Galerkin Conditions where $W, V$ are both $P_k$, we reformulate the Norm Minimizations conditions under the framework of Petrov Galarkin conditions: 
             \begin{align}
                 \text{choose: }x \in x_0 + \text{ran}(P_k) \text{ s.t: } b - Ax \perp \text{ran}(P_k)    
             \end{align}
             Take note that the link between a norm minimzation and an equivalent subspace Orthogonality conditions don't garantee to happen for other subspace projector methods, for example the FOM and Bi-Lanczos Methods are orthogonalizations method that doesn't directly link to a norm minimization objective (\textbf{CITATION NEEDED}). 
             \par
-            To solve for $w$, we wish to make $P_k^TAP_k$ to be an easy-to-solve matrix. Let the easy-to-solve matrix to be a diagonal matrx and hence we let $P_k$ to be a \textit{matrix whose columns are A-Orthogonal vectors}.
+            To solve for $w$, we wish to make $P_k^TAP_k$ to be an easy-to-solve matrix. Let the easy-to-solve matrix to be a diagonal matrix and hence we let $P_k$ to be a \textit{matrix whose columns are A-Orthogonal vectors}.
             \begin{align}
                 P^T_kAP_k &= D_k \text{ where: } (D_k)_{i,i} = \langle p_{i - 1}, Ap_{i - 1}\rangle
                 \\
@@ -570,25 +600,27 @@ In this paper we establish some of the foundations for subspace iterative method
             For above propositions, we used the immediate consequence of the range of these oblique projectors. 
         \subsubsection{Assisted Conjugate Gradient (Conjugate Directions)}
             So far, we have this particular scheme of solving the optimization problem, coupled with the way to computing the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
-            \begin{align}
-                \begin{cases}
-                    x_k = x_0 + \overline{P}_k r_0
-                    \\
-                    r_k = (I - A\overline{P}_k) r_0
-                    \\
-                    P^T_kAP_k = D_k
-                    \\
-                    \overline{P}_k = P_kD^{-1}_kP_k^T
-                    \\
-                    p_k = (I - \overline{P}_kA)u_k & \{u_i\}_{i = 0}^{n - 1} \text{ is a Basis}
-                \end{cases}
-            \end{align}
+            \begin{definition}[Assited Conjugate Gradient]
+                \begin{align}
+                    \begin{cases}
+                        x_k = x_0 + \overline{P}_k r_0
+                        \\
+                        r_k = (I - A\overline{P}_k) r_0
+                        \\
+                        P^T_kAP_k = D_k
+                        \\
+                        \overline{P}_k = P_kD^{-1}_kP_k^T
+                        \\
+                        p_k = (I - \overline{P}_kA)u_k & \{u_i\}_{i = 0}^{n - 1} \text{ is a Basis}
+                    \end{cases}
+                \end{align}
+            \end{definition}
             With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Assisted Conjugate Gradient}. 
-            \begin{remark}
-                This ACG method is nothing new, in the original paper from Hestenes and Stiefel back in 1952, they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
+            \begin{remark}[ACG is Conjugate Direction Method]
+                This ACG method is nothing new, in the original paper from Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}), they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
             \end{remark}
             \begin{remark}[Geometric Intutions of Assisted CG]
-                What is happening in geometrically is that the A-Orthogonal vectors are orthogonal if desribe it under the alternative eigensubspaces. Intuition one should think of a hyper dimensional ellipsoid that sits along the standard basis vector, and transformation of $A$ is stretching and rotating's axis, resulting in a new ellipsoid in a different orientations; if such a transformation is also applied to the axis of ellipsoid then the transformed axis are conjugate vectors. Tracing along the direction of these vectors will ensure minimum redundancy of search directions. 
+                What is happening geometrically is that the A-Orthogonal vectors are orthogonal if desribe it under the alternative eigensubspaces. Intuition one should think of a hyper dimensional ellipsoid that sits along the standard basis vector, and transformation of $A$ is stretching and rotating's axis, resulting in a new ellipsoid in a different orientations; if such a transformation is also applied to the axis of ellipsoid then the transformed axis are conjugate vectors. Tracing along the direction of these vectors will ensure minimum redundancy of search directions. 
             \end{remark}
         \subsubsection{Properties of Assisted Conjugate Gradient}
             Here we setup several useful lemma and propositions that can derive the short recurrences of A-Orthogonal vectors 
@@ -602,9 +634,11 @@ In this paper we establish some of the foundations for subspace iterative method
                     \\
                     &= p_{k + j}^Tr_0    
                 \end{align}
+                This is true because the vector $p_{k + j}$, a conjugate vector in the future is orthogonal to all previous conjugte vectors. 
             \end{prop}
             As a consequence of the above proposition, we obtained a short recurrence for the residuals and solution $x$ of ACG: 
-            \begin{align}
+            \begin{prop}[ACG Recurrence]\label{prop:ACG_Recurrences}
+                \begin{align}
                     r_k - r_{k - 1} &= r_0 - A\overline{P}_kr_0 - (r_0 - A\overline{P}_{k - 1}r_0)
                     \\
                     &= A\overline{P}_kr_0 - A\overline{P}_{k - 1}r_0
@@ -622,10 +656,12 @@ In this paper we establish some of the foundations for subspace iterative method
                         \langle p_{k - 1}, Ap_{k - 1}\rangle
                     }
             \end{align}
+            \end{prop}
+            
             We define the value of $a_{k - 1}$, and in above, we have 2 equivalent representation. Please take note that, this proposition remains true for the future RACG algorithm that we are going to develop. 
         \subsubsection{Residual Assisted Conjugate Gradient}
             Now, consider the case where, the set of basis vector: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the ACG itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ during each iteration arised and residuals are all orthgonal. We wish to proceed to prove that part. 
-            \begin{lemma}\label{lemma:1.5.1}
+            \begin{lemma}\label{lemma:RACG_Lemma_1}
                 \begin{align}
                     \langle p_{k + j}, Ap_k\rangle
                     &=\langle r_k, Ap_{k + j}\rangle
@@ -644,7 +680,7 @@ In this paper we establish some of the foundations for subspace iterative method
                     = \langle p_{k + j}, Ar_k\rangle
                 \end{align}
             \end{proof}
-            \begin{lemma}\label{lemma:1.5.2}
+            \begin{lemma}\label{lemma:RACG_Lemma_2}
                 \begin{align}
                     \langle r_k, p_k\rangle &= \langle r_k, r_k\rangle
                 \end{align}
@@ -724,7 +760,7 @@ In this paper we establish some of the foundations for subspace iterative method
                         \langle p_{k - 1}, Ar_k\rangle
                     \end{bmatrix}
                 \end{align}
-                Next, we can make use of \hyperref[lemma:1.5.1]{lemma 1.5.1} to get rid of $Ar_k$: 
+                Next, we can make use of \hyperref[lemma:RACG_Lemma_1]{lemma 3.5.1} to get rid of $Ar_k$: 
                 \begin{align}
                     \langle p_j, Ar_k\rangle& \quad \forall\; 0 \le j \le k -2 
                     \\
@@ -734,7 +770,7 @@ In this paper we establish some of the foundations for subspace iterative method
                     \\
                     &= a_j^{-1}\langle r_k, (r_j - r_{j + 1})\rangle = 0
                 \end{align}
-                The second line is using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for ACG, and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:1.6]{proposition 1.6}. Therefore we have: 
+                The second line is also using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for ACG (\hyperref[prop:ACG_Recurrences]{ACG Recurrences}), and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:1.6]{proposition 1.6}. Therefore we have: 
                 
                 \begin{align}
                     (AP_k)^Tr_k &= 
@@ -1019,6 +1055,7 @@ In this paper we establish some of the foundations for subspace iterative method
                 It's true because the $\beta_{k}$ in the Lanczos is equivalent to $h_{k + 1, k}$. It's been discussed previously that if $h_{k + 1, 1} = 0$ for the Arnoldi's Iteration, then the Krylov Subspace $\mathcal K_k(A|q_1)$ became an invariant subpace under $A$, and in that sense, the algorithm has to terminate due to a divides by zero error. 
             \end{proof}
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
+    In this section we state the terminations conditions for the Lanczos iterations and the RACG algorithm we developed using the property of Krylov Subspace. This is just a throughly discussion about these 2 algorithm and applying the foundations and it's not following any references. 
     \subsection{Conjugate Gradient and Matrix Polynomial}
         One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace} is the connections to matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
         \begin{prop}[CG Relative Energy Error]\label{prop:CG_Relative_Energy Error}
@@ -1085,7 +1122,7 @@ In this paper we establish some of the foundations for subspace iterative method
                 \min_{w\in \mathbb R^k}
                 \left(
                     \max_{x\in [\lambda_{\min}, \lambda_{\max}]}
-                    |1 + \lambda_ip_k(\lambda_i|w)|^2
+                    |1 + xp_k(x|w)|^2
                 \right)\Vert e_0\Vert_A^2
                 \quad \text{still tight}
                 \\
@@ -1108,6 +1145,9 @@ In this paper we establish some of the foundations for subspace iterative method
             Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between theminimum and the maximum of the eigenvalues for the matrix $A$. Finally, please notice thta we use an monic $p_{k+1}(x)$ at the and to simplify things. 
         \end{proof}
         The above results will be useful for proving the convergence and terminations properties of the CG. 
+        \begin{remark}[The RACG Relative Energy Error Norm is Tight]
+            The bound is tight refers to the fact that the matrix is SPD, therefore $\Vert Ax\Vert \le \Vert A\Vert\Vert x\Vert$ is tight, which justifies that (4.1.10) is tight. (4.1.12) can still be tight if we have the freedom to choose the eigenvalues of the matrix $A$. However, the bound is rarely tight. 
+        \end{remark}
     \subsection{Termination Conditions of RACG}
         Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Grade for a Krylov Subspace}. However, this bound is true for all definite matrix $A$, but there are conditions where the termination of the CG algorithm comes early and it depends on the grade of $\mathcal K_k(A|r_0)$, which then depends on the eigenvalues of the matrix $A$ and initial guess $r_0$. 
         \begin{prop}
@@ -1127,10 +1167,11 @@ In this paper we establish some of the foundations for subspace iterative method
         $$
         We use the eigen factorization for the S.P.D matrix $A$. One of the immediate consequence of the above equation would imply that, if there exists a monoic polynomial interpolating all the eigenvalues of matrix $A$, then the grade of the Krylov Subspace is reached. As a consequence of that, for any initial vector, then CG must terminate as the same number of unique eigenvalues of matrix $A$. Finally, take notice that the projections of $r_0$ only covers a portion of the eigenspace then the CG algorithm will terminates earlier. This is true because $\mathcal K_k(A|r_0) = Q\mathcal K_k(\Lambda| r_0)Q^Tr_0$, and please observe that the maximum dimension equals to the number of non-zero elements in $Q^Tr_0$, which further shortens the number of number of iterations required. 
 
+
     \subsection{Convergence Rate of RACG under Exact Arithematic}
         In this section we make heavy use of Greenbaum's Analysis for convergence rate of the algorithm. The core is idea is to use a Chebyshev Polynomial to establish a bound and it's applicable when the linear operator has extremely high dimension and we limit the number of iterations to $k$ where $k$ is much smaller than $n$, the size of the matrix. We will follow Greenbaum's Analysis but with some more details. 
         \subsubsection{Uniformly Distributed Eigenvalues}
-            \begin{theorem}[CG Convergence Rate]
+            \begin{theorem}[CG Convergence Rate]\label{theorem:CG_Convergence_Rate}
                 The relative error squared measured over the energy norm is bounded by: 
                 \begin{align}
                     \frac{\Vert e_k\Vert_A}{\Vert e_k\Vert_A}
@@ -1975,20 +2016,58 @@ In this paper we establish some of the foundations for subspace iterative method
                 \Vert F_k\Vert  \Vert T_k^{-1}\xi_1\Vert
             \end{align}
             Here, because of the assumption of exactness for the $Q_k$ matrices we are able to reuse \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} to regaudge it and obtain a similar expression but this time, taking the floating error into account. In fact, this formula is elegant in the sense that it's determined by the scalar $\xi_k^T T_k^{-1}\xi_1$ and the floating point error $F_k$ produced by the Lanczos iterations. 
+            \begin{remark}\label{remark:CG_Float_Remark}
+                Here we present the core idea behind Greenbaum's analysis for the convergence rate of Conjugate Gradient under floating arithematic. The idea is that the bound for the exact arithemtic, \hyperref[theorem:CG_Convergence_Rate]{CG convergence rate} can be applied here for the term: $\beta_k |
+                \xi_k^T T_k^{-1}\xi_1|$. 
+                \par
+                This is true because if we were to perform an CG on the $T_k$ produced by the finite precision algorithm with the initial Lanczos vector being $\xi_1^{(n)}$, then its residual $\overline{r}_{k +1}$ would be exact and it's given as $-\beta_kT^{-1}_k\xi_kq_{k + 1}$, but with $q_{k + 1} = \xi_{k + 1}^{(n)}$, the $k + 1$ th standard basis vector in $\mathbb R^{n}$. And to our excitment, we already have the bound for $\overline{r}_{k+1}$. which eventually, proving that the CG algorithm is backwards stable. 
+            \end{remark}
         
         \subsubsection{Convergence Rate and Paige's Theorem}
-            Now, we introduce a new theorem poposed paige (\textbf{CITATION NEEDED}). Which gives a bound to the floating point errors for the Lanczos Algorithm, and consequently, giving us a bound on the relative error for CG under floating points. The theorem goes as follow: 
+            Now, we introduce a new theorem poposed by Paige (\textbf{CITATION NEEDED}). Which gives a bound to the floating point errors for the Lanczos Algorithm, and consequently, giving us a bound on the relative error for CG under floating points. The theorem goes as follow: 
             \begin{theorem}[Paige's Theorem]
-                The eigenvalues $\tau_i^{(j)}, i = 1, \cdots, j$ of the tridiagonal matix $T_j$ satisfies: 
+                The eigenvalues $\theta_i^{(j)}, i = 1, \cdots, j$ of the tridiagonal matix $T_j$ satisfies: 
                 \begin{align}
+                    & 
                     \lambda_1 - j^{5/2}\epsilon_2\Vert A\Vert 
                     \le \theta_i^{(j)}
                     \le 
                     \lambda_n + j^{5/2}\epsilon_2\Vert A\Vert
+                    \\
+                    &
+                    \epsilon_2 = \sqrt{2}\max\{6\epsilon_0, \epsilon_1\}
                 \end{align}
             \end{theorem}
+            Along with this theorem, the following quantities are also cited in Greenbaum's work (\textbf{CITATION NEEDED}) from Paige. 
+            \begin{align}
+                & \epsilon_0 \equiv 2(n + 4)\epsilon
+                \\
+                & \epsilon_1 \equiv 2(7 + m \Vert  \;|A|\;\Vert/\Vert A\Vert)\epsilon
+                \\
+                & \Vert F_k\Vert \le \sqrt{k}(\epsilon_1) \Vert A\Vert
+            \end{align}
+            Using Paige's theroem, we can bound the conditions number for the matrix $T_k$ produced by the finite precision Lanczos, which is given by: 
+            \begin{align}
+                \tilde{\kappa} = \frac{\lambda_n + (k + 1)^{5/2}\epsilon_2\Vert A\Vert}
+                {\lambda_1 - (k + 1)^{5/2} \epsilon_2\Vert A\Vert}
+            \end{align}
+            Using \hyperref[remark:CG_Float_Remark]{(remark 5.3.1)}, we can make the following proposition
+            \begin{prop}
+
+                \begin{align}
+                    | \beta_k\xi_k^TT_k^{-1}\xi_1 | \le 
+                    2 \sqrt{\tilde{k}}\left(
+                        \frac{\sqrt{\tilde{k}} - 1}{\sqrt{\tilde{\kappa}} + 1}
+                    \right)^k
+                \end{align}    
+                Where $\kappa$ is the bound of the condition number of the $T_k$ matrix, the tridiagonal matrix produced by the finite precision Lanczos. 
+            \end{prop}
+            \begin{proof}
+                
+            \end{proof}
+            
         \subsubsection{Ghost Eigenvalues}
-            The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, the extremely closed eigenvalues are a single eigenvalues. More specifically, the eigenvalues in $T_k$ seems to cluster gruops of eigenvalues that are extemely close to the true eigenvalues of the original matrix $A$. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues (\textbf{NONTRIVIAL FACTS}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs Orthogonalization process. Here, we conducted the numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = (-1 + 2(i - 1)/(n - 1))^3$ where $A\in \mathbb R^{n\times n}$. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos Iterations and mark the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories during 64 iterations. The results can be seemed at \hyperref[fig:2]{(fig 2)}. 
+            The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, the extremely closed eigenvalues are a single eigenvalues. More specifically, the eigenvalues in $T_k$ seems to cluster gruops of eigenvalues that are extemely close to the true eigenvalues of the original matrix $A$. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues (\textbf{NONTRIVIAL FACTS}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs Orthogonalization process. Here, we conducted the numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos Iterations and mark the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories during 64 iterations. The results can be seemed at \hyperref[fig:2]{(fig 2)}. 
             \begin{figure}[H]\label{fig:2}
                 \centering
                 \includegraphics[width=14cm]{fig2.png}
@@ -2002,25 +2081,26 @@ In this paper we establish some of the foundations for subspace iterative method
             \begin{figure}[H]\label{fig:3}
                 \centering
                 \includegraphics[width=10cm]{fig3.png}
-                \caption{The heatmap of the plot of log2 of the absolute values of the matrix $\tilde{Q}^H_k\tilde{Q}_k$. }
+                \caption{The heatmap of the plot of log2 of the absolute values of the matrix $\tilde{Q}^H_k\tilde{Q}_k$.}
             \end{figure}
-            In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $\tilde{Q}_kA\tilde{Q}_k$ which is plotted in \hyperref[fig:4]{(fig 4)}. 
+            In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $\tilde{Q}_kA\tilde{Q}_k$ which is plotted in \hyperref[fig:4]{(fig 4)}. Observe that most of the off tridiagonal entries are non-zero and relatively huge, which doesn't worry us too much because $A$ itself has an extremely bad conditions number. What is important is the blob of non-zero entries on the top left and the bottom right of the plot, which looks similar to how the $\tilde{Q}_k^H\tilde{Q}_k$. And this is a hint that the lost of orthogonality will create extra errors on the off tridiagonal parts of the matrix $T_k$. 
             \begin{figure}[H]\label{fig:4}
                 \centering
                 \includegraphics[width=10cm]{fig4.png}
                 \caption{The plot of the $T_k$ matrix as reproduced by $\tilde{Q}_kA\tilde{Q}_k$}
             \end{figure}
             \begin{remark}
-                As a final remark for these numerical experiments, I suggest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exerior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig 2)}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality corresondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
+                As a final remark for these numerical experiments, I sugguest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exerior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig 2)}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality corresondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
             \end{remark}
 
     \subsection{The Rizt Vector's View and Another Paige's Theorem}
+    \subsection{Forward Error Analysis}
 
 
-        
-\section{Appendix}
 \newpage
-\section{Biliography}
+\appendix
+\newpage
+
             
             
 

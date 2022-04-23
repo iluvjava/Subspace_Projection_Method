@@ -12,22 +12,19 @@ for _ in 1: n - 1
     il()
 end
 Q = GetQMatrix(il)
-fig = heatmap(Q'*Q .|> abs .|> log2, size=(1024, 1024))
-ToPlot = Q'*Q .|> abs .|> log2
-fig2 = heatmap(ToPlot .>= -10)
 mkpath("$(@__DIR__)/plots")
-λ, S = eigen(GetTMatrix(il))
-Y = Q*S
-fig3 = heatmap(Y'*Y .|> abs .|> log2)
-savefig(fig, "$(@__DIR__)/plots/fig.png")
-savefig(fig2, "$(@__DIR__)/plots/fig2.png")
-savefig(fig3, "$(@__DIR__)/plots/fig3.png")
+fig = heatmap(Q'*Q .|> abs .|> log2, size=(722, 512))
+fig2= heatmap(Q'*A*Q .|> abs .|> log2, size=(722, 512))
+
+savefig(fig, "$(@__DIR__)/plots/fig3.png")
+savefig(fig2, "$(@__DIR__)/plots/fig4.png")
+
 
 # ------------------------------------------------------------------------------
-# All the ritz values during the computations process. 
+# All the ritz values during the computations process. and plotting it. 
 # ------------------------------------------------------------------------------
 
-A = Diagonal(LinRange(1e-3, 1, n))
+A = Diagonal(LinRange(-1, 1, n).^3)
 il = IterativeLanczos(A, rand(n))
 FoundRitzValues = Vector{Vector{Float64}}()
 push!(FoundRitzValues, [GetTMatrix(il)])
@@ -44,7 +41,7 @@ for RitzValue in FoundRitzValues
     sort!(RitzValue, rev=true)
 end
 
-fig4 = scatter(title="Ritz Values During Iterations", legend=false)
+fig4 = scatter(title="Ghost Eigenvalues", legend=false)
 for Idx in 1: 10
     RitzTrajectory = Vector{Float64}()
     for RitzValues in FoundRitzValues
@@ -52,12 +49,13 @@ for Idx in 1: 10
             push!(RitzTrajectory, RitzValues[Idx])
         end
     end
-    scatter!(
+    plot!(
         fig4, 
         Idx: length(RitzTrajectory) + Idx - 1, 
         RitzTrajectory, size=(750,750), 
         dpi=250, 
-        markershape=:cross
+        markershape=:cross, 
+        linestyle=:solid
     )
 end
 for Idx in 1:10
@@ -67,17 +65,18 @@ for Idx in 1:10
             push!(RitzTrajectory, RitzValues[end - Idx + 1])
         end
     end
-    scatter!(
+    plot!(
         fig4, 
         Idx: length(RitzTrajectory) + Idx - 1, 
         RitzTrajectory,
         dpi=250, 
-        markershape=:xcross
+        markershape=:xcross,
+        linestyle=:solid
     )
 end
 xlabel!(fig4, "iterations")
-ylabel!(fig4, "logged ritz values")
+ylabel!(fig4, "theta")
 display(fig4)
-savefig(fig4, "$(@__DIR__)/plots/fig4.png")
+savefig(fig4, "$(@__DIR__)/plots/fig2.png")
 
 T = GetTMatrix(il)
