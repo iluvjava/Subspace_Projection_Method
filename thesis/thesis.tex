@@ -71,7 +71,7 @@
 \begin{center}
     \vspace*{1cm}
     \textbf{Thesis Title}
-         
+        Add later I forgot what title I submitted for my thesis along with my graduation request
     \vspace{1.5cm}
 
     \textbf{Author Name}: Hongda Li
@@ -82,7 +82,7 @@
          
     \vspace{0.8cm}
          
-    Department Name: University of Washington Applied Mathematics\\
+    Department Name: Department of Applied Mathematics\\
 
     University Name: University of Washington\\
 
@@ -90,10 +90,12 @@
         Abstract
     \end{center}
 
-    In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczos Iterations, look into their relations and analyze them in details. We start with deriving the method of Conjugate Gradient using projectors and its properties using the foundations established. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm and using the relations to reveal inspirations in the area of symmetric indefinite solvers and convergence rate anaysis. We then analyze algorithms behaviors under floating points arithematic, specifically how the floating point arithemtic slows down the convergence of CG and how it's related to the lost of orthogonality of Lanczos vectors, and then we present some theorems regarding which directions the Lanczos vectors are losing their orthogonality together with illustrative numerical experiments.
+\end{center}
+
+In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczos Iterations, look into their relations and analyze them in details. We start with deriving the method of Conjugate Gradient using projectors and its properties using the foundations established. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm and using the relations to reveal inspirations in the area of symmetric indefinite solvers and convergence rate anaysis. We then analyze algorithms behaviors under floating points arithematic, specifically how the floating point arithemtic slows down the convergence of CG and how it's related to the lost of orthogonality of Lanczos vectors, and then we present some theorems regarding which directions the Lanczos vectors are losing their orthogonality together with illustrative numerical experiments.
     
          
-\end{center}
+
 \newpage
 \tableofcontents
 
@@ -111,8 +113,13 @@
 \end{enumerate}
 
 \section{Introduction}
-    ????
+    The Conjugate Gradient method is an iterative method used for solving linear systems which date back to the period when computers were programmed using punched cards. It didn't receive much attention at the start but was revised and reappeared as a method for solving large sparse linear systems decades later, becoming the best option for positive definite linear systems that are sparse and large and, by extension, for optimizing strongly convex functions as well. In this thesis, we discuss Conjugate Gradient without pre-conditioning by deriving it and analyzing it along with Lanczos Iterations, a tightly related algorithm for symmetric eigenproblems. Finally, we use their connections to analyze its behaviour under floating-point arithmetic. The thesis will require some background in numerical linear algebra for the best understanding. 
+    \par
+    In the first section, we introduce the projectors and Krylov subspace as important mathematical objects for the subspace projections method, the frameworks for subspace projection methods, and the Lanczos Iteration as a symmetric case of the Arnoldi Iterations. At the end of the section, we proceed and derive the conjugate gradient method using only these ideas and concepts. In the second section, we analyze the behaviors of Conjugate gradient and Lanczos Iterations, including the terminations conditions for both algorithm, their convergence rate, and the equivalence between them. The goal is to show how they can be the same and have similar properties and how the connections between them can spark other methods for solving a symmetric indefinite linear system. And in the final parts of the second section, we derive the convergence bound for the conjugate gradient algorithm. 
+    \par
+    In the third section, we demonstrate the behaviors of Lanczos Iterations and Conjugate Gradient numerically and then show that the algorithm is backward stable. We show how floating points affect the Lanczos algorithm more rigor and how it may be fixed and mitigated, consequently improving the conjugate gradient algorithm. 
 
+    \newpage
 \begin{center}\large
     \textbf{Acknowledgement}
 \end{center}
@@ -1914,7 +1921,7 @@
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
     % ADD SOME MORE STUFF HERE. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
-        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the ACG algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both persisted for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea. Firstly recall the proof for proposition 3.7. Next, we inductively consider the case where the newest residual vector involving round off error $\overline{r}_{k + 1}$ are given and it breaks the orhogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
+        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the ACG algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both preserved for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea in the paper by Hestenes and Stieful, but using the quantities we derived in the first section. Firstly recall the proof for \textbf{proposition 3.7}(ADD HYPERREF). Next, we inductively consider the case where the newest residual vector involving round off error $\overline{r}_{k + 1}$ are given and it breaks the orhogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
         \begin{align}
             (AP_k)^T\overline{r}_k &= 
             \begin{bmatrix}
@@ -2017,10 +2024,11 @@
             \end{align}
             Here, because of the assumption of exactness for the $Q_k$ matrices we are able to reuse \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} to regaudge it and obtain a similar expression but this time, taking the floating error into account. In fact, this formula is elegant in the sense that it's determined by the scalar $\xi_k^T T_k^{-1}\xi_1$ and the floating point error $F_k$ produced by the Lanczos iterations. 
             \begin{remark}\label{remark:CG_Float_Remark}
-                Here we present the core idea behind Greenbaum's analysis for the convergence rate of Conjugate Gradient under floating arithematic. The idea is that the bound for the exact arithemtic, \hyperref[theorem:CG_Convergence_Rate]{CG convergence rate} can be applied here for the term: $\beta_k |
+                Here we present the core idea behind Greenbaum's analysis for the convergence rate of Conjugate Gradient under floating arithematic. The idea is that the bound for the exact arithemtic, \hyperref[theorem:CG_Convergence_Rate]{CG convergence rate} can be applied here for the term: 
+                $\beta_k |
                 \xi_k^T T_k^{-1}\xi_1|$. 
                 \par
-                This is true because if we were to perform an CG on the $T_k$ produced by the finite precision algorithm with the initial Lanczos vector being $\xi_1^{(n)}$, then its residual $\overline{r}_{k +1}$ would be exact and it's given as $-\beta_kT^{-1}_k\xi_kq_{k + 1}$, but with $q_{k + 1} = \xi_{k + 1}^{(n)}$, the $k + 1$ th standard basis vector in $\mathbb R^{n}$. And to our excitment, we already have the bound for $\overline{r}_{k+1}$. which eventually, proving that the CG algorithm is backwards stable. 
+                This is true because if we were to perform an CG on the $T_{k + 1}$ produced by the finite precision algorithm with the initial Lanczos vector $q_1$ being $\xi_1^{(n)}$, then its residual $\overline{r}_{k}$ would be exact and it's given as $-\beta_kT_{k}^{-1}\xi_kq_{k + 1}$, but with $q_{k + 1} = \xi_{k + 1}^{(n)}$, the $k + 1$ th standard basis vector in $\mathbb R^{n}$, and $T_k = (T_{k + 1})_{1:k, 1:k}$ . And to our excitment, we already have the bound for $\overline{r}_{k+1}$. which eventually, proving that the CG algorithm is backwards stable. 
             \end{remark}
         
         \subsubsection{Convergence Rate and Paige's Theorem}
@@ -2035,37 +2043,92 @@
                     \lambda_n + j^{5/2}\epsilon_2\Vert A\Vert
                     \\
                     &
-                    \epsilon_2 = \sqrt{2}\max\{6\epsilon_0, \epsilon_1\}
+                    \epsilon_2 := \sqrt{2}\max\{6\epsilon_0, \epsilon_1\}
                 \end{align}
             \end{theorem}
-            Along with this theorem, the following quantities are also cited in Greenbaum's work (\textbf{CITATION NEEDED}) from Paige. 
+            Along with this theorem, the following quantities are also defined and cited in Greenbaum's work (\textbf{CITATION NEEDED}) from the work of Paige. 
             \begin{align}
                 & \epsilon_0 \equiv 2(n + 4)\epsilon
                 \\
                 & \epsilon_1 \equiv 2(7 + m \Vert  \;|A|\;\Vert/\Vert A\Vert)\epsilon
                 \\
+                & \epsilon_0 < \frac{1}{12} \quad k(3\epsilon_0 + \epsilon_1) < 1
+                \\
                 & \Vert F_k\Vert \le \sqrt{k}(\epsilon_1) \Vert A\Vert
+                \\
+                & \Vert q^T_jq_j -1\Vert \le 2\epsilon_0
+                \\
+                & \beta_j \le \Vert A\Vert(1 + (2n + 6)\epsilon + j(3\epsilon_0 + \epsilon_1))
             \end{align}
-            Using Paige's theroem, we can bound the conditions number for the matrix $T_k$ produced by the finite precision Lanczos, which is given by: 
+            The quantity $k$ is the current iterations number of the Lanczos Iterations, $j\le k$. $m$ is the maximum number of non-zero element in the matrix $A$. 
+            Using Paige's theroem, we can bound the conditions number for the matrix $T_{k + 1}$ produced by the finite precision Lanczos, which is given by: 
             \begin{align}
                 \tilde{\kappa} = \frac{\lambda_n + (k + 1)^{5/2}\epsilon_2\Vert A\Vert}
                 {\lambda_1 - (k + 1)^{5/2} \epsilon_2\Vert A\Vert}
             \end{align}
             Using \hyperref[remark:CG_Float_Remark]{(remark 5.3.1)}, we can make the following proposition
             \begin{prop}
-
                 \begin{align}
                     | \beta_k\xi_k^TT_k^{-1}\xi_1 | \le 
-                    2 \sqrt{\tilde{k}}\left(
-                        \frac{\sqrt{\tilde{k}} - 1}{\sqrt{\tilde{\kappa}} + 1}
+                    2 \sqrt{\tilde{\kappa}}\left(
+                        \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
                     \right)^k
                 \end{align}    
                 Where $\kappa$ is the bound of the condition number of the $T_k$ matrix, the tridiagonal matrix produced by the finite precision Lanczos. 
             \end{prop}
             \begin{proof}
-                
+                Using the \hyperref[lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions]{lemma in appendix}, we can derive the relations between the 2 norm of the relative residuals and the energy norm of the relative error: 
+                \begin{align}
+                    \frac{\Vert Ae_k\Vert}{\Vert Ae_0\Vert}
+                    & \le 
+                    \kappa(T_k)\frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A}
+                    \le 2\sqrt{\kappa(T_k)}
+                    \left(
+                        \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
+                    \right)^k
+                    \\
+                    \frac{\Vert r_k\Vert}{\Vert r_0\Vert} &= 
+                    | \beta_k\xi_k^TT_k^{-1}\xi_1 | \quad \text{by \hyperref[remark:CG_Float_Remark]{(remark 5.3.1)}}
+                    \\
+                    \implies | \beta_k\xi_k^TT_k^{-1}\xi_1 | 
+                    &\le 
+                    2 \sqrt{\tilde{\kappa}}
+                    \left(
+                        \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
+                    \right)^k
+                \end{align}
+                The third inequality is simply from \hyperref[theorem:CG_Convergence_Rate]{CG Convergence Rate} when we assume that the eigenvalues are uniformly distributed convex hull of the spectrum of $A$. The first fraction is actually the relative error of the 2 norm of the residual becaus $Ae_k = r_k$ by definition. Susbtituting the quantity $\kappa(T_k)$, the conditions number of the matrix $T_k$, which we figured out using Paige's theorem and denoted it as $\tilde{\kappa}$. 
             \end{proof}
+            Finally, if we assume that $T_k^{-1}$ is actually invertible, which requires that conditions for all the quantities: $\epsilon_0, \epsilon_1$ holds true, and $\lambda_1 - (k + 1)^{5/2} \epsilon_2\Vert A\Vert > 0$. Finally, we make can bound the relative residual of the CG algorithm, considering: 
+            \begin{align}
+                \frac{\Vert r_{k + 1}\Vert}
+                {
+                    \Vert r_0\Vert
+                } &\le
+                \beta_k \Vert
+                    \xi_k^T T_k^{-1}\xi_1 q_{k + 1}
+                \Vert + 
+                \Vert F_kT_k^{-1}\xi_1 \Vert
+                \\
+                & \le 
+                \beta_k|\xi_k^T T_k^{-1}\xi_1|
+                \Vert q_{k + 1}\Vert + 
+                \Vert F_k\Vert  \Vert T^{-1}_k\xi_1\Vert
+                \\
+                & \le 
+                2 \Vert q_{k + 1}\Vert\sqrt{\tilde{\kappa}}
+                    \left(
+                        \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
+                    \right)^k
+                + 
+                \sqrt{k}(\epsilon_1) \Vert A\Vert 
+                \Vert T^{-1}_k\Vert
+            \end{align}
+            Now, observe that $|q_j^Tq_j - 1|\le 2\epsilon_0$, which implies that $\Vert q_{k + 2}\Vert^2 \le (1 + 3\epsilon_0)$ which is $\Vert q_{k + 1}\Vert \le \sqrt{1 + 2\epsilon_0}$. In persue of mathematical beauty, we look for alternative expression for the quantity $\Vert A\Vert \Vert T^{-1}_k\Vert$ giving us: 
             
+            \begin{remark}
+                
+            \end{remark}
         \subsubsection{Ghost Eigenvalues}
             The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, the extremely closed eigenvalues are a single eigenvalues. More specifically, the eigenvalues in $T_k$ seems to cluster gruops of eigenvalues that are extemely close to the true eigenvalues of the original matrix $A$. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues (\textbf{NONTRIVIAL FACTS}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs Orthogonalization process. Here, we conducted the numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos Iterations and mark the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories during 64 iterations. The results can be seemed at \hyperref[fig:2]{(fig 2)}. 
             \begin{figure}[H]\label{fig:2}
@@ -2092,13 +2155,66 @@
             \begin{remark}
                 As a final remark for these numerical experiments, I sugguest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exerior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig 2)}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality corresondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
             \end{remark}
-
+        
     \subsection{The Rizt Vector's View and Another Paige's Theorem}
     \subsection{Forward Error Analysis}
 
 
 \newpage
 \appendix
+    \begin{lemma}[Relative Energy Norm and Relative 2 Norm Conversions]\label{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}
+        Let $A$ be a Positive Symmetric Positive Definite Matrix, then it can be said that: 
+        $$
+        \frac{\Vert A x\Vert}{\Vert Ay \Vert} \le \kappa(A)\frac{\Vert 
+        x\Vert_A}{\Vert y \Vert_A}
+        $$
+    \end{lemma}
+    \begin{proof}
+        From the definition of incuded 2-norm of matrices, assuming that $\lambda_1$ is the minimum eigenvalue of the matrix $A$, and $\lambda_n$ the maximum, and the fact that matrix $A$ has factorization $A^{1/2}A^{1/2}$: 
+    \end{proof}
+    \begin{align}
+        \lambda_1 \Vert x \Vert 
+        &\le \Vert Ax\Vert 
+        \le \lambda_2 \Vert x\Vert
+        \\
+        \sqrt{\lambda_1} \Vert x\Vert 
+        & \le \Vert A^{1/2}x\Vert \le \sqrt{\lambda_n}\Vert x \Vert
+        \\
+        \implies
+        \sqrt{\lambda_1} & \le \frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
+        \le \sqrt{\lambda_n}
+    \end{align}
+    Consider another vector $y$: 
+    \begin{align}
+        \sqrt{\lambda_1} \le \frac{\Vert Ay\Vert}{\Vert A^{1/2}y \Vert} \le \sqrt{\lambda_n}
+    \end{align}
+    Combining the two we have: 
+    \begin{align}
+        \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
+        & \le \sqrt{\lambda_n}\sqrt{\lambda_1}
+        \\
+        \sqrt{\lambda_1}\sqrt{\lambda_n}& \ge \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
+             A^{1/2}y
+        \right\Vert}
+        \\
+        \implies 
+        \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} & \le 
+        \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
+             A^{1/2}y
+        \right\Vert}
+        \\
+        \frac{\Vert Ax\Vert}{\Vert A^{1/2}x\Vert} &\le 
+        \sqrt{\kappa(A)} 
+        \frac{\Vert Ay\Vert}{\Vert A^{1/2}y\Vert}
+        \\
+        \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
+        \sqrt{\kappa(A)} 
+        \frac{\Vert A^{1/2}x\Vert}{\Vert A^{1/2}y\Vert}
+        \\
+        \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
+        \sqrt{\kappa(A)} 
+        \frac{\Vert x\Vert_A}{\Vert y\Vert_A}
+    \end{align}
 \newpage
 
             
