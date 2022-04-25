@@ -2031,7 +2031,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 This is true because if we were to perform an CG on the $T_{k + 1}$ produced by the finite precision algorithm with the initial Lanczos vector $q_1$ being $\xi_1^{(n)}$, then its residual $\overline{r}_{k}$ would be exact and it's given as $-\beta_kT_{k}^{-1}\xi_kq_{k + 1}$, but with $q_{k + 1} = \xi_{k + 1}^{(n)}$, the $k + 1$ th standard basis vector in $\mathbb R^{n}$, and $T_k = (T_{k + 1})_{1:k, 1:k}$ . And to our excitment, we already have the bound for $\overline{r}_{k+1}$. which eventually, proving that the CG algorithm is backwards stable. 
             \end{remark}
         
-        \subsubsection{Convergence Rate and Paige's Theorem}
+        \subsubsection{Paige's Theorem and Backwards Stability}
             Now, we introduce a new theorem poposed by Paige (\textbf{CITATION NEEDED}). Which gives a bound to the floating point errors for the Lanczos Algorithm, and consequently, giving us a bound on the relative error for CG under floating points. The theorem goes as follow: 
             \begin{theorem}[Paige's Theorem]
                 The eigenvalues $\theta_i^{(j)}, i = 1, \cdots, j$ of the tridiagonal matix $T_j$ satisfies: 
@@ -2125,10 +2125,27 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \Vert T^{-1}_k\Vert
             \end{align}
             Now, observe that $|q_j^Tq_j - 1|\le 2\epsilon_0$, which implies that $\Vert q_{k + 2}\Vert^2 \le (1 + 3\epsilon_0)$ which is $\Vert q_{k + 1}\Vert \le \sqrt{1 + 2\epsilon_0}$. In persue of mathematical beauty, we look for alternative expression for the quantity $\Vert A\Vert \Vert T^{-1}_k\Vert$ giving us: 
-            
+            \begin{align}
+                \Vert A\Vert\Vert T_k^{-1}\Vert &= \frac{\lambda_n}{\lambda_1 - k^{5/2}\epsilon_2\Vert A\Vert} \le \tilde{\kappa}
+                \\
+                \implies 
+                \frac{\Vert r_{k + 1}\Vert}
+                {
+                    \Vert r_0\Vert
+                } &\le 
+                2  \sqrt{1 + 2\epsilon_0}\sqrt{\tilde{\kappa}}
+                    \left(
+                        \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
+                    \right)^k
+                + \sqrt{k}(\epsilon_1) \tilde{\kappa}
+            \end{align}
+            Which completes the proof for the upper bound on the convergence rate for the Conjugate Gradient Method. 
             \begin{remark}
-                
+                This proof showed that the Conjugate Gradient method for $T_{k + 1}$ that is non-singular then it will be backwards stable. As long as the value of $\beta_k$ is non zero, and the eigenvalues of $T_{k + 1}$ is not containing zero, the conjugate gradient method will continue to converge in the future iterations. So in laymen's term, it doesn't matter if the roudoff error accumulated, Conjugate Gradient will converge as long as the problem is not too insane, or $A$ being too pathological to deal with. 
+                \par
+                Finally, I want to point out the fact that Paige's theorem is derived using forward error analysis on the Lanczos Iterations, which is the absolute worst case. For most cases in modern computing platforms, the summation process of vector dot products has much higher floating-accuracy compare to older computing platforms due to the use of parallelizism, or floating point specific summation instructons, which reduces the relative sizes for the sumees, hence reducing the total roudoff error accumulations. 
             \end{remark}
+
         \subsubsection{Ghost Eigenvalues}
             The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, the extremely closed eigenvalues are a single eigenvalues. More specifically, the eigenvalues in $T_k$ seems to cluster gruops of eigenvalues that are extemely close to the true eigenvalues of the original matrix $A$. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues (\textbf{NONTRIVIAL FACTS}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs Orthogonalization process. Here, we conducted the numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos Iterations and mark the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories during 64 iterations. The results can be seemed at \hyperref[fig:2]{(fig 2)}. 
             \begin{figure}[H]\label{fig:2}
@@ -2157,6 +2174,12 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             \end{remark}
         
     \subsection{The Rizt Vector's View and Another Paige's Theorem}
+        In this section, we prove another analysis of the Lanczos Iterations from Dammel's work(\textbf{Citation Needed}) where he introduced proof of another Paige's theorem that shows exactly how to measure the lost of orthogonality of the Lanczos vectors while Lanczos algorithm is running. Here, we wish to prove it in much more details with more thoroughness.
+        \par
+        The theorem highlights 2 important facts. The first is the the lost of orthogonality of Lanczos Vector and Ghost eigenvalues appears at the same time and they are sysmatic. The second is that the projection of the Lanczos vector onto the converged ritze vectors can be numerically attained, which tells us how much lost of orthogonality is occuring and which direction we need to re-orthogonalize so that the Lanczos vectors retains orthogonality. Here is the statement of the theorem: 
+        \begin{theorem}[Another Paige's Theorem]
+            
+        \end{theorem}
     \subsection{Forward Error Analysis}
 
 
