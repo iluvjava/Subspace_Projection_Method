@@ -110,6 +110,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
     \item $\forall\; 0\le j \le k$: under certain context it indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
     \item Boldface $\mathbf 0$ denotes the zero vector or matrix, depending on the context it can be either a zero row/column vector, or a zero matrix.
     \item The $\hat{}$ decorator is reserved for denoting the unit vector of some non zero vector. For example $\hat{x}:= x/\Vert x\Vert, x \neq \mathbf 0$. 
+    \item $p_k(A|w)$ denotes the matrix polynomial $\sum_{j = 0}^k w_jA^j$. 
 \end{enumerate}
 
 \section{Introduction}
@@ -141,6 +142,22 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 The grade of the krylov subspace is the the smallest $\mathcal K_{k}(A|v)$ such that the vectors in the span is linear dependent, denoted as $\text{grade}(A|v)$. 
             \end{definition}
             The word grade of a krylov Subspace is usedn Y.Saad's work (\textbf{CITATION NEEDED}) in reference to Krylov Subspace. And once the grade is reached, the Krylov Subspace becomes an invariant subspace to the matrix $A$. For a proof, refers to \hyperref[prop:Krylov_Subspace_Grade_Invariant_Theorem]{Krylov Subspace Grade Invariant Theorem} in the appendix. This concept is useful for determining the termination conditions for Lanczos iterations and Conjugate Gradient. 
+            \begin{prop}[When the Grade is Reached]\label{prop:When_the_Grade_is_Reached}
+                Assuming that matrix $A$ is diagonalizable, $A = V\Lambda V^{-1}$, then $\text{grade}(A|u)$ is the number of unique $\lambda_i$ such that $(V^{-1}u)_i$ is non-zero. 
+            \end{prop}
+            \begin{proof}
+                Let $k$ be the grade, then it's the minimum number such that the matrix polynomial of $A$ multiplied by $u$ equals to the zero vector, and it's nontrivial. 
+                \begin{align}
+                    & \mathbf 0 = \sum_{j = 0}^{k}
+                    w_jA^{j}u
+                    \\
+                    & \mathbf 0 = V\sum_{j = 0}^{k} w_j\Lambda^jV^{-1}u
+                    \\
+                    & \forall i \quad 0 = \sum_{j = 0}^{k} w_j\lambda_i^{j}(V^{-1}u)_i
+                \end{align}
+                When non trivial solution exists for some $w_j \neq 0$, it will be the case that whenever $(V^{-1}u)_i$ is not zero, then the a polynomial will have to interpolate $\lambda_i$. Therefore, minimum $k$ is the number of unique $\lambda_i$ such that $(V^{-1}u)_i\neq 0$
+            \end{proof}
+            
         \subsubsection{Projectors}
             \begin{definition}
                 A matrix $P$ is a projector when $P^2 = P$, we call this property idempotent. 
@@ -405,7 +422,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \end{cases}
                 \end{align}
             \end{definition}
-            With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method}(CDM). 
+            With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method }(CDM). 
             \begin{remark}
                 This CDM method is nothing new, in the original paper from Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}), they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
             \end{remark}
@@ -486,7 +503,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align}
                 From the first line to the second line, we make use of the definition proposed. 
             \end{proof}
-            \begin{prop}[Residual Assisted CG Generates Orthogonal Residuals]\label{prop:1.6}
+            \begin{prop}[CG Generates Orthogonal Residuals]\label{prop:CG_Generates_Orthogonal_Residuals}
                 \begin{align}
                     \langle r_k , r_j \rangle = 0 \quad \forall\; 0 \le j \le k - 1 
                 \end{align}
@@ -550,7 +567,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                         \langle p_{k - 1}, Ar_k\rangle
                     \end{bmatrix}
                 \end{align}
-                Next, we can make use of \hyperref[lemma:CG_Lemma_1]{lemma 3.5.1} to get rid of $Ar_k$: 
+                Next, we can make use of \hyperref[lemma:CG_Lemma_1]{lemma 3.3.1} to get rid of $Ar_k$: 
                 \begin{align}
                     \langle p_j, Ar_k\rangle& \quad \forall\; 0 \le j \le k -2 
                     \\
@@ -560,7 +577,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     &= a_j^{-1}\langle r_k, (r_j - r_{j + 1})\rangle = 0
                 \end{align}
-                The second line is also using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for CDM (\hyperref[prop:CDM_Recurrence]{CDM Recurrences}), and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:1.6]{proposition 1.6}. Therefore we have: 
+                The second line is also using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for CDM (\hyperref[prop:CDM_Recurrence]{CDM Recurrences (Proposition 3.6)}), and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:CG_Generates_Orthogonal_Residuals]{CG Generates Orthogonal Residuals (Proposition 3.7)}. Therefore we have: 
                 
                 \begin{align}
                     (AP_k)^Tr_k &= 
@@ -939,7 +956,12 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             The bound is tight refers to the fact that the matrix is SPD, therefore $\Vert Ax\Vert \le \Vert A\Vert\Vert x\Vert$ is tight, which justifies that (4.1.10) is tight. (4.1.12) can still be tight if we have the freedom to choose the eigenvalues of the matrix $A$. However, the bound is rarely tight. 
         \end{remark}
     \subsection{Termination Conditions of CG}
-        
+        \begin{prop}[Termination of CG]
+            The CG terminates after $k$ number of iterations where $k$ is the grade of the krylov subspace of $A$ wrt to $r_0$. 
+        \end{prop}
+        Recall from \hyperref[sec:CG_and_Krylov_Subspace]{CG and Krylov Subspace (3.3.6)} where we established that $r_k\in \mathcal K_{k + 1}(A|r_0), r_k \perp \mathcal K_{k}(A|r_0)$. Recall that once the grade of the Krylov subspace is reached, Krylov subspace becomes invariant, and hence, $r_k = \mathbf 0$, the algorithm terminates. 
+        \par
+        In addition, $\text{grade}(A|r_0)$ depends on the number of unique $\lambda_i$ where $q_i^Tr_0$ is not zero, $q_i$ here is the eigenvector that has eigenvalue $r_i$. We consider the eigen decomposition of matrix $A$, then it's direct using \hyperref[prop:When_the_Grade_is_Reached]{When the Grade is Reached (proposition 3.1)}. 
 
 
     \subsection{Convergence Rate of CG under Exact Arithematic}
@@ -953,32 +975,33 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                             \frac{\sqrt{\kappa} + 1}{\sqrt{\kappa} - 1}
                     \right)^k
                 \end{align}
-                Where $k$ is the number of iterations, and $e_k = A^{-1}b - x_k$, the upper bound is the most genearl and it's able to bound the convergence given $\lambda_{\min}, \lambda_{\max}$ of the operator $A$. The bound is lose if there are some kind of clustering of the eigenvalue of matrix $A$, and the bound would be tighter given that $k<<n$ and the eigenvalues of $A$ are evenly spread out on the spectrum. 
+                Where $k$ is the number of iterations, and $e_k = A^{-1}b - x_k$, the upper bound is the most general and it's able to bound the convergence given $\lambda_{\min}, \lambda_{\max}$ of the operator $A$. The bound is loose if there are some kind of clustering of the eigenvalue of matrix $A$, and the bound would be tighter given that $k<<n$ and the eigenvalues of $A$ are evenly spread out on the spectrum. 
             \end{theorem}
             Before the proof, I need to point out the analysis draws inspiration from the interpolating mononic polynomial for the spectrum of the matrix $A$, and we make use of the Inf Norm minimization property of the Chebyshev Polynomial. Here, we order all the eigenvalues of matrix $A$ so that $\lambda_1, \lambda_n$ denotes the maximum and the minimum eigenvalues for $A$. 
             \begin{proof}
                 We start by adapting the Chebyshev Polynomial to the convex hull of the spectrum for matrix $A$, while also making it monic: 
                 \begin{align}
-                    T_k(x) &= \min_{
+                    T_k(x) &= \arg\min_{
                         \substack{
-                            p(x)\in \mathcal{P}_{k + 1}
-                            \\
-                            \text{s.t: } p(0)  = 1
+                            p\in \mathcal{P}_{k}
                             }
                         }\max_{x\in [-1, 1]}|p(x)|
                     \\
-                    p_k(x) &:= \frac{T_k(\varphi(x))}{T_k(\varphi(0))}
-                    \quad \text{where: } \varphi(x) := \frac{2x - \lambda_n - \lambda_1}{\lambda_n - \lambda_1}
+                    p_k(x) &:= 
+                    \frac{T_k(\varphi(x))}{T_k(\varphi(0))}
+                    \quad 
+                    \text{where: } 
+                    \varphi(x) := \frac{2x - \lambda_1 - \lambda_n}{\lambda_n - \lambda_1}
                     \\
-                    \text{then: } p_k(x) &= \min_{
+                    \implies p_k(x) &= \arg \min_{
                         \substack{
-                            p(x)\in \mathcal{P}_{k + 1}
+                            p\in \mathcal{P}_{k}
                             \\
                             \text{s.t: } p(0)  = 1
                         }
                     }\max_{x\in [\lambda_1, \lambda_n]}|p(x)|
                 \end{align}
-                At this point, we have defined a new polynomial $p_k$ that minimizes the inf norm over the convex hull of the eigenvalues and it's Monic. Note, here we use $T_k$ for the type T Chebyshev Polynomial of degree k and it's not the Tridiagoal Symmetric Matrix from lanczos. Next, we use the property that the range of the Chebyshev is bounded withint the interval $[-1, 1]$ to obtain inequality: 
+                At this point, we have defined a new polynomial $p_k$ that minimizes the inf norm over the convex hull of the eigenvalues and it's monic. Note that here we use $T_k$ for the type T Chebyshev Polynomial of degree k and it's not the tridiagonal symmetric matrix from Lanczos iterations. Next, we use the property that the range of the Chebyshev is bounded within the interval $[-1, 1]$ to obtain inequality: 
                 \begin{align}
                     \forall x \in [\lambda_1, \lambda_n]: \left|
                     \frac{T_k(\varphi(x))}{T_k(\varphi(0))}
@@ -988,14 +1011,14 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                         \frac{1}{T_k(\varphi(0))}
                     \right|
                 \end{align}
-                Next, our objective is to find any upper bound for the quantities on the RHS in relations to the Condition number for matrix $A$ and the degree of the Chebyshev Polynomial. Firstly observe that $1 < \varphi(0) \not\in [\lambda_1, \lambda_n]$, because all Eigenvalues are larger than zero, therefore it's out of the range of the Cheb and we need to find the actual value of it by considering alterantive form of Chebyshev T for values outside of the $[-1,1]$: 
+                Next, our objective is to find any upper bound for the quantities on the RHS in relations to the Condition number for matrix $A$ and the degree of the Chebyshev polynomial. Firstly observe that $\varphi(0) < -1, \varphi(0) \not\in [\lambda_1, \lambda_n]$, because all Eigenvalues are larger than zero, therefore it's out of the range of the Chebyshev polynomial and we need to find the actual value of it by considering alterantive form of Chebyshev T for values outside of the $[-1,1]$: 
                 \begin{align}
                     T_k(x) &= \cosh(k\text{ arccosh}(z)) \quad \forall z \ge 1
                     \\
                     \implies
                     T_k(\cosh(\zeta)) &= \cosh(k\zeta) \quad z := \cosh(\zeta)
                 \end{align}
-                We need to match the form of the expression $T_k(\varphi(0))$ with the expression of the form $T_k(\cosh(\zeta))$ given the freedom of varying $\zeta$. 
+                We need to match the form of the expression $T_k(\varphi(0))$ with the expression of the form $T_k(\cosh(\zeta))$ given the freedom of varying $\zeta$. To do that we consider a substitution of $\zeta = \ln(y)$, so that we only need to match $\varphi(0)$ with the form $(y + y^{-1})/2$, which is just a quadratic equation. 
                 \begin{align}
                     \varphi(0) &= \cosh(\zeta) = \cosh(\ln(y)) \quad \ln(y) := \zeta
                     \\
@@ -1027,7 +1050,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     y = \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
                 \end{align}
-                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us 2 roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can substitute and get the value of $T_k(\varphi(0))$ interms of $y$ and then $\kappa$: 
+                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us 2 roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can substitute and get the value of $T_k(\varphi(0))$ in terms of $y$ and then $\kappa$: 
                 \begin{align}
                     \varphi(0)&= \frac{1}{2}(y + y^{-1})
                     \\

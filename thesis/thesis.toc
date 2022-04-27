@@ -4,15 +4,15 @@
 \contentsline {section}{\numberline {3}Foundations}{6}{section.3}%
 \contentsline {subsection}{\numberline {3.1}The Basics}{6}{subsection.3.1}%
 \contentsline {subsubsection}{\numberline {3.1.1}Krylov Subspace}{6}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Projectors}{6}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.2}Projectors}{7}{subsubsection.3.1.2}%
 \contentsline {subsection}{\numberline {3.2}Subspace Projection Methods}{7}{subsection.3.2}%
 \contentsline {subsubsection}{\numberline {3.2.1}Prototype Algorithm}{7}{subsubsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2}Energy Norm Minimization using Gradient}{8}{subsubsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.3}Deriving Conjugate Gradient from Conjugate Directions}{9}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}CG Objective and Framework}{9}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Using the Projector}{10}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}Method of Conjugate Directions}{11}{subsubsection.3.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.4}Properties of CDM}{12}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.1}CG Objective and Framework}{10}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Using the Projector}{11}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Method of Conjugate Directions}{12}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Properties of CDM}{13}{subsubsection.3.3.4}%
 \contentsline {subsubsection}{\numberline {3.3.5}Conjugate Gradient}{13}{subsubsection.3.3.5}%
 \contentsline {subsubsection}{\numberline {3.3.6}CG and Krylov Subspace}{16}{subsubsection.3.3.6}%
 \contentsline {subsection}{\numberline {3.4}Arnoldi Iterations and Lanczos}{17}{subsection.3.4}%
@@ -24,8 +24,8 @@
 \contentsline {subsection}{\numberline {4.2}Termination Conditions of CG}{22}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Convergence Rate of CG under Exact Arithematic}{22}{subsection.4.3}%
 \contentsline {subsubsection}{\numberline {4.3.1}Uniformly Distributed Eigenvalues}{22}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}One Outlier Eigenvalue}{24}{subsubsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.4}From Conjugate Gradient to Lanczos}{26}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.3.2}One Outlier Eigenvalue}{25}{subsubsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.4}From Conjugate Gradient to Lanczos}{27}{subsection.4.4}%
 \contentsline {subsubsection}{\numberline {4.4.1}The Base Case}{28}{subsubsection.4.4.1}%
 \contentsline {subsubsection}{\numberline {4.4.2}The Inductive Case}{28}{subsubsection.4.4.2}%
 \contentsline {subsubsection}{\numberline {4.4.3}Fixing the Sign}{30}{subsubsection.4.4.3}%
