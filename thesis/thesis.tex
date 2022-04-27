@@ -86,13 +86,15 @@
 
     University Name: University of Washington\\
 
+    
+
+\end{center}
+
     \begin{center}
         Abstract
     \end{center}
 
-\end{center}
-
-In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczos Iterations, look into their relations and analyze them in details. We start with deriving the method of Conjugate Gradient using projectors and its properties using the foundations established. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm and using the relations to reveal inspirations in the area of symmetric indefinite solvers and convergence rate anaysis. We then analyze algorithms behaviors under floating points arithematic, specifically how the floating point arithemtic slows down the convergence of CG and how it's related to the lost of orthogonality of Lanczos vectors, and then we present some theorems regarding which directions the Lanczos vectors are losing their orthogonality together with illustrative numerical experiments.
+    In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczos Iterations, look into their relations and analyze them in details. We start with deriving the method of Conjugate Gradient using projectors and its properties using the foundations established. Then we clarify the relations between the Conjugaet Gradient and Lanczos Algorithm and using the relations to reveal inspirations in the area of symmetric indefinite solvers and convergence rate anaysis. We then analyze algorithms behaviors under floating points arithematic, specifically how the floating point arithemtic slows down the convergence of CG and how it's related to the lost of orthogonality of Lanczos vectors, and then we present some theorems regarding which directions the Lanczos vectors are losing their orthogonality together with illustrative numerical experiments.
     
          
 
@@ -867,19 +869,17 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
         One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace} is the connections to matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
         \begin{prop}[CG Relative Energy Error]\label{prop:CG_Relative_Energy Error}
             \begin{align}
-                x_k &\in x_0 + \mathcal K_k(A|r_0)
+                & x_k \in \mathcal{K}(A|r_0)w + x_0
                 \\
-                x_k &= \mathcal{K}(r_0)w + x_0
-                \\
-                \frac{\Vert e_k\Vert_A^2}{\Vert e_0\Vert_A^2}
-                &= 
+                & \frac{\Vert e_k\Vert_A^2}{\Vert e_0\Vert_A^2}
+                = 
                 \min_{w\in \mathbb R^k} 
                 \Vert
-                    (I + Ap_k(A|w))A^{1/2}e_0
-                \Vert_2^2 
-                \\
-                &\le
-                \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k + 1}(x)|
+                    (1 + Ap_k(A|w))A^{1/2}e_0
+                \Vert_2^2
+                \le
+                \min_{p_{k}: p_{k}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}
+                ]} |p_k(x)|
             \end{align}
             Here we use the notation $e_k = A^{-1}b - x_k$ to denotes the error vector. 
         \end{prop}
@@ -892,36 +892,36 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \Vert_A^2
                 \\
                 x_k \in x_0 + \mathcal K_k(A|r_0) 
-                & \iff
-                e_k = e_0 + p_k(A|w)r_0
+                & \implies
+                e_k = e_0 + p_{k - 1}(A|w)r_0
                 \\
                 \implies  &=
                 \min_{w\in \mathbb R^k}
                 \Vert 
-                    e_0 + p_k(A|w)r_0
+                    e_0 + p_{k - 1}(A|w)r_0
                 \Vert_A^2
                 \\
                 &= \min_{w\in \mathbb R^k}
                 \Vert 
-                    e_0 + Ap_k(A|w)e_0
+                    e_0 + Ap_{k - 1}(A|w)e_0
                 \Vert_A^2
                 \\
                 &= \min_{w\in \mathbb R^k}
                 \Vert 
-                    A^{1/2}(I + Ap_k(A|w))e_0
+                    A^{1/2}(I + Ap_{k - 1}(A|w))e_0
                 \Vert_2^2
                 \\
                 &\le
                 \min_{w\in \mathbb R^k}
                 \Vert 
-                    I + Ap_k(A|w)
-                \Vert_2^2\Vert e_0\Vert_A^2 \quad \text{tight}
+                    I + Ap_{k - 1}(A|w)
+                \Vert_2^2\Vert e_0\Vert_A^2 \quad 
                 \\
                 & = 
                 \min_{w\in \mathbb R^k}
                 \left(
                     \max_{i = 1, \dots, n}
-                    |1 + \lambda_ip_k(\lambda_i|w)|^2
+                    |1 + \lambda_i p_{k - 1}(\lambda_i|w)|^2
                 \right)\Vert e_0\Vert_A^2
                 \quad
                 \\
@@ -929,31 +929,35 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \min_{w\in \mathbb R^k}
                 \left(
                     \max_{x\in [\lambda_{\min}, \lambda_{\max}]}
-                    |1 + xp_k(x|w)|^2
+                    |1 + \lambda_i p_{k - 1}(\lambda_i|w)|^2
                 \right)\Vert e_0\Vert_A^2
-                \quad \text{still tight}
+                \quad 
                 \\
-                &= \min_{p_{k + 1}: p_{k + 1}(0) = 1}
-                \max_{x\in [\lambda_{\min}, \lambda_{\max}]}| p_{k + 1}(x)|^2 \Vert e\Vert_A^2
+                &= 
+                \min_{p_{k}: p_{k}(0) = 1}
+                \max_{x\in [\lambda_{\min}, \lambda_{\max}]}
+                | p_{k}(x)|^2 \Vert e\Vert_A^2
                 \\
                 \implies
                 \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} &\le 
-                \min_{p_{k + 1}: p_{k + 1}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k + 1}(x)|
+                \min_{p_{k}: p_{k}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k}(x)|
             \end{align}
-            We proceed with writing up the affine subspace where $x_k$ is from: $x_0 + \mathcal K_k(A|r_0)$, putting it in terms of matrix polynomial mulitplied by $r_0$ and then use $A^{-1}b$ to subtract both side. From the 3rd line to the 4th, we use the fact that $r_0 = Ae_0$, allowing us to extract out a factor $A$. Next, on the 4th line to the next, we use the fact that every Definite Matrix $A$ has the factorization of $A^{1/2}A^{1/2}$ where $A^{1/2}$ is also a Definite Matrix. After that we moved the $A^{1/2}$ to $e_0$ to get $\Vert e_0\Vert_A^2$ and the matrix polynomial part is left with the 2-norm. Next we use the eigendecompoition of  $A$ which diagonalizable and can have unitary eigenvectors, giving us the form of $Q\Lambda Q^T = A$ where $Q$ is an Unitary Matrix and diagonals of $\Lambda$ are the eigenvalues of $A$. Allow me to explain: 
+            (4.1.3) is the Error Energy norm minimization objective of CG, we proceed with writing up the affine subspace where $x_k$ is from: $x_0 + \mathcal K_k(A|r_0)$ at (4.1.4), putting Krylov subspace in terms of a matrix polynomial mulitplied by $r_0$ and then use $A^{-1}b$ to subtract both side to get the expression for $e_k$. From the (4.15) line to the (4.16), we use the fact that $r_0 = Ae_0$, allowing us to extract out a factor $A$. 
+            \par
+            Next, from (4.1.6) to (5.1.7), we use the fact that every symmetric definite matrix $A$ has the factorization of $A^{1/2}A^{1/2}$ where $A^{1/2}$ is also a symetric definite matrix. After that we moved the $A^{1/2}$ to $e_0$ to get $\Vert e_0\Vert_A^2$ from (4.1.7) to (4.1.8), the matrix polynomial part is left with the 2-norm. From (4.1.8) to (4.1.9) we use the eigendecompoition of $A$ which is diagonalizable with a unitary transform, giving us the form of $Q\Lambda Q^T = A$ where $Q$ is an Unitary Matrix and diagonals of $\Lambda$ are the eigenvalues of $A$. Allow me to explain: 
             \begin{align}
-                \Vert I + Ap_k(A|w)\Vert_2^2
-                &= \Vert Q(I + \Lambda p_k(\Lambda|w))Q^T\Vert_2^2
+                \Vert I + Ap_{k - 1}(A|w)\Vert_2^2
+                &= \Vert Q(I + \Lambda p_{k - 1}(\Lambda|w))Q^T\Vert_2^2
                 \\
-                &= \Vert I + \Lambda p_k(\Lambda|w)\Vert_2^2
+                &= \Vert I + \Lambda p_{k - 1}(\Lambda|w)\Vert_2^2
                 \\
-                &= \max_{i=1,\cdots, n}|1 + \lambda_ip_k(\lambda_i|w)|^2
+                &= \max_{i=1,\cdots, n}|1 + \lambda_ip_{k - 1}(\lambda_i|w)|^2
             \end{align}
-            Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between theminimum and the maximum of the eigenvalues for the matrix $A$. Finally, please notice thta we use an monic $p_{k+1}(x)$ at the and to simplify things. 
+            Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between theminimum and the maximum of the eigenvalues for the matrix $A$ (from (4.1.9) to (4.1.10)). Finally, please notice thta we use an monic $p_{k+1}(x)$ at the and to simplify things. 
         \end{proof}
-        The above results will be useful for proving the convergence and terminations properties of the CG. 
+        The above results will be useful for proving the convergenc of CG. 
         \begin{remark}[The CG Relative Energy Error Norm is Tight]
-            The bound is tight refers to the fact that the matrix is SPD, therefore $\Vert Ax\Vert \le \Vert A\Vert\Vert x\Vert$ is tight, which justifies that (4.1.10) is tight. (4.1.12) can still be tight if we have the freedom to choose the eigenvalues of the matrix $A$. However, the bound is rarely tight. 
+            The bound is tight refers to the fact that the matrix is SPD, therefore $\Vert Ax\Vert \le \Vert A\Vert\Vert x\Vert$ is tight, which justifies that (4.1.10) is tight in the sense that for any iteration $k$, we can choose an initial vector $e_0$ such that the equality is achieved. (4.1.12) can still be tight if we have the freedom to choose the eigenvalues of the matrix $A$. However, the bound is rarely tight if the initial error vector $e_0$ and the matrix $A$ is fixed. 
         \end{remark}
     \subsection{Termination Conditions of CG}
         \begin{prop}[Termination of CG]
@@ -1110,7 +1114,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \right)^{k - 1}\quad 
                     \kappa_{n - 1} =  \frac{\lambda_{n - 1}}{\lambda_1}
                 \end{align}
-                Reader please observe that, the outlier eigenvalue $\kappa_n$ plays a smaller role in determining the convergence rate of the algorithm compare to the previous bound. 
+                Reader please observe that, the outlier eigenvalue $\lambda_n$ plays a smaller role in determining the convergence rate of the algorithm compare to the previous bound. 
             \end{prop}
             \begin{proof}
                 Here, we wish to show that a more focused use of the Chebyshev will introduce a better convergence rate for the Conjugate Gradient. We define the notation for the adapted k-th degree Chebyshev Polynomial over an closed interval: $[a, b]$ as: 
@@ -1122,30 +1126,28 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align} 
                 Next, we consider the following polynomial: 
                 \begin{align}
-                    p_k(z) := 
+                    p_k(x) := 
                     \frac
                     {
                         \hat{T}_{[\lambda_1, \lambda_{n - 1}]}^{(k - 1)}
                         \left(
-                            z
+                            x
                         \right)
                     }{
                         T^{(k - 1)}_{[\lambda_1, \lambda_{n - 1}]}
                         \left(
                             0
                         \right)
-                    }\frac{\lambda_n - z}{\lambda_n}
+                    }
+                    \left(
+                        \frac{\lambda_n - x}{x}
+                    \right)
                 \end{align}
                 Where, we use an $k-1$ degree polynomial for the clustered eigenvalues, and then we multiply that by a linear function $(\lambda_n - z)/\lambda_n$ which is zero at right boundary $\lambda_n$ and it's less than one at the left boundary $\lambda_1$. Next, observe the following facts about the above polynomials: 
                 \begin{align}
                     &
                     \frac{\lambda_n - z}{\lambda_n} \in [0, 1]
                     \quad \forall z \in [\lambda_1, \lambda_n]
-                    \\
-                    &
-                    \frac{\lambda_n - z}{\lambda_n} <1
-                    \quad  \forall z \in 
-                    [\lambda_1, \lambda_{n-1}]
                     \\
                     & 
                     |p_k(x)| \le
@@ -1191,7 +1193,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \right)^{k - 1}
                 \end{align}
             \end{proof}
-            Another case that is worth considering is when there is one eigenvalue that is smaller than all the other eigenvalues which are clustered at a way larger value than it, by we I mean the value of $\lambda_1$ is much smaller than all other eigenvalues and the other eigenvalues are clutered closed together in an interval uniformaly in some interval. 
+            Another case that is worth considering is when there is one eigenvalue that is smaller than all the other eigenvalues which are clustered at a way larger value than it, by which I mean the value of $\lambda_1$ is much smaller than all other eigenvalues and the other eigenvalues are clustered close together in an interval uniformly. 
             \begin{prop}[Small Outlier CG Convergence Rate]
                 The convergence rate is: 
                 \begin{align}
@@ -1219,12 +1221,12 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \max_{x\in[\lambda_2, \lambda_n]} |w(x)| &=
                     \frac{\lambda_n - \lambda_1}{\lambda_1}
                 \end{align}
-                In this case, the maximal value of the weight function $w$ is achieved via $x = \lambda_1$, and the absolute value swapped the sign of the function. Therefore, we have: 
+                In this case, the maximal value of the linear function $w$ is achieved via $x = \lambda_1$, and the absolute value swapped the sign of the function. Therefore, we have: 
                 \begin{align}
-                    |p_k(z)| &= 
+                    |p_k(x)| &= 
                     \left|
-                        w(z) 
-                        \frac{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(z)}
+                        w(x) 
+                        \frac{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(x)}
                         {
                             \hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(0)
                         }
@@ -1232,7 +1234,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     &\le 
                     \left|
-                        \frac{w(z)}{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(0)}
+                        \frac{w(x)}{\hat{T}_{[\lambda_2, \lambda_n]}^{(k - 1)}(0)}
                     \right|
                     \\
                     & \le
@@ -1254,12 +1256,12 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align}
                 We applied the Chebyshev Bound theorem proved in the previous part. And $\kappa_0 = \lambda_n/\lambda_2$, and that is the maximal bound for the absolute value of the polynomial.
                 \par
-                Take notice that it's not immediately clear which type of outlier eigenvalue make the convergence better or worse, but in this case, the weight $w(x)$ introduces a term that grows inversely proportional to $\lambda_1$, making it clearn that if $\lambda_1$ is close to zero the convergence rate is going to be terrible. 
+                Take notice that it's not immediately clear which type of outlier eigenvalue make the convergence better or worse, but in this case, the weight $w(x)$ introduces a term that grows inversely proportional to $\lambda_1$. 
             \end{proof}
     \subsection{From Conjugate Gradient to Lanczos}
         Up until this point of disucssion, we had been brewing the fact that, the Iterative Lanczos Algorithm and the Conjugate gradient algorithm are pretty much the same thing. From the previous discussion we can observe that: 
         \begin{enumerate}
-            \item [1.)] Both Lanczos and CG terminates when the grade of Krylove subspace is reached. For lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$
+            \item [1.)] Both Lanczos and CG terminates when the grade of Krylov subspace is reached. For lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$
             \item [2.)] Both Lanczos and CG generates orthogonal vectors, for Lanczos they are the $q_i$ vector and for CG they are the $r_i$ vectors. 
         \end{enumerate}
         These 2 properties in particular, is hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived as CG in the first section, and yet it doesn't make use of any orthogonal projector. Further more, one might also notice that Iterative Lanczos are for General Symmetric Matrices whie CG are only for positive definite matrices. To see how everything ties together, we have to go both directions way to show the connections between these 2 iterative algorithms, which are what this section and the subsequent section about. Here, we refers Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
@@ -1275,7 +1277,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \\
                 q_j &= (-1)^{j + 1}\hat r_{j + 1}
             \end{align}
-            Here, $\hat{r}_j:= r_j/\Vert r_j\Vert$ and we can fill in the Lancozs Tridiagonal matrix using the CG parameters to obtain the tridiagonalization of the Positive definite matrix $A$: 
+            Here, $\hat{r}_j:= r_j/\Vert r_j\Vert$ and we can fill in the Lanczos Tridiagonal matrix using the CG parameters to obtain the tridiagonalization of the Positive definite matrix $A$: 
             \begin{align}
                 \begin{cases}
                     \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
@@ -1489,7 +1491,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                         \beta_k \xi_k^T
                     \end{bmatrix}
                 \end{align}
-                Recall that the Conjugate Gradient algorithm takes the guesses from the affine span of $x_0 + \mathcal{K}_k(A|r_0)$, and that means: 
+                Recall that the Conjugate Gradient algorithm takes the guesses from the affine span of $x_0 + \mathcal{K}_k(A|r_0)$, from section \hyperref[sec:CG_and_Krylov_Subspace]{CG and Krylov Subspace (3.3.6)} we know that that: $p_k \in \mathcal K_{k + 1}(A|r_0)$, the matrix $P_k, Q_k$ spans the same subspace, and that means: 
                 \begin{align}
                     x_{k + 1} &= x_0 + Q_ky_k
                     \\
@@ -1502,7 +1504,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     y_k &= T_k^{-1}\beta \xi_1
                 \end{align}
-                Reader please recall from section \hyperref[sec:CG_and_Krylov_Subspace]{CG and Krylov Subspace} that: $p_k \in \mathcal K_{k + 1}(A|r_0)$, which is implying a link between the $p_k$ A-orthogonal vectors and the Lanczos Orthogonal matrix: $Q_k$. Now to get the residual we simply consider: 
+                Now to get the residual we simply consider: 
                 \begin{align}
                     r_{k + 1} &= r_0 - AQ_k y_k
                     \\
@@ -1731,7 +1733,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \frac{\langle \overline{r}_k, r_{k -1}\rangle}{\langle r_{k - 1}, r_{k - 1}\rangle}p_k
             - \sum_{j = 0}^{k - 1}\frac{\langle p_j, A\overline{r}_k\rangle}{\langle p_k, Ap_k\rangle}p_j
             \\
-            r_k &:= \overline{r}_j - \sum_{j = 0}^{k - 1} \langle \hat{r}_j,\overline{r}_k\rangle \hat{r}_j
+            r_k &:= \overline{r}_k - \sum_{j = 0}^{k - 1} \langle \hat{r}_j,\overline{r}_k\rangle \hat{r}_j
         \end{align}
         Here, we generate the conjuate vectors $p_k$ correctly by faithfully reproducing the term $(AP_k)^T\overline{r}_k$, and then we upadate the residual $\overline{r}_k$ into $r_k$ by orthogonalizing it against all previous residual vectors. Doing ths require the expensive storage of previous vectors $p_k$. One can use alternative formulas to A-orthogonalize $p_k$ and re-orthogonalize $r_k$. In addition, we have the options for partially orthogonalizing the $r_k, p_k$ vectors for less memory usage. 
 
@@ -1752,9 +1754,9 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
         \end{figure}
         The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues are not perfectly uniform. The partially orthogonalized methods diverges from the exact error after more steps of iterations compare to the relative error without any orthogonalizations. These are seemed in \hyperref[fig:1]{(fig 1)}. 
         \begin{remark}
-            The convergence is disappointing under floating point arithematic and the promised efficiency of the algorithm is not there anymore if the matrix is ill-conditioned. If we were to use a fully re-orthogonalized variant of the CG, the memory needed and the totaly complexity for a fixed tolerance is going to be on the same scale of solving it by direct methods. 
+            The convergence is disappointing under floating point arithematic and the promised efficiency of the algorithm is not there anymore if the matrix is not neccessarily ill-conditioned. If we were to use a fully re-orthogonalized variant of the CG, the memory needed and the total complexity for a fixed tolerance is going to be on the same scale of solving it by direct methods. 
         \end{remark}
-    \subsection{Greenbaum's Backward Analysis and Paige's Floating Point Analysis}
+    \subsection{Paige's Floating Point Analysis}
         In this section we present the backwards analysis of the algorithm in a more thoroughly manner and exam its consequences. When floating point arithematic is used, the eigenvalues of the Tridiagonal matrices might inttroduces ghost eigenvectors for the Lanczos Iterations, and using the equivalence of the Lanczos iterations and CG, we can capture a posteri bound on how much the error is exactly during the iterations of CG. 
         \subsubsection{Bounding the The Relative Residuals}
             Recall from proposition \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition 4.6} that the residual of the CG can be expressed interms of the Lanczos vectors. However, the Lanczos Algorithm under floating doesn't produces perfectly orthogonal Lanczos Vectors (The lost of orthogonality is experimented and visualized in the next section), $\tilde{Q}_k$ is not quiet orthogonal, which would also means that $\tilde{Q}_k^HA\tilde{Q}_k\approx T_k$ where $T_k$ is the results from the Lanczos Algorithm will be the truncation of the tridiagonal parts of the matrix $\tilde{Q}_k^HA\tilde{Q}_k$. However when we solve for $y_k$ using the expression $y_k = \beta T^{-1}_k\xi_1$, and this is what the CG algorithm does faithfully. The algorithm still thought $T_k$ produced by itself is perfectly tridiagonal which is not true because $Q_k$ is not quiet orthogonal. As a results the algorithm never quiet find the optimal under the conjugate basis. At first glance, tiny round-off errors in the Lanczos vectors is very problematic. 
@@ -2052,7 +2054,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
         $A^2K_k$ will span the same sapce as the range of the matrix $K_k$. 
 \newpage
 
-            
+
             
 
 \end{document}
