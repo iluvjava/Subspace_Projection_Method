@@ -127,96 +127,169 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
 
 \newpage
 \section{Foundations}
-    In this section, we go over the foundations of Conjugate Gradient and the Lanczos Algorithm. We introduce the important ideas at the beginning and then we proceed to prove the conjugate gradient algorithm via the method conjugate directions, and then we state the Lanczos Iterations as a symmetric case of the Arnoldi Iterations. 
-    \subsection{The Basics}
-        In this subsection we go over some basics concepts and mathematical entities that are important to the Subspace Projection methods in general. 
-        \subsubsection{Krylov Subspace}
-            \begin{definition}[Krylov Subspace]
-                $$
-                \mathcal{K}_k(A|b) = \text{span}( b, Ab, A^2b, \cdots A^{k - 1}b)
-                $$
-                Observe that, for every element in the subspace, it's a matrix polynomial, we write it as $p_{k-1}(A|w)$, a $k-1$ degree matrix polynomial where $A$ is the matrix and $w$ is a vector denoting the coefficients. 
-            \end{definition}
-            \begin{definition}[The Grade of Krylov Subspace]
-                The grade of the krylov subspace is the the smallest $\mathcal K_{k}(A|v)$ such that the vectors in the span is linear dependent, denoted as $\text{grade}(A|v)$. 
-            \end{definition}
-            The word grade of a krylov Subspace is usedn Y.Saad's work (\textbf{CITATION NEEDED}) in reference to Krylov Subspace. And once the grade is reached, the Krylov Subspace becomes an invariant subspace to the matrix $A$. For a proof, refers to \hyperref[prop:Krylov_Subspace_Grade_Invariant_Theorem]{Krylov Subspace Grade Invariant Theorem} in the appendix. This concept is useful for determining the termination conditions for Lanczos iterations and Conjugate Gradient. 
-        \subsubsection{Projectors}
-            \begin{definition}
-                A matrix $P$ is a projector when $P^2 = P$, we call this property idempotent. 
-            \end{definition}
-            There are 2 types of projectors, oblique and orthogonal projectors. A projector is orthogonal projector when it's Hermitian, it's oblique when it's not Harmitian. 
-            \begin{prop}[Projector Complementary]
-                The projector $I - P$ projects onto the null space of $P$ and vice versa. 
-                \begin{align}
-                    & \text{ran}(P) = \text{null}(I - P)
-                    \\
-                    & \text{ran}(I - P) = \text{null}(P)
-                \end{align}
-            \end{prop}
-            The proof is immediate from the definition. For more coverage of facts, refer to Trefethen's Book on Numerical Linear Algebra(\textbf{CITATION HERE}).
+    This section focuses on important mathematical entities that are important for formulating, analyzing the Conjugate Gradient and the Lanczos Algorithm. Major parts of this section cited from... (\textbf{CITATION NEEDED})
 
-    \subsection{Subspace Projection Methods}\label{sec:Subspace_Projection_Methods}
-        Let $\mathcal K, \mathcal L$ be 2 subspaces. $\mathcal K$ can be viewed as a subspace where we choose our solutions for the $x$ in the linear system $Ax = b$, and $\mathcal L$ is a subspace where we test our residual $r = b - Ax$. This is a description of this framework: 
+    \subsection{Projectors}
+        The properties of projector have importance for subspace projection method. In this section, we go through 2 types of projectors, the orthgonal projector and the oblique projector. The oblique projector is made useful for the derivation of the classic CG algorithm, which is referred to as RACG in the context of this paper. The orthogonal projector is useful for orthogonalizing the Krylov Subspace. 
+        \begin{definition}
+            A matrix $P$ is a projector when: 
+            \begin{align}
+                P^2 = P
+            \end{align}    
+        \end{definition}
+        This property is sometimes referred as \textit{idempotent}. As a consequence, $\text{ran}(I - P) = \text{null}(P)$ and here is the proof: 
+        \begin{proof}
+            \begin{align}
+                \forall x \in \mathbb{C}^n: P(I - P)x &= \mathbf{0} \implies \text{ran}(I - P)\subseteq \text{null}(P)
+                \\
+                \forall x \in \text{null}(P): Px &= \mathbf{0} \implies (I - P)x = x \implies x \in \text{ran}(I - P)
+                \\
+                \implies \text{ran}(I - P) &= \text{null}(P)
+                \label{3.1.4}
+            \end{align}
+        \end{proof}
+        \noindent
+        \subsubsection{Orthogonal Projector}
+            \begin{definition}
+                An orthogonal projector is a projector $P$ which: 
+                \begin{align}
+                    \text{null}(P) \perp \text{ran}(P)
+                \end{align}    
+            \end{definition}
+            This property is in fact, very special. A good example of an orthogonal projector would be the Householder Reflector Matrix. Or just any $\hat{u}\hat{u}^H$ where $\hat{u}$ is a unitary vector. For convenience of proving, assume subspace $M = \text{ran}(P)$. Consider the following lemma: 
+            \begin{lemma}
+                \begin{align}
+                    \text{null}(P^H) = \text{ran}(P)^{\perp}
+                    \\
+                    \text{null}(P) = \text{ran}(P^H)^{\perp}
+                \end{align}
+            \end{lemma}
+            \noindent
+            Using \hyperref[3.1.4]{(3.1.4)} and consider the proof: 
+            \begin{proof}
+                \begin{align}
+                    \text{Observe}: &
+                    \langle P^Hx, y\rangle = \langle x, Py\rangle 
+                    \\
+                    & \implies \forall  x \in \text{null}(P^H), y\in \mathbb{C}^n: \langle P^Hx ,y\rangle = 0 = \langle x, Py\rangle
+                    \\
+                    &\quad 
+                    \implies \text{null}(P^H) \perp \text{ran}(P)
+                    \\
+                    & \forall y \in \text{null}(P), x \in \mathbb{C}^n: \langle x, Py\rangle = 0 = \langle P^Hx, y\rangle
+                    \\
+                    & \implies \text{ran}(P^H) \perp \text{null}(P)
+                \end{align}
+            \end{proof}
+            
+            \begin{prop}
+                A projector is orthogonal iff it's Hermitian. 
+            \end{prop}
+            \begin{proof}
+                $\impliedby$ Assuming the matrix is Hermitian and it's a projector, then we wish to prove that it's an orthogonal projector. Let's recall the results of previous lemma: 
+                \begin{align}
+                    \text{null}(P^H) = \text{ran}(P)^{\perp}
+                    \\
+                    \text{null}(P) = \text{ran}(P^H)^{\perp}
+                \end{align}
+                Substituting $P^H = P$, we have $\text{null}(P) = \text{ran}(P)^{\perp}$, Which is the definition of Orthogonal Projector. Therefore, $P$ is an orthogonal projector by the definition of the projector. 
+                \par
+                For the $\implies$ direction, we assume that $P$ is an Orthogonal Projector, then we wish to show that it's also Hermitian. Observe that $P^H$ is also a projector because $(P^H)^2 = (P^2)^H$. Then, using the definition of orthogonal projector: 
+                \begin{align}
+                    \text{null}(P) &\perp\text{ran}(P) 
+                    \\
+                    \text{null}(P^H) &\perp \text{ran}(P^H)
+                \end{align}
+                Notice that using above statement together with Lemma 1 means $\text{null}(P) = \text{ran}(P)^\perp = \text{null}(P^H)$, and then $\text{ran}(P)=\text{null}(P)^\perp = \text{ran}(P^H)$. Therefore, $P^H$ is an projector such that: $\text{ran}(P) = \text{ran}(P^H) \wedge \text{null}(P) = \text{null}(P^H)$. The range and null space of $P^H$ and $P$ is the same therefore $P$ has to be Hermitian. 
+            \end{proof}
+            \subsubsection{Oblique Projector}
+                An oblique projector a projector but not an orthogonal projector, and vice versa. It's a projector that satisfies the following conditions: 
+                \begin{definition}
+                    \begin{align}
+                        Px \in M \quad (I - P)x \perp L \quad \text{where: } M \neq L
+                    \end{align}    
+                \end{definition}
+                An orthgonal projector is the case when the subspace $M = L$. 
+                \par
+                A famous example of an orthogonal projector is $QQ^H$ where $Q$ is an Unitary Matrix. This is a Hermitian Matrix and it's idempotent, making it an orthogonal projector. 
+            \subsubsection{Projector Geometric Intuitions}
+                A projector describes a given vector using some elements from another basis. The oblique projector creates a light sources in the form of the subspace $L$ and it shoots parallel light rays in the direction orthogonal to $L$, crossing vectors and projecting their shadow onto subspace $M$. 
+        \subsubsection{Projector as a 2-Norm Minimizer}
+            An orthogonal projector always reduce the 2 norm of a vector. Given any subspace $M$, we can create a basis of vectors packing into the matrix $A$, then $P_M$ as a projector onto the basis $M$ as an example can be: $A(AA^T)^{-1}A^T$. What exactly the projector is doesn't matter in the future disucssions. Let's consider the claim: 
+            \begin{align}
+                \Vert P_Mx\Vert^2 \le \Vert x\Vert^2
+            \end{align}
+            \begin{proof}
+                For notational convenience, we simply denotes $P_M$ using $P$. 
+                \begin{align}
+                    x &= Px + (I - P)x 
+                    \\
+                    \Vert x\Vert^2 &= \Vert Px\Vert^2 + \Vert (I - P)x\Vert^2
+                    \\
+                    \Vert x\Vert^2 &\ge \Vert Px\Vert^2
+                \end{align}    
+            \end{proof}
+            Using this property of the Orthogonal Projector, we consider the following minimizations problem: 
+            \begin{align}
+                \min_{x\in M} \Vert y - x\Vert_2^2 = \Vert y - Py\Vert_2^2
+            \end{align}
+            Proof:
+            \begin{align}
+                \Vert y - x\Vert_2^2 &= 
+                \Vert y - Py + Py - x\Vert_2^2
+                \\
+                \Vert y - x\Vert_2^2 &= 
+                \Vert y - Py\Vert_2^2 + \Vert Py - x\Vert_2^2
+                \\
+                \implies 
+                \Vert y - Py\Vert_2^2 &\le \Vert y - x\Vert_2^2
+            \end{align}
+            That concludes the proof. Observe that, $y - Py\perp M$ and $Py - x \in M$ because $Py, x \in M$, which allows us to split the norm of $y - x$ into 2 components. In addition using the fact that the projector is orthogonal. That concludes the proof. 
+    \subsection{Subspace Projection Methods}
+        Let $\mathcal K, \mathcal L$ be subspaces where candidates soltuions are chosen and residuals are orthogonalized against. Under the idea case the 2 subspaces spans all dimensions, and it's able to approximate all solutions and forcing the residual vector ($b - Ax$) to be zero. This is a description of this framework: 
         \begin{align}
-            \text{choose }\tilde{x} \in x_0 + \mathcal{K} \text{ s.t: } b - A\tilde{x} \perp \mathcal{L}
+            \tilde{x} \in x_0 + \mathcal{K} \text{ s.t: } b - A\tilde{x} \perp \mathcal{L}
         \end{align}
-        We look for a $x$ in the affine linear subspace $x_0 + \mathcal{K}$ such that it's perpendicular to the subspace $\mathcal{L}$, or, equivalently, minimizing the projection onto the subspace $\mathcal{L}$.  
+        it looks for an $x$ in the affine linear subspace $\mathcal{K}$ such that it's perpendicular to the subspace $\mathcal{L}$, or, equivalently, minimizing the projection onto the subspace $\mathcal{L}$. One interpretation of it is an projection of residual onto the basis that is orthogonal to $\mathcal L$. 
         \par
-        The above conditions can be expressed using matrix. 
+        Sometimes, for convenience and the exposition and exposing hidden connections between ideas, the above conditions can be expressed using matrix. 
         \begin{align}
-            \text{Let } V \in \mathbb{R}^{n\times m} \text{ be a aasis for: }\mathcal{K}
+            \text{Let } V \in \mathbb{C}^{n\times m} \text{ be a aasis for: }\mathcal{K}
             \\
-            \text{Let } W \in \mathbb{R}^{n\times m} \text{ be a basis for: } \mathcal{L}
+            \text{Let } W \in \mathbb{C}^{n\times m} \text{ be a basis for: } \mathcal{L}
         \end{align}
-        Substituting the matrices to the above set of conditions: 
+        We can then make us of (1.3.1) and express it in the form of: 
         \begin{align}
-            \tilde{x} &= x_0 + Vy
+            \tilde{x} &= x^{(0)} + Vy
             \\
-            \text{choose } x \text{ s.t: } b - A\tilde{x}  &\perp \text{ran}(W)
+            b - A\tilde{x}  &\perp \text{ran}(W)
             \\
-            \implies W^T(b - Ax_0 - AVy) &= \mathbf{0}
+            W^T(b - A\tilde{x} - AVy) &= \mathbf{0}
             \\
-            W^Tr_0 - W^TAVy&= \mathbf{0}
+            W^Tr^{(0)} - W^TAVy&= \mathbf{0}
             \\
-            W^TAVy &= W^Tr_0
+            W^TAVy &= W^Tr^{(0)}
         \end{align}
         \subsubsection{Prototype Algorithm}
             And from here, we can define a simple prototype algorithm using this framworks. 
             \begin{align}
-                \begin{aligned}
-                    & \text{While not converging}: 
-                    \\&\hspace{1.1em}
-                            \begin{aligned}
-                            &\text{Increase Span for: } \mathcal{K, L}
-                            \\
-                            &\text{Choose: } V, W \text{ for } \mathcal{K}, \mathcal{L}
-                            \\
-                            & y:= (W^TAV)^{-1}W^Tr_0
-                            \\
-                            & x:= x+ Vy
-                            \\
-                            & r:= r_0 - AVy
-                        \end{aligned}
-                \end{aligned}
+            \begin{aligned}
+                & \text{While not converging}: 
+                \\&\hspace{1.1em}
+                        \begin{aligned}
+                        &\text{Increase Span for: } \mathcal{K, L}
+                        \\
+                        &\text{Choose: } V, W \text{ for } \mathcal{K}, \mathcal{L}
+                        \\
+                        & r := b - Ax
+                        \\
+                        & y := (W^TAV)^{-1}W^Tr
+                        \\
+                        & x := x + Vy
+                    \end{aligned}
+            \end{aligned}
             \end{align}
-            Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions (\textbf{CHECK THIS}). 
-            \\
-            \begin{remark}[Projector in the Prototype Algorithm]
-                One may proceed to find a projector in the above prototype algorithm. 
-                \begin{align}
-                    & y = (W^TAv)^{-1}W^Tr_0
-                    \\
-                    & AVy = AV(W^TAV)^{-1}W^{T}r_0
-                    \\
-                    & x = x_0 + AVy
-                    \\
-                    & b - Ax = b - Ax_0 - AVy
-                    \\
-                    & r = r_0 - AV(W^TAV)^{-1}W^Tr_0
-                \end{align}
-                In here, $AV(W^TAV)^{-1}W^T$ is a projector, assuming the invertibility of $W^TAV$. 
-            \end{remark}
+            Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions. 
         
         \subsubsection{Energy Norm Minimization using Gradient}\label{sec:Energy_Norm_Minimization_using_Gradient}
             Other times, iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under some norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, and we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$, then one may consider using gradient as a more direct approach instead of projector. 
@@ -231,7 +304,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     r_0 - AKw
                 \Vert_B^2
             \end{align}
-            We take the derivative of it and set the derivative to zero, skipping the proof that the derivative of $\nabla_x[\frac{1}{2}\Vert x\Vert_A^2] = Ax$ and just apply this formula for computing the gradient $\nabla_x[f(Ax)] = A^T\nabla [f(x)]$ where $f(x)$ is a mapping from $\mathbb R^n$ to $\mathbb R$. 
+            We take the derivative of it and set the derivative to zero. The skip the proof that the derivative of $\nabla_x[\frac{1}{2}\Vert x\Vert_A^2] = Ax$, and for a crash course on derivative, the $\nabla_x[f(Ax)] = A^T\nabla [f(x)]$. 
             \begin{align}
                 \nabla_w \left[
                     \Vert r_0 - AKx\Vert_B^2
@@ -243,13 +316,13 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \\
                 (AK)^TBr_0 &= (AK)^TBAKx
             \end{align}
-            The above formulation is powerful. I used gradient instead of projector for the simplicity of the argument. One can derive the same using orhtogonal projector to minimizes the 2 norm, but the math is bit more tedious. However, this minimization objective is minimizing the residual, which is fine for deriving subspace methods such as the GMRes, or the Minres and Orthomin, however, for the sake of the conjugate gradient, we have to consider the altenative. Let's this be a proposition that we proceed to prove. 
+            The above formulation is tremendously powerful. I used gradient instead of projector for the simplicity of the argument. One can derive the same using orhtogonal projector to minimizes the 2 norm, but the math is bit more hedious. However, this minimization objective is minimizing the residual, which is fine for deriving subspace methods such as the GMRes, or the Minres and Orthomin, however, for the sake of the conjugate gradient, we have to consider the altenative. Let's this be a proposition that we proceed to prove. 
             \begin{prop}[Conditions for Minimum Error Under Energy Norm]
                 Here, we let matrix $B$ be positive definite so it can induce a norm, we let $K$ be a matrix whose columns forms a basis for $\mathcal K$, we let $e_k$ denotes the error, given by: $A^{-1}b - x_k$, and we let $r_k$ denotes the residual given as $b - Ax_k$. 
                 \begin{align}
                     \min_{x_k\in x_0 + \mathcal K}\Vert A^{-1}b - x\Vert_B^2
                     \iff
-                    K^TBe_0 - K^TBKw &= \mathbf 0
+                    K^TBe_k - K^TBKw &= \mathbf 0
                 \end{align} 
             \end{prop}
             Next, we proceed to prove it and explain its interpretations and importance: 
@@ -259,51 +332,195 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \Vert A^{-1}b - x\Vert_B^2
                     &= 
                     \min_{x\in \mathbb R} 
-                    \Vert A^{-1}b - x_0 - Kw\Vert_B^2
+                    \Vert A^{-1}b - x_0 - Kw\Vert_b^2
                     \\
                     &= \min_{x\in \mathbb R^k}
-                    \Vert e_0 - Kw\Vert_B^2
+                    \Vert e_k - Kw\Vert_b^2
                 \end{align}
                 To attain the minimum of the norm, we take the derivative and set it to be zero, giving us: 
                 \begin{align}
-                    \mathbf 0 &= \nabla_w[\Vert e_0 - Kw\Vert_B^2]
+                    \mathbf 0 &= \nabla_w[\Vert e_k - Kw\Vert_B^2]
                     \\
-                    &= \nabla_w[e_0 - Kw]^TB(e_k - Kw)
+                    &= \nabla_w[e_k - Kw]^TB(e_k - Kw)
                     \\
-                    &= 2K^TB(e_0 - Kw)
+                    &= 2K^TB(e_k - Kw)
                     \\
                     \implies 
-                    K^TBe_0 - K^TBKw &= \mathbf 0
+                    K^TBe_k - K^TBKw &= \mathbf 0
                 \end{align}
             \end{proof}
-            This conditions is implicity describing the objective of a Preconditioned Conjugate Gradient algorithm, where $B$ is the $M^{-1}$ matrix (\textbf{VERIFICATION NEEDED}), however this discussion right now it's a digression. Instead let's set $B$ to $A$, so that it's equivalent to the Energy Norm minimization of Conjugate Gradient, giving us this conditions: 
+            This conditions is implicity describing the objective of a Preconditioned Conjugate Gradient algorithm, where $B$ is the $M^{-1}$ matrix, however this discussion right now it's a digression. Instead let's set $B$ to $A$, so that it's equivalent to the Energy Norm minimization of Conjugate Gradient, giving us this conditions: 
             \begin{align}
-                K^TAA^{-1}r_0 - K^TAKw &= \mathbf 0
+                K^TAA^{-1}r_k - K^TAKw &= \mathbf 0
                 \\
-                K^Tr_0 - K^TAKw &= \mathbf 0
+                K^Tr_k - K^TAKw &= \mathbf 0
             \end{align}
             Here, we jsut made the substitution of $e_k = A^{-1}r_k$, and $B = A$. Later, we will see how this condition is linked to the idea of an Oblique Projector, similar to how an Orthogonal Projector is able to minimize the 2-Norm of the residual. 
 
-     
+    \subsection{Krylov Subspace}
+        A Krylov Subspace is a sequence of basises paramaterized by $A$, the linear operator. $v$ is an initial vector. For each basis in the sequence, it's a gotten by applying the linear operator to the previous basis in the sequence. In this part we prove some of the properties of Krylov Subspace. The term ``grade" we used is originated from the textbook (\textbf{CITATION NEEDED}) from Y.Saad. 
+        \begin{definition}[Krylov subspace]
+            \begin{align}
+                \mathcal{K}_k(A|b) = \text{span}( b, Ab, A^2b, \cdots A^{k - 1}b)
+            \end{align}
+        \end{definition}
+        \noindent
+        Please immediately observe that from the definition we have: 
+        \begin{align}
+            \forall v: \mathcal{K}_1(A|v)  \subseteq  \mathcal{K}_2(A|v)  \subseteq \mathcal{K}_3(A|v)  \cdots 
+        \end{align}
+        Please also observe that, every element inside of krylov subspace generated by matrix $A$, and an initial veoctr $v$ can be represented as a polynomial of matrix $A$ multiplied by the vector $v$ and vice versa.
+        \begin{align}
+            & \forall x \in \mathcal K_k(A|v) \;\exists\; w: p_k(A|w)v = x
+        \end{align}
+        We use $p_k(A|w)$ to denotes a matrix polynomial with coefficients $w\in \mathcal K_j$, where $w$ is a vector. No proof this is trivial. Take note that, we can change the field of where the scalar $w_i$ is coming from, but for discussion below, $\mathbb R, \mathbb C$  doesn't matter and won't change the results so we stick to $\mathbb R$ and we let $v, A$ be real vectors and matrices so it's consistent. 
+        \begin{align}
+            p_k(A|w)v = \sum_{j = 0}^{k - 1}w_jA^jv
+        \end{align}
+        \subsubsection{The Grade of a Krylov Subspace}
+            The most important porperty of the subspace is the idea of grade denoted as $\text{grade}(A|v)$, indicating when the Krylov Subspace of $A$ wrt to $v$ becomes invariant when the grade of the subspace is reached and it kept its invariance for all subsequent subspaces. To show this idea, we consider the following 3 statements about Krylov Subspace which we will proceed to prove. 
+            \begin{lemma}[Grade Lemma 1]
+                \begin{align}
+                    \exists 1 \le k \le m + 1: \mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v)
+                \end{align}
+                There exists an natural number between $1$ and $m+ 1$ such that, the successive krylov subspace span the same space as the previous one. 
+            \end{lemma} 
+            \begin{lemma}[Grade Lemma 2]
+                \begin{align}
+                    \exists! k \text{ s.t: }\mathcal K_k(A|v) = \mathcal K_{k + 1}(A|v) \implies 
+                    \mathcal K_k(A|v) \text{ is Lin Ind} \wedge \mathcal K_{k + 1}(A|v) \text{ is Lin Dep}. 
+                \end{align}
+                There eixsts a minimum such $k$ that is unique where the immediate next krylov subspace is linear dependent, and $k - 1$ would be the grade. 
+            \end{lemma}
+            \begin{lemma}[Grade Lemma 3]
+                \begin{align}
+                    \mathcal K_k(A|v) \text{ Lin Dep} \implies \mathcal K_{k + 1}(A|v) = \mathcal K_k(A|v)
+                \end{align}
+                if the $k$ Krylov Subspace is linear dependent, then all successive Krylov Subspace is the same. 
+            \end{lemma}
+            \begin{theorem}[Unique Existence of Grade for a Krylov Subspace]
+                \label{theorem:Existence_of_Grade_for_a_Krylov_Subspace}
+                Let $k$ be the minumum number when the krylov subspace becomes linear dependent, then all successive krylov subspace spand the same space. $\mathcal K_k(A|v) = \mathcal K_{k + j}(A|v) \;\forall j \ge 0$. The number $k$ is regarded as the grade of krylov subspace wrt to v denoted using $\text{grade}(A|v)$. 
+            \end{theorem}
+            Lemma 1, 2 ensures that there exists a term in the sequence of krylov subspace becomes linear dependence, and when that happens all subsequent Krylov Subspace will span the same subspace, this is by Lemma 3. As a results, the grade for the Krylov Subspace exists and it's unique. 
+            \par
+            Next, let's consider the proof of theorem 1 by proving all 3 of the lemmas. 
+            \begin{proof}[Krylov Grade Lemma 1]
+                For notational simplicity, $\mathcal K_k$ now denotes $\mathcal K_k(A|v)$. Let's start the considerations from the definition of the Krylov Subspace: 
+                \begin{align}
+                    \forall\; k: \mathcal K_k \subseteq \mathcal K_{k + 1}\implies \text{dim}(\mathcal K_{k})\le \text{dim}(\mathcal K_{k + 1})
+                    \\
+                    \mathcal K_{k + 1}\setminus \mathcal K_k = \text{span}(A^{k}v) 
+                    \\
+                    \implies \dim(\mathcal K_{k + 1}) - \dim(\mathcal K_k) \le 1
+                \end{align}
+                Therefore, the dimension of the successive krylov subspace forms a sequence of positive integer that is monotonically increasing. By the Cayley's Hamilton's theorem (will be stated later), the sequence is bounded by $m$, since there are $m + 1$ terms, it must be the case that at least 2 of the krylov subspace has the same dimension (And the earliest such occurance will exist), implying the the fact that the new added vector from $k$ to $k + 1$ is in the span of the previous subspace. 
+            \end{proof}
+            \begin{proof}[Krylov Grade Lemma 3]
+                The direction $\mathcal K_k(A|v) \subseteq \mathcal K_k(A|v)$ is trivial. 
+                
+                Assuming that $\mathcal K_{k + 1}(A|v)$ is linear dependence, we wish to prove that $\mathcal K_{k + 1}(A|v)\subseteq \mathcal K(A|v)$ by considering: 
+                $$
+                \begin{aligned}
+                    & \mathcal K_{k + 1}(A|v) \text{ is Lin dependent} 
+                    \\
+                    & \implies \exists w^{(k)}: A^kv  = p_k(A|w^{(k)})v
+                    \\
+                    & x \in \mathcal K_{k + 1}(A|v)\iff \exists w^{(k + 1)}: p_{k + 1}(A|w^{(k + 1)}) v = x
+                    \\
+                    & x = w^{(k + 1)} A^kv + \sum_{j = 0}^{k - 1}w^{(k + 1)}_jA^jv
+                    \\
+                    & x = w^{(k + 1)}_k p_k(A|w^{(k)})v + \sum_{j = 0}^{k - 1}w^{(k + 1)}_jA^jv
+                    \\
+                    & x \in \mathcal K_k(A|v)
+                \end{aligned}
+                $$
+                For notations, we used $w^{(k)}, w^{(k + 1)}$ to represents the vector containing all coefficients for the polynomial and their $i$ element is denoted as $w^{(k)}_i$. From the last line, we proved that for all $x$ in $\mathcal K_{k + 1}(A|v)$, it's must also be in $\mathcal K(A|v)$. The frist line is using the fact that $\mathcal K_{k + 1}(A|v)$ is linear dependent, giving us an polynomial for the term $A^kv$. The next line is saying that for any element in $\mathcal K_{k + 1}(A|v)$ there exists a matrix polynomial representing $x$. Doingsome algebra, we reduced the polynomial of max degree $k$ into degree $k - 1$, proving that $x$ must also be in $\mathcal K_k(A|v)$.
+            \end{proof}
+            \begin{proof}[Krylov Grade Lemma 2]
+                The proof for Lemma 2 is direct from Lemma 1, 3. Lemma 2 asserts the existence of a unique minimum of $k$ and such k makes $\mathcal K_{k - 1}(A|v) = \mathcal K_k(A|v)$ and $\mathcal K_k(A|v)$ is linearly dependence. 
+            \end{proof}
+        \subsubsection{The Grade and Matrix Polynomial}
+            \begin{theorem}\label{theorem:2}
+                Let $k$ be the grade of Krylov Subspace $A$ initialized with $v$, then exists $p_{k}(A|w)v = x$ for all $x$ in the subspace $\mathcal K_k(A|v)$ with $w\neq \mathbf 0$, and it must be the case that $w_0\neq 0$.
+            \end{theorem}
+            \begin{proof}
+                For contradiction suppose otherwise that we can represents $x\in \mathcal K_k(A|v)$  and such a polynomial with $w_0$ exists then: 
+                \begin{align}
+                    \exists w &\neq \mathbf 0 : p_{k}(A|w)v = \mathbf 0 
+                    \\
+                    \implies& w_0v + \sum_{j = 1}^{k - 1} w_jA^jv = \mathbf 0
+                    \\
+                    \mathbf 0 &=\sum_{j = 1}^{k - 1} w_jA^jv
+                    \\
+                    \mathbf 0 &= A\sum_{j = 0}^{k - 2} w_{j + 1}A^jv
+                    \\
+                    \implies \sum_{j = 0}^{k - 2} w_{j + 1}A^jv &= \mathbf 0 
+                \end{align}
+                From the second line to the third, I susbstitute $w_0 = 0$ for contradiction. On the last line, it suggested that $k$ is not the smallest, and $k - 1$ might be the grade, contradicting the assumption that $k$ is the grade of the Krylov Subspace. Therefore, $w_0 \neq 0 $. 
+            \end{proof}
+    \subsection{Useful Theorems and Mathematical Entities}
+        \subsubsection{Minimal Polynomial of a Matrix}
+            \begin{definition}
+                A minimal polynomial $p_k(x)$ is monic such that $p_k(A) = \mathbf{0}$ and $k$ is as small as possible. 
+            \end{definition}
+            One immediate property that might be useful for future constext is the fact that the constant term of the Minimal Polynomial has to have a non-zero coefficient. For contradiction suppose that is the not the case and $k-1$ is the lowest degree of a minimal polynomial then: 
+            \begin{align}
+                \forall x: \mathbf 0 &= \sum_{j = 0}^{k - 1}w_jA^jx
+                \\
+                w_0 &:= 0 
+                \\
+                \forall x: \mathbf 0 &= \sum_{j = 1}^{k - 1}w_jA^jx
+                \\
+                \forall x: \mathbf 0 &= A\sum_{j = 0}^{k - 2}w_jA^jx
+                \\
+                \implies \forall x : \mathbf 0 &= \sum_{j = 0}^{k - 2}w_jA^jx 
+            \end{align}
+            And we get another polynomial satisfying that conditions that has a degree of $k - 1$, contradicting the condition that $k$ is the minimal such parameter. 
+        \subsubsection{Cauchy Interlace Theorem}
+            \begin{theorem}[Cauchy Interlace]\label{theorem:Cauchy_Interlace}
+                The cauchy's Iterlace Theorem describes the relations of eigenvalues between the submatrix of a Symmetric Tridiagonal matrix and the bigger matrix. In our caes, let $T_{k-1}\in \mathbb R^{(k - 1)\times (k - 1)}$ be the principal sub-matrix to the matrix $T_k$, then between every eigenvalue of $T_{k}$, there must exists an eigenvalue of $T_{k-1}$ between them. Let $\theta_i^{(k)}$ be the $i$ eigenvalues of $T_k$, let the eigenvalues be sorted then: 
+                \begin{align}
+                    \theta_{j}^{(k + 1)}
+                    \le \theta_{j}^{(k)}
+                    \le \theta_{j + 1}^{(k + 1)}
+                    \quad \forall  1 \le j \le k - 1
+                \end{align}
+            \end{theorem}
 
-    \subsection{Deriving Conjugate Gradient from Conjugate Directions}
-        By the time this is being written, it's been 70 years since the first time Conjugate Gradient algorithm is proposed by Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}). Upon their first discussion of the algorithm, numerious perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iterations. Here, we use the exact same idea but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the subspace orthogonality conditions to derive it. The ideas are rehashed and in the end we point out its relations to Krylov Subspace, which ultimately, leads to other important new ideas that are not yet present back in 1952. In most time under classroom settings or textbook, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so we can move on and talk about other things. In this section of the paper, we take a different approach that similar in spirit to a coursenotes by Shewchuk (\textbf{CITATION NEEDED}) where we focuses more on that inspirations behind the algorithm and disregard Lanczos Algorithms and Krylov Subspace until the very end.  
+        \subsubsection{Caley Hamilton's Theorem}
+            \begin{theorem}[Caley's Hamilton Theorem]\label{theorem:Caley_Hamilton}
+                A matrix satisfies it's own characteristic equation, let $p(x)$ be the characteristic polynomial for the matrix $A$, then $p(A) = \mathbf 0$. 
+            \end{theorem}
+            The Calye's Hamilton's Theorem is important in the sense that, a direct consequence is the termination conditions for all krylov Subspace Methods (regardless of initial guess vectors). It's saying that all Krylov Subspace methods will terminates at step $n + 1$ at most, if $n$ is the size of the operator. However, the more important fact is that, when it terminates, the solution $x$ is a weighted sum of the Krylov Subspace vectors and the weights are related to the characterstic polynomial of the matrix. 
+        \subsubsection{The Chebyshev Polynomial}
+            The chebyshev polynomial is an orthogonal polynomials under a weighted space; it has amazing properties, for our sake, we focuses the Type T Chebyshev Polynomial which has the property of minimizing the infinitty norm over a closed interval: 
+            \begin{align}
+                T_k(x) = \arg\min_{p(x)}
+                \left\lbrace
+                    \Vert p(x) \Vert_\infty: \forall x \in [-1, 1]
+                \right\rbrace
+            \end{align}
+            This thereom is later used as a pivotal tools for the analysis for floating point error for the conjugate gradient algorithm. 
+
+    \subsection{Deriving Conjugate Gradient from First Principles}
+        By the time this is being written, it's been 70 years since the first time Conjugate Gradient algorithm is proposed by Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}). Upon their first discussion of the algorithm, numerious perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iterations. Here, we use the exact same idea but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the Petrov Galerkin Conditions to derive it. The ideas are rehashed and in the end we point out its relations to Krylov Subspace, which ultimately, leads to other important new ideas that are not yet present back in 1952. In most time under classroom settings or textbook, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so we can move on and talk about other things. In this section of the paper, we take a different approach that similar in spirit to a coursenotes by Shewchuk (\textbf{CITATION NEEDED}) where we focuses more on that inspirations behind the algorithm and disregard Lanczos Algorithms and Krylov Subspace until the very end.  
         \subsubsection{CG Objective and Framework}
             We introduce the algorithm as an attempt to minimize the energy norm of the error for a system of linear equations $Ax = b$ and we make the assumptions: 
             \begin{itemize}
-                \item [1)] The matrix $A$ is symmetric positive definite.  
-                \item [2)] Further assume another matrix $P_k = [p_0 \;p_1\;\cdots p_{k-1}]$ as a matrix whose columns is a basis for $x_k$.
+                \item [1)] The matrix $A$ is symmetric semi-positive definite.  
+                \item [2)] Further assume another matrix $P_k = [p_0 \;p_1\;\cdots p_{k-1}]$ as a matrix whose columns is a basis.
             \end{itemize}
             \begin{align}
                 \min_{w \in \mathbb{R}^k}\Vert 
                     A^{-1}b - (x_0 + P_kw)
                 \Vert_A^2 \iff P^T_kr_0 = P_k^TAP_kw
             \end{align}
-            Refer back to \hyperref[sec:Energy_Norm_Minimization_using_Gradient]{Energy Norm Minimization using Gradient (3.2.2)} for how to obtain the above minimization objective. Using the matrix from the \hyperref[sec:Subspace_Projection_Methods]{subspace projection method (3.2)} where $W, V$ are both $P_k$, we reformulate the norm minimizations conditions as: 
+            Refer back to \hyperref[sec:Energy_Norm_Minimization_using_Gradient]{Energy Norm Minimization using Gradient} for how to obtain the above minimization objective. Using the matrix form for the Petrov Galerkin Conditions where $W, V$ are both $P_k$, we reformulate the Norm Minimizations conditions under the framework of Petrov Galarkin conditions: 
             \begin{align}
                 \text{choose: }x \in x_0 + \text{ran}(P_k) \text{ s.t: } b - Ax \perp \text{ran}(P_k)    
             \end{align}
-            Take note that the link between a norm minimzation and an equivalent subspace orthogonality conditions don't garantee to happen for other subspace projection methods, for example the FOM and Bi-Lanczos Methods are orthogonalizations method that doesn't directly link to a norm minimization objective (\textbf{CITATION NEEDED}). 
+            Take note that the link between a norm minimzation and an equivalent subspace Orthogonality conditions don't garantee to happen for other subspace projector methods, for example the FOM and Bi-Lanczos Methods are orthogonalizations method that doesn't directly link to a norm minimization objective (\textbf{CITATION NEEDED}). 
             \par
             To solve for $w$, we wish to make $P_k^TAP_k$ to be an easy-to-solve matrix. Let the easy-to-solve matrix to be a diagonal matrix and hence we let $P_k$ to be a \textit{matrix whose columns are A-Orthogonal vectors}.
             \begin{align}
@@ -313,7 +530,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \\
                 w &= D^{-1}_kP_k^Tr_0
             \end{align}
-            The idea here is: Accumulating vectors $p_j$ into the matrix $P_k$ and then iteratively improve the solution $x_k$ by reducing the error denote as $e_k$ defined as $A^{-1}b - x_k$. Then, we derive the following expression for $x_k$ and the residual $r_k = b - Ax_k$: 
+            The idea here is: Accumulating vectors $p_j$ into the matrix $P_k$ and then iteratively improve the solution $x_k$, by reducing the error denote as $e_k$ defined as $A^{-1}b - x_k$. Then, we can derive the following expression for the solution at step k: $x_k$ and the residual at step $r_k = b - Ax_k$ for the algorithm: 
             \begin{align}
                 \begin{cases}
                     x_k = x_0 + P_kD^{-1}_kP^T_kr_0
@@ -388,9 +605,9 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align}
             \end{prop}
             For above propositions, we used the immediate consequence of the range of these oblique projectors. 
-        \subsubsection{Method of Conjugate Directions}
+        \subsubsection{Assisted Conjugate Gradient (Conjugate Directions)}
             So far, we have this particular scheme of solving the optimization problem, coupled with the way to computing the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
-            \begin{definition}[Method of Conjugate Directions]
+            \begin{definition}[Assited Conjugate Gradient]
                 \begin{align}
                     \begin{cases}
                         x_k = x_0 + \overline{P}_k r_0
@@ -405,14 +622,14 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \end{cases}
                 \end{align}
             \end{definition}
-            With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method}(CDM). 
-            \begin{remark}
-                This CDM method is nothing new, in the original paper from Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}), they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
+            With the assitance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Assisted Conjugate Gradient}. 
+            \begin{remark}[ACG is Conjugate Direction Method]
+                This ACG method is nothing new, in the original paper from Hestenes and Stiefel back in 1952(\textbf{CITATION NEEDED}), they commented on the method of Conjugate Direction, for each chose of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Eliminations. 
             \end{remark}
-            \begin{remark}[Geometric Intutions of CDM]
+            \begin{remark}[Geometric Intutions of Assisted CG]
                 What is happening geometrically is that the A-Orthogonal vectors are orthogonal if desribe it under the alternative eigensubspaces. Intuition one should think of a hyper dimensional ellipsoid that sits along the standard basis vector, and transformation of $A$ is stretching and rotating's axis, resulting in a new ellipsoid in a different orientations; if such a transformation is also applied to the axis of ellipsoid then the transformed axis are conjugate vectors. Tracing along the direction of these vectors will ensure minimum redundancy of search directions. 
             \end{remark}
-        \subsubsection{Properties of CDM}
+        \subsubsection{Properties of Assisted Conjugate Gradient}
             Here we setup several useful lemma and propositions that can derive the short recurrences of A-Orthogonal vectors 
             \begin{prop}
                 \begin{align}
@@ -426,8 +643,8 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align}
                 This is true because the vector $p_{k + j}$, a conjugate vector in the future is orthogonal to all previous conjugte vectors. 
             \end{prop}
-            As a consequence of the above proposition, we obtained a short recurrence for the residuals and solution $x$ of CDM: 
-            \begin{prop}[CDM Recurrence]\label{prop:CDM_Recurrence}
+            As a consequence of the above proposition, we obtained a short recurrence for the residuals and solution $x$ of ACG: 
+            \begin{prop}[ACG Recurrence]\label{prop:ACG_Recurrences}
                 \begin{align}
                     r_k - r_{k - 1} &= r_0 - A\overline{P}_kr_0 - (r_0 - A\overline{P}_{k - 1}r_0)
                     \\
@@ -448,10 +665,10 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             \end{align}
             \end{prop}
             
-            We define the value of $a_{k - 1}$, and in above, we have 2 equivalent representation. Please take note that, this proposition remains true for the future CG algorithm that we are going to develop. 
-        \subsubsection{Conjugate Gradient}
-            Now, consider the case where, the set of basis vector: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the CDM itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ during each iteration arised and residuals are all orthgonal. We wish to proceed to prove that part. 
-            \begin{lemma}\label{lemma:CG_Lemma_1}
+            We define the value of $a_{k - 1}$, and in above, we have 2 equivalent representation. Please take note that, this proposition remains true for the future RACG algorithm that we are going to develop. 
+        \subsubsection{Residual Assisted Conjugate Gradient}
+            Now, consider the case where, the set of basis vector: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the ACG itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ during each iteration arised and residuals are all orthgonal. We wish to proceed to prove that part. 
+            \begin{lemma}\label{lemma:RACG_Lemma_1}
                 \begin{align}
                     \langle p_{k + j}, Ap_k\rangle
                     &=\langle r_k, Ap_{k + j}\rangle
@@ -470,7 +687,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     = \langle p_{k + j}, Ar_k\rangle
                 \end{align}
             \end{proof}
-            \begin{lemma}\label{lemma:CG_Lemma_2}
+            \begin{lemma}\label{lemma:RACG_Lemma_2}
                 \begin{align}
                     \langle r_k, p_k\rangle &= \langle r_k, r_k\rangle
                 \end{align}
@@ -508,7 +725,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     &= 
                     0
                 \end{align}
-                The first line is from the reccurrence of CDM residuals, and then next we make use of the updated definition for $a_k$. Next we consider: 
+                The first line is from the reccurrence of ACG residuals, and then next we make use of the updated definition for $a_k$. Next we consider: 
                 \begin{align}
                     p_j &= (I - \overline{P}_jA)r_j \quad \forall\; 0\le j \le k - 1
                     \\
@@ -521,14 +738,14 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align}
                 The second line is a result of the first line. Here we again make use of the projector $I - A \overline{P}_k$. The base case of the argument is simple, because $p_0 = r_0$, and by the property of the projector, $\langle r_1, r_0\rangle = 0$. The theorem is now proven. 
             \end{proof}
-            \begin{prop}[CG Recurrences]
+            \begin{prop}[RACG Recurrences]
                 \begin{align}
                     p_k &= r_k + b_{k - 1}p_{k - 1} \quad b_{k - 1} = \frac{\Vert r_k\Vert_2^2}
                     {\Vert r_{k - 1}\Vert_2^2}
                 \end{align}
             \end{prop}
             \begin{proof}
-                The proof is direct and we start with the definition of CDM, which is given as: 
+                The proof is direct and we start with the definition of ACG, which is given as: 
                 \begin{align}
                     p_k &= (I - \overline{P}_kA)r_k
                     \\
@@ -550,7 +767,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                         \langle p_{k - 1}, Ar_k\rangle
                     \end{bmatrix}
                 \end{align}
-                Next, we can make use of \hyperref[lemma:CG_Lemma_1]{lemma 3.5.1} to get rid of $Ar_k$: 
+                Next, we can make use of \hyperref[lemma:RACG_Lemma_1]{lemma 3.5.1} to get rid of $Ar_k$: 
                 \begin{align}
                     \langle p_j, Ar_k\rangle& \quad \forall\; 0 \le j \le k -2 
                     \\
@@ -560,7 +777,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     &= a_j^{-1}\langle r_k, (r_j - r_{j + 1})\rangle = 0
                 \end{align}
-                The second line is also using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for CDM (\hyperref[prop:CDM_Recurrence]{CDM Recurrences}), and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:1.6]{proposition 1.6}. Therefore we have: 
+                The second line is also using the property that the matrix $A$ is symmetric, the third line is using the recurrence of the residual established for ACG (\hyperref[prop:ACG_Recurrences]{ACG Recurrences}), and the last line is true for all $0 \le j \le k - 2$ by the orhogonality of the residual proved in \hyperref[prop:1.6]{proposition 1.6}. Therefore we have: 
                 
                 \begin{align}
                     (AP_k)^Tr_k &= 
@@ -598,10 +815,10 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     &= 
                     r_k + \frac{\langle r_k, r_k\rangle}{\langle r_{k - 1}, r_{k - 1}\rangle}p_k
                 \end{align}
-                We make use of the definition for $a_{k-1}$ for the CDM algorithm. At this point, we have proven the short CG recurrences for $p_k$. 
+                We make use of the definition for $a_{k-1}$ for the ACG algorithm. At this point, we have proven the short RACG recurrences for $p_k$. 
             \end{proof}
-            Up until this point we have proven the usual of conjugate gradient proposed by Hestenes \& Stiefe (\textbf{CITATION NEEDED}), we started with the minimizations objective and the properties of $P_k$, then we define a recurrences for the residual (Simultaneously the solution $x_k$), and the A-Orthogonal vectors using a basis as assistance for the generations process. Next, we make the key changes of the assistance basis, making it equal to the set of residuals vector generated from the algorithm itself; after some proofs, we uncovered the exact same parameters found in most of the definitions of the CG algorithm, which we refers to as Residual Assisted Conjugate Gradient. Here we proposed the CG: 
-            \begin{definition}[CG]\label{def:CG}
+            Up until this point we have proven the usual of conjugate gradient proposed by Hestenes \& Stiefe (\textbf{CITATION NEEDED}), we started with the minimizations objective and the properties of $P_k$, then we define a recurrences for the residual (Simultaneously the solution $x_k$), and the A-Orthogonal vectors using a basis as assistance for the generations process. Next, we make the key changes of the assistance basis, making it equal to the set of residuals vector generated from the algorithm itself; after some proofs, we uncovered the exact same parameters found in most of the definitions of the CG algorithm, which we refers to as Residual Assisted Conjugate Gradient. Here we proposed the RACG: 
+            \begin{definition}[RACG]\label{def:RACG}
                 \begin{align}
                     & p^{(0)} = b - Ax^{(0)} 
                     \\&
@@ -621,7 +838,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \end{align}
             \end{definition}
             That is the algorithm, stated with all the iteration number listed as a super script inside of a parenthesis. Which is equivalent to what we have proven for the Residual Assisted Conjugate Gradient. 
-        \subsubsection{CG and Krylov Subspace}\label{sec:CG_and_Krylov_Subspace}
+        \subsubsection{RACG and Krylov Subspace}\label{sec:RACG_and_Krylov_Subspace}
             The conjugate Gradient Algorithm is actually a residual assisted conjugate gradient, a special case of the algorithm we derived at the start of the excerp. The full algorithm can be seem by the short recurrence for the residual and the conjugation vector. This part is trivial. Next, we want to show the relations to the Krylov Subspace, which only occurs for the Residual Assisted Conjugate Gradient algorithm. 
             \begin{prop}
                 \begin{align}
@@ -665,7 +882,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 Take note that, $\text{ran}(P_k) = \mathcal K_k(A|r_0)$ because the index starts with zero. The above formulations gives theoretical importance for the Conjugate Gradient Algorithm. 
             \end{proof}
     \subsection{Arnoldi Iterations and Lanczos}
-        In this section, we introduce another important algorithm: The Lanczos Algorithm. However, to give more context for the discussion, the Arnoldi iteration is considered as well and it's used to amphasize that Lanczos Iterations is just Arnoldi but with the matrix $A$ being a symmetric matrix. Finally we make the link between Lanczos Iterations and Krylov Subspace, which wil inevitably linked back to CG and plays an important role for the analysis of CG. 
+        In this section, we introduce another important algorithm: The Lanczos Algorithm. However, to give more context for the discussion, the Arnoldi iteration is considered as well and it's used to amphasize that Lanczos Iterations is just Arnoldi but with the matrix $A$ being a symmetric matrix. Finally we make the link between Lanczos Iterations and Krylov Subspace, which wil inevitably linked back to RACG and plays an important role for the analysis of RACG. 
         \subsubsection{The Arnoldi Iterations}
             We first define the Arnoldi Algorithm, and then we proceed to derive it using the idea of orthgonal projector. Next, we discuss a special case of the Arnoldi Iteration: the Lanczos Algorithm, which is just Arnoldi applied to a symmetric matrix. And such algorithm will inherit the properties of the Arnoldi Iterations. 
             \par
@@ -839,13 +1056,13 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             \par
             Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The lanczos algorithm produces an irreducible Symmetric Tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any Symmetric Tridiaogonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediate show here is the fact that Lanczos Algorithm will produce such a matrix. 
             \begin{prop}
-                The Lanczos Iteration produces a Symmetric Tridiagonal Matrix that has no zero element on its super and sub-diagonal, and if $\beta_k$ is zero, then the algorithm must terminate, and $k$ would equal to $\text{grade}(A|q_1)$, the grade of the Krylov Subspace. 
+                The Lanczos Iteration produces a Symmetric Tridiagonal Matrix that has no zero element on its super and sub-diagonal, and if $\beta_k$ is zero, then the algorithm must terminates, and $k$ would equal to $\text{grade}(A|q_1)$, the grade of the Krylov Subspace. 
             \end{prop}
             \begin{proof}
                 It's true because the $\beta_{k}$ in the Lanczos is equivalent to $h_{k + 1, k}$. It's been discussed previously that if $h_{k + 1, 1} = 0$ for the Arnoldi's Iteration, then the Krylov Subspace $\mathcal K_k(A|q_1)$ became an invariant subpace under $A$, and in that sense, the algorithm has to terminate due to a divides by zero error. 
             \end{proof}
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
-    In this section we state the terminations conditions for the Lanczos iterations and the CG algorithm we developed using the property of Krylov Subspace. This is just a throughly discussion about these 2 algorithm and applying the foundations and it's not following any references. 
+    In this section we state the terminations conditions for the Lanczos iterations and the RACG algorithm we developed using the property of Krylov Subspace. This is just a throughly discussion about these 2 algorithm and applying the foundations and it's not following any references. 
     \subsection{Conjugate Gradient and Matrix Polynomial}
         One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace} is the connections to matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
         \begin{prop}[CG Relative Energy Error]\label{prop:CG_Relative_Energy Error}
@@ -935,14 +1152,30 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between theminimum and the maximum of the eigenvalues for the matrix $A$. Finally, please notice thta we use an monic $p_{k+1}(x)$ at the and to simplify things. 
         \end{proof}
         The above results will be useful for proving the convergence and terminations properties of the CG. 
-        \begin{remark}[The CG Relative Energy Error Norm is Tight]
+        \begin{remark}[The RACG Relative Energy Error Norm is Tight]
             The bound is tight refers to the fact that the matrix is SPD, therefore $\Vert Ax\Vert \le \Vert A\Vert\Vert x\Vert$ is tight, which justifies that (4.1.10) is tight. (4.1.12) can still be tight if we have the freedom to choose the eigenvalues of the matrix $A$. However, the bound is rarely tight. 
         \end{remark}
-    \subsection{Termination Conditions of CG}
-        
+    \subsection{Termination Conditions of RACG}
+        Under exact arithememtic, the algorithm terminates at most $n$ iterations where $n$ is the size of the matrix $A$. This is true due to the \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subpsace}, the \hyperref[theorem:Existence_of_Grade_for_a_Krylov_Subspace]{Grade for a Krylov Subspace}. However, this bound is true for all definite matrix $A$, but there are conditions where the termination of the CG algorithm comes early and it depends on the grade of $\mathcal K_k(A|r_0)$, which then depends on the eigenvalues of the matrix $A$ and initial guess $r_0$. 
+        \begin{prop}
+            The $\text{grade}(A|r_0)$ determines the number maximum number of iterations required before the terminations of the CG, and by the time it terminates, the residual will be the zero vector. Further more, the upper bound for the grade of the subspace is the number of unique eigenvalues for the matrix $A$, There also exists initial guess $r_0$ where the number of iterations required might be shorter if it's projection onto some of the eigen vectors are zero. 
+        \end{prop}
+        For a justification, we consider the Krylov Subspace accumulated during the CG algorithm. The grade of the Krylov subspace $\mathcal K_k(A|r_0)$ determines when the CG algorithm is going to terminate. Suppose that $\text{grade}(A|r_0)$ is $k + 1$, then $\mathcal K_{k}(A|r_0) = \mathcal K_{k = 1}(A|v)$, and $\mathcal K_k$ would be linear independent while $\mathcal K_{k+1}$ would be dependent. The Conjugate Gradient asserts $r_{k - 1}\in \mathcal K_k(A|r_0)$ and $r_k \in \mathcal K_{k + 1}(A|r_0) = \mathcal K_k(A|r_0)$. But at the same time the CG algorithm asserts that $r_j \perp r_j \;\forall\; 0 \le j \le k - 1$. Observe that inductively CG asserts $r_j \in \mathcal K_{j + 1}(A|r_0)$ and all of them are mutually orthogonal, and there are k of them in total. Using the nesting property of Krylov Susbapce we know that $r_k\perp \mathcal K_k(A|r_0)$, therefore they must span the whole space. However, $r_k\in \mathcal K_k(A|r_0)$ because the subspace becomes invariant after $k - 1$, therefore it has to be the case that $r_k = \mathbf 0$. When it heppens, it will result in $b_{k - 1}$ being zero because of CG, which will give $p_k = \mathbf 0$. Which will terminaete the algorithm at step $k + 1$ due to a division of zero inside the expression for $a_k$. 
+        \par
+        Next, we wish to say more about the maximum grade of a Krylov Subspace. Recall from the Krylov Susbspace discussion, when the grade is reached, there exists non trivial polynomial expression where: 
+        $$
+        \begin{aligned}
+            \mathbf 0 &= r_0 + \sum_{j = 1}^{k - 1}w_0^{-1}w_jA^jr_0
+            \\
+            \mathbf 0 &= Q\left(
+                I + \sum_{j = 1}^{k - 1}w^{-1}_0w_j\Lambda^jr_0
+            \right)Q^Tr_0 
+        \end{aligned}
+        $$
+        We use the eigen factorization for the S.P.D matrix $A$. One of the immediate consequence of the above equation would imply that, if there exists a monoic polynomial interpolating all the eigenvalues of matrix $A$, then the grade of the Krylov Subspace is reached. As a consequence of that, for any initial vector, then CG must terminate as the same number of unique eigenvalues of matrix $A$. Finally, take notice that the projections of $r_0$ only covers a portion of the eigenspace then the CG algorithm will terminates earlier. This is true because $\mathcal K_k(A|r_0) = Q\mathcal K_k(\Lambda| r_0)Q^Tr_0$, and please observe that the maximum dimension equals to the number of non-zero elements in $Q^Tr_0$, which further shortens the number of number of iterations required. 
 
 
-    \subsection{Convergence Rate of CG under Exact Arithematic}
+    \subsection{Convergence Rate of RACG under Exact Arithematic}
         In this section we make heavy use of Greenbaum's Analysis for convergence rate of the algorithm. The core is idea is to use a Chebyshev Polynomial to establish a bound and it's applicable when the linear operator has extremely high dimension and we limit the number of iterations to $k$ where $k$ is much smaller than $n$, the size of the matrix. We will follow Greenbaum's Analysis but with some more details. 
         \subsubsection{Uniformly Distributed Eigenvalues}
             \begin{theorem}[CG Convergence Rate]\label{theorem:CG_Convergence_Rate}
@@ -1027,7 +1260,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     y = \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
                 \end{align}
-                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us 2 roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can substitute and get the value of $T_k(\varphi(0))$ interms of $y$ and then $\kappa$: 
+                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us 2 roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can susbtitute and get the value of $T_k(\varphi(0))$ interms of $y$ and then $\kappa$: 
                 \begin{align}
                     \varphi(0)&= \frac{1}{2}(y + y^{-1})
                     \\
@@ -1239,7 +1472,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             \item [1.)] Both Lanczos and CG terminates when the grade of Krylove subspace is reached. For lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$
             \item [2.)] Both Lanczos and CG generates orthogonal vectors, for Lanczos they are the $q_i$ vector and for CG they are the $r_i$ vectors. 
         \end{enumerate}
-        These 2 properties in particular, is hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived as CG in the first section, and yet it doesn't make use of any orthogonal projector. Further more, one might also notice that Iterative Lanczos are for General Symmetric Matrices whie CG are only for positive definite matrices. To see how everything ties together, we have to go both directions way to show the connections between these 2 iterative algorithms, which are what this section and the subsequent section about. Here, we refers Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
+        These 2 properties in particular, is hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived as RACG in the first section, and yet it doesn't make use of any orthogonal projector. Further more, one might also notice that Iterative Lanczos are for General Symmetric Matrices whie CG are only for positive definite matrices. To see how everything ties together, we have to go both directions way to show the connections between these 2 iterative algorithms, which are what this section and the subsequent section about. Here, we refers Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
         \par
         For this subsection, our objective is to establish the equivalence between the parameters from the lanczos algorithm: $\alpha_k, \beta_k, q_k$ and the $a_j, b_j, r_j$ from the conjugate gradient algorithm. We establish it by going from the conjugate gradient to the Lanczos Algorithm. 
         \begin{prop}
@@ -1280,7 +1513,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 \\
                 Ar_0 &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}(r_0 - r_1)
             \end{align}
-            Consider subtituting $r_0 = \Vert r_0\Vert q_1, r_1 = -\Vert r_1\Vert q_2$, then: 
+            Consider susbtituting $r_0 = \Vert r_0\Vert q_1, r_1 = -\Vert r_1\Vert q_2$, then: 
             \begin{align}
                 A\Vert r_0\Vert q_1 
                 &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\left(
@@ -1325,7 +1558,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                         r_{j - 2} - r_{j - 1}
                     \right)
                 \end{align}
-                Here, we can subtitute the results of for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
+                Here, we can susbtitute the results of for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
                 \begin{align}
                     r_{j} &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 2}
                     \\
@@ -1412,7 +1645,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 Take notes that the form is now matched, but the expression for $\alpha_{j + 1}$ has an extra $b_{j - 1}/a_{j - 1}$, to resolve that, we take the audacity to make $b_0$ so that it's consistent with the base case. 
             \end{proof}
         \subsubsection{Fixing the Sign}
-            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalcne residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially 2 substitution possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
+            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalcne residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially 2 susbstitution possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
             \begin{align}
                 \begin{cases}
                     q_{j + 1} := \pm \frac{r_j}{\Vert r_j\Vert}
@@ -1479,7 +1712,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                     \\
                     y_k &= T_k^{-1}\beta \xi_1
                 \end{align}
-                Reader please recall from section \hyperref[sec:CG_and_Krylov_Subspace]{CG and Krylov Subspace} that: $p_k \in \mathcal K_{k + 1}(A|r_0)$, which is implying a link between the $p_k$ A-orthogonal vectors and the Lanczos Orthogonal matrix: $Q_k$. Now to get the residual we simply consider: 
+                Reader please recall from section \hyperref[sec:RACG_and_Krylov_Subspace]{RACG and Krylov Subspace} that: $p_k \in \mathcal K_{k + 1}(A|r_0)$, which is implying a link between the $p_k$ A-orthogonal vectors and the Lanczos Orthogonal matrix: $Q_k$. Now to get the residual we simply consider: 
                 \begin{align}
                     r_{k + 1} &= r_0 - AQ_k y_k
                     \\
@@ -1505,7 +1738,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                 By observing the fact that $\xi^T_kT^{-1}_k\xi_1$ the $(k, 1)$ element of the matrix $T_k^{-1}$ which is a scalar, we can conclude that the residual from CG and the Lanczos vector are scalar multiple of each other, therefore, $r_k$ from the CG must be orthgonal as well. 
             \end{proof}
             \begin{prop}[Lanczos Vectors and Conjugate Vectors]
-                The $P_k$ matrix as derived in the CG algorithm can be related to the Lanczos iterations by the formula: 
+                The $P_k$ matrix as derived in the RACG algorithm can be related to the Lanczos iterations by the formula: 
                 \begin{align}
                     P_k = Q_k U_k^{-1}
                 \end{align}
@@ -1673,7 +1906,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
             \par
             Therefore the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm at the same time. 
             \begin{remark}
-                The derivation might seems excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite providing potential to new algorithm that can solve symmetric indefinite system directly. The Lanczos Algorithm for linear system (we refer to the method derived in the above section) is a special case of FOM (\textbf{CITATION NEEDED}) when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrences for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithemtic, CG can be applied to symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the CG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. However there are 2 problems solving Symmetric Indefinite using the CG is that, the following recurrence doesn't hold anymore and it should be restated as: 
+                The derivation might seems excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite providing potential to new algorithm that can solve symmetric indefinite system directly. The Lanczos Algorithm for linear system (we refer to the method derived in the above section) is a special case of FOM (\textbf{CITATION NEEDED}) when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrences for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithemtic, CG can be applied to symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the RACG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. However there are 2 problems solving Symmetric Indefinite using the CG is that, the following recurrence doesn't hold anymore and it should be restated as: 
                 \begin{align}
                     AQ_k &\approx Q_{k + 1}
                     \begin{bmatrix}
@@ -1688,7 +1921,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
     % ADD SOME MORE STUFF HERE. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
-        In this section, we use some of the results and insight obtained from the derivation of the CG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the CG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the CDM algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both preserved for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea in the paper by Hestenes and Stieful, but using the quantities we derived in the first section. Firstly recall the proof for \textbf{proposition 3.7}(ADD HYPERREF). Next, we inductively consider the case where the newest residual vector involving round off error $\overline{r}_{k + 1}$ are given and it breaks the orhogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
+        In this section, we use some of the results and insight obtained from the derivation of the RACG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the RACG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the ACG algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both preserved for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea in the paper by Hestenes and Stieful, but using the quantities we derived in the first section. Firstly recall the proof for \textbf{proposition 3.7}(ADD HYPERREF). Next, we inductively consider the case where the newest residual vector involving round off error $\overline{r}_{k + 1}$ are given and it breaks the orhogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
         \begin{align}
             (AP_k)^T\overline{r}_k &= 
             \begin{bmatrix}
@@ -1864,7 +2097,7 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
                         \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
                     \right)^k
                 \end{align}
-                The third inequality is simply from \hyperref[theorem:CG_Convergence_Rate]{CG Convergence Rate} when we assume that the eigenvalues are uniformly distributed convex hull of the spectrum of $A$. The first fraction is actually the relative error of the 2 norm of the residual becaus $Ae_k = r_k$ by definition. Subtituting the quantity $\kappa(T_k)$, the conditions number of the matrix $T_k$, which we figured out using Paige's theorem and denoted it as $\tilde{\kappa}$. 
+                The third inequality is simply from \hyperref[theorem:CG_Convergence_Rate]{CG Convergence Rate} when we assume that the eigenvalues are uniformly distributed convex hull of the spectrum of $A$. The first fraction is actually the relative error of the 2 norm of the residual becaus $Ae_k = r_k$ by definition. Susbtituting the quantity $\kappa(T_k)$, the conditions number of the matrix $T_k$, which we figured out using Paige's theorem and denoted it as $\tilde{\kappa}$. 
             \end{proof}
             Finally, if we assume that $T_k^{-1}$ is actually invertible, which requires that conditions for all the quantities: $\epsilon_0, \epsilon_1$ holds true, and $\lambda_1 - (k + 1)^{5/2} \epsilon_2\Vert A\Vert > 0$. Finally, we make can bound the relative residual of the CG algorithm, considering: 
             \begin{align}
@@ -1951,82 +2184,60 @@ In this paper we derive and analyzie the Conjugate Gradient algorithm and Lanczo
 
 
 \newpage
-\section{Appendix}
-    \subsection{Useful Lemmas}
-        \begin{lemma}[Relative Energy Norm and Relative 2 Norm Conversions]\label{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}
-            Let $A$ be a Positive Symmetric Positive Definite Matrix, then it can be said that: 
-            $$
-            \frac{\Vert A x\Vert}{\Vert Ay \Vert} \le \kappa(A)\frac{\Vert 
-            x\Vert_A}{\Vert y \Vert_A}
-            $$
-        \end{lemma}
-        \begin{proof}
-            From the definition of incuded 2-norm of matrices, assuming that $\lambda_1$ is the minimum eigenvalue of the matrix $A$, and $\lambda_n$ the maximum, and the fact that matrix $A$ has factorization $A^{1/2}A^{1/2}$: 
-        \end{proof}
-        \begin{align}
-            \lambda_1 \Vert x \Vert 
-            &\le \Vert Ax\Vert 
-            \le \lambda_2 \Vert x\Vert
-            \\
-            \sqrt{\lambda_1} \Vert x\Vert 
-            & \le \Vert A^{1/2}x\Vert \le \sqrt{\lambda_n}\Vert x \Vert
-            \\
-            \implies
-            \sqrt{\lambda_1} & \le \frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
-            \le \sqrt{\lambda_n}
-        \end{align}
-        Consider another vector $y$: 
-        \begin{align}
-            \sqrt{\lambda_1} \le \frac{\Vert Ay\Vert}{\Vert A^{1/2}y \Vert} \le \sqrt{\lambda_n}
-        \end{align}
-        Combining the two we have: 
-        \begin{align}
-            \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
-            & \le \sqrt{\lambda_n}\sqrt{\lambda_1}
-            \\
-            \sqrt{\lambda_1}\sqrt{\lambda_n}& \ge \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
-                A^{1/2}y
-            \right\Vert}
-            \\
-            \implies 
-            \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} & \le 
-            \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
-                A^{1/2}y
-            \right\Vert}
-            \\
-            \frac{\Vert Ax\Vert}{\Vert A^{1/2}x\Vert} &\le 
-            \sqrt{\kappa(A)} 
-            \frac{\Vert Ay\Vert}{\Vert A^{1/2}y\Vert}
-            \\
-            \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
-            \sqrt{\kappa(A)} 
-            \frac{\Vert A^{1/2}x\Vert}{\Vert A^{1/2}y\Vert}
-            \\
-            \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
-            \sqrt{\kappa(A)} 
-            \frac{\Vert x\Vert_A}{\Vert y\Vert_A}
-        \end{align}
-    \subsection{Theorems, Propositions}
-        \begin{prop}[Krylov Subspace Grade Invariant Theorem]\label{prop:Krylov_Subspace_Grade_Invariant_Theorem}
-            Once the subspace becomes linear dependent, the subspace becomes invariant. 
-        \end{prop}
-        \begin{align}
-            & K_k = \begin{bmatrix}
-                b & AB & \cdots & A^{k - 1}b
-            \end{bmatrix}
-            \\
-            & K_k \text{ Lin Dep} \implies A^{k-1}b = AK_{k - 1}w
-            \\
-            & \implies 
-            AK_k = K_k
-                \underbrace{\begin{bmatrix}
-                    e_2 & \cdots & e_k & c_k
-                \end{bmatrix}}_{:= C_k}
-            \\
-            & \implies 
-            A^2K_k = AK_kC_k = K_kC_k^2
-        \end{align}
-        $A^2K_k$ will span the same sapce as the range of the matrix $K_k$. 
+\appendix
+    \begin{lemma}[Relative Energy Norm and Relative 2 Norm Conversions]\label{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}
+        Let $A$ be a Positive Symmetric Positive Definite Matrix, then it can be said that: 
+        $$
+        \frac{\Vert A x\Vert}{\Vert Ay \Vert} \le \kappa(A)\frac{\Vert 
+        x\Vert_A}{\Vert y \Vert_A}
+        $$
+    \end{lemma}
+    \begin{proof}
+        From the definition of incuded 2-norm of matrices, assuming that $\lambda_1$ is the minimum eigenvalue of the matrix $A$, and $\lambda_n$ the maximum, and the fact that matrix $A$ has factorization $A^{1/2}A^{1/2}$: 
+    \end{proof}
+    \begin{align}
+        \lambda_1 \Vert x \Vert 
+        &\le \Vert Ax\Vert 
+        \le \lambda_2 \Vert x\Vert
+        \\
+        \sqrt{\lambda_1} \Vert x\Vert 
+        & \le \Vert A^{1/2}x\Vert \le \sqrt{\lambda_n}\Vert x \Vert
+        \\
+        \implies
+        \sqrt{\lambda_1} & \le \frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
+        \le \sqrt{\lambda_n}
+    \end{align}
+    Consider another vector $y$: 
+    \begin{align}
+        \sqrt{\lambda_1} \le \frac{\Vert Ay\Vert}{\Vert A^{1/2}y \Vert} \le \sqrt{\lambda_n}
+    \end{align}
+    Combining the two we have: 
+    \begin{align}
+        \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
+        & \le \sqrt{\lambda_n}\sqrt{\lambda_1}
+        \\
+        \sqrt{\lambda_1}\sqrt{\lambda_n}& \ge \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
+             A^{1/2}y
+        \right\Vert}
+        \\
+        \implies 
+        \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} & \le 
+        \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
+             A^{1/2}y
+        \right\Vert}
+        \\
+        \frac{\Vert Ax\Vert}{\Vert A^{1/2}x\Vert} &\le 
+        \sqrt{\kappa(A)} 
+        \frac{\Vert Ay\Vert}{\Vert A^{1/2}y\Vert}
+        \\
+        \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
+        \sqrt{\kappa(A)} 
+        \frac{\Vert A^{1/2}x\Vert}{\Vert A^{1/2}y\Vert}
+        \\
+        \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
+        \sqrt{\kappa(A)} 
+        \frac{\Vert x\Vert_A}{\Vert y\Vert_A}
+    \end{align}
 \newpage
 
             
