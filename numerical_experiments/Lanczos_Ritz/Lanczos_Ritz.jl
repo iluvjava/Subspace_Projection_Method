@@ -6,18 +6,23 @@ include("../../src/iterative_lanczos.jl")
 # And the linear dependence of eigenvalues of the exterior of the spectrum. 
 # ------------------------------------------------------------------------------
 n = 64
-A = Diagonal(LinRange(1e-3, 1, n).^3)
+A = Diagonal(LinRange(-1, 1, n).^3)
 il = IterativeLanczos(A, rand(n))
 for _ in 1: n - 1
     il()
 end
 Q = GetQMatrix(il)
+T = GetTMatrix(il)
 mkpath("$(@__DIR__)/plots")
 fig = heatmap(Q'*Q .|> abs .|> log2, size=(722, 512))
-fig2= heatmap(Q'*A*Q .|> abs .|> log2, size=(722, 512))
-
+fig2 = heatmap(Q'*A*Q .|> abs .|> log2, size=(722, 512))
+fig3 = heatmap(
+    (A*Q[:, 1:end - 1] - Q*T[:, 1:end - 1]).|> abs, 
+    size=(1200, 768), dpi=250
+)
 savefig(fig, "$(@__DIR__)/plots/fig3.png")
 savefig(fig2, "$(@__DIR__)/plots/fig4.png")
+
 
 
 # ------------------------------------------------------------------------------

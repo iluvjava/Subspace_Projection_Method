@@ -125,6 +125,7 @@
     \newpage
 \begin{center}\large
     \textbf{Acknowledgement}
+    Thanks to Professor Greenbaum taking the time reviewing the first draft of this thesis and her help throughout my research throughout the year. 
 \end{center}
 
 
@@ -771,9 +772,11 @@
                     \implies \text{ran}(Q_{k + 1}) &= \mathcal K_{k + 1}(A|q_1)
                 \end{aligned}
                 $$
-
                 The Arnoldi Algorithm terminates if the value $h_{k + 1, k}$ is set to be zero. This is the case because the normalization process is dividing by $h_{k + 1, k}$ to get $q_{k + 1}$. This only happens when $Aq_{k}\in \text{ran}(Q_k)$; because $h_{k +1, k}$ is given by the projector of $I - Q_kQ^H$ applied to $Aq_k$ and the null space of this projector is $\text{ran}(Q_k)$, resulging in $h_{k + 1, k} = 0$. 
             \end{proof}
+            \begin{remark}[Arnoldi Produces Minimal Monic in Krylov Subspace]
+                The characteristic polynomial of $H$, minimizes $\Vert p(A|w)q_1\Vert_2$. For more information, Trefenthen has a coverage on the topic in his works(\textbf{CITATION NEEDED}). The minimization property in Arnoldi translate to Lanczos Iterations as well. 
+            \end{remark}
         \subsubsection{The Lanczos Iterations}
             \begin{definition}[Lanczos Iterations]
                 \begin{align}
@@ -854,7 +857,6 @@
                     \implies Aq_1 &= \alpha_1q_1 + \beta_1 q_2
                 \end{align}    
             \end{theorem}
-            
             \par
             Often time, we refers the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The lanczos algorithm produces an irreducible Symmetric Tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any Symmetric Tridiaogonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediate show here is the fact that Lanczos Algorithm will produce such a matrix. 
             \begin{prop}
@@ -863,6 +865,10 @@
             \begin{proof}
                 It's true because the $\beta_{k}$ in the Lanczos is equivalent to $h_{k + 1, k}$. It's been discussed previously that if $h_{k + 1, 1} = 0$ for the Arnoldi's Iteration, then the Krylov Subspace $\mathcal K_k(A|q_1)$ became an invariant subpace under $A$, and in that sense, the algorithm has to terminate due to a divides by zero error. 
             \end{proof}
+            \begin{remark}
+                The characteristic polynomial of $T_k$ minimizes: 
+            \end{remark}
+            
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
     In this section we state the terminations conditions for the Lanczos iterations and the CG algorithm we developed using the property of Krylov Subspace. This is just a throughly discussion about these 2 algorithm and applying the foundations and it's not following any references. 
     \subsection{Conjugate Gradient and Matrix Polynomial}
@@ -961,12 +967,9 @@
         \end{remark}
     \subsection{Termination Conditions of CG}
         \begin{prop}[Termination of CG]
-            The CG terminates after $k$ number of iterations where $k$ is the grade of the krylov subspace of $A$ wrt to $r_0$. 
+            For all initial guess, the maximum iterations underwent by the CG algorithm is the number of unique eigenvalues for the matrix $A$. 
         \end{prop}
-        Recall from \hyperref[sec:CG_and_Krylov_Subspace]{CG and Krylov Subspace (3.3.6)} where we established that $r_k\in \mathcal K_{k + 1}(A|r_0), r_k \perp \mathcal K_{k}(A|r_0)$. Recall that once the grade of the Krylov subspace is reached, Krylov subspace becomes invariant, and hence, $r_k = \mathbf 0$, the algorithm terminates. 
-        \par
-        In addition, $\text{grade}(A|r_0)$ depends on the number of unique $\lambda_i$ where $q_i^Tr_0$ is not zero, $q_i$ here is the eigenvector that has eigenvalue $r_i$. We consider the eigen decomposition of matrix $A$, then it's direct using \hyperref[prop:When_the_Grade_is_Reached]{When the Grade is Reached (proposition 3.1)}. 
-
+        This result is direct from (4.1.8), the CG algorithm terminates when a polynomial that interpolates all the unique eigenvalue is found. This bound is true for all initial guess, and sometimes for some given $e_0$, the terminations can come faster than that. 
 
     \subsection{Convergence Rate of CG under Exact Arithematic}
         In this section we make heavy use of Greenbaum's Analysis for convergence rate of the algorithm. The core is idea is to use a Chebyshev Polynomial to establish a bound and it's applicable when the linear operator has extremely high dimension and we limit the number of iterations to $k$ where $k$ is much smaller than $n$, the size of the matrix. We will follow Greenbaum's Analysis but with some more details. 
@@ -1261,7 +1264,7 @@
     \subsection{From Conjugate Gradient to Lanczos}
         Up until this point of disucssion, we had been brewing the fact that, the Iterative Lanczos Algorithm and the Conjugate gradient algorithm are pretty much the same thing. From the previous discussion we can observe that: 
         \begin{enumerate}
-            \item [1.)] Both Lanczos and CG terminates when the grade of Krylov subspace is reached. For lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$
+            \item [1.)] Both Lanczos and CG terminates when the grade of Krylov subspace is reached. For lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$.
             \item [2.)] Both Lanczos and CG generates orthogonal vectors, for Lanczos they are the $q_i$ vector and for CG they are the $r_i$ vectors. 
         \end{enumerate}
         These 2 properties in particular, is hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived as CG in the first section, and yet it doesn't make use of any orthogonal projector. Further more, one might also notice that Iterative Lanczos are for General Symmetric Matrices whie CG are only for positive definite matrices. To see how everything ties together, we have to go both directions way to show the connections between these 2 iterative algorithms, which are what this section and the subsequent section about. Here, we refers Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
