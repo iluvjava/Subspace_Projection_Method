@@ -37,9 +37,9 @@ end
 
 E = PerformCGFor(Diagonal(rand(10)), rand(10))
 
-function PerformExperiment1()
+function PerformExperiment1(filename, p=0.9)
     N = 256
-    A = GetNastyPSDMatrix(N, 0.9)
+    A = GetNastyPSDMatrix(N, p)
     b = rand(N)
     A = convert(Matrix{Float16}, A)
     b = convert(Vector{Float16}, b)
@@ -67,7 +67,7 @@ function PerformExperiment1()
         fig1, 
         log10.(RelErr), 
         label="Relative Energy (floats)",
-        linestyle=:dash
+        linestyle=:dash#, markershape=:+
     )
 
     # ==========================================================================
@@ -93,13 +93,14 @@ function PerformExperiment1()
         log10.(RelErr), 
         label="Relative Energy (partial)",
         legend=:bottomleft, 
-        linestyle=:dashdot
+        linestyle=:dashdot # ,  markershape=:x
     )
 
     display(fig1)
-    SaveFigToCurrentScriptDir(fig1, "fig1.png")
+    SaveFigToCurrentScriptDir(fig1, "$(filename).png")
 
     
 return end
 
-PerformExperiment1()
+PerformExperiment1("cg_convergence_0.9")
+PerformExperiment1("cg_convergence_1", 1)
