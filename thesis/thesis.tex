@@ -1727,7 +1727,7 @@
         
 \section{Effects of Floating Point Arithematic}
     In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithematic. 
-    % ADD SOME MORE STUFF HERE. 
+    % TODO: ADD SOME MORE STUFF HERE. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
         In this section, we use some of the results and insight obtained from the derivation of the CG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the CG algorithm. The floating errors inside of the CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the CDM algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orhtogonality and Orthogonality are both preserved for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952; here we present the second more computationally expensive idea in the paper by Hestenes and Stieful, but using the quantities we derived in the first section. Firstly recall the proof for \hyperref[prop:CG_Recurrences]{proposition 3.9}. Next, we inductively consider the case where the newest residual vector is involving some round off error $\overline{r}_{k + 1}$ and it breaks the orhogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
         \begin{align}
@@ -1760,21 +1760,15 @@
             \right)(\lambda_{\max} - \lambda_{\min})\rho^{N - j + 1}\quad \forall\; 1 \le j \le N - 1, \; 0 \le \rho \le 1
         \end{align}
         If the value of $\rho$ is close to zero, then the eigenvalues are clustered around the origin, if it's close to $1$, then the eigenvalues are tend to be more evenlly distributed around the interval $[\lambda_{\min}, \lambda_{\max}]$. 
-        \begin{figure}[h]\label{fig:cg_convergence_0.9}
+        \begin{figure}[h]\label{fig:1}
             \centering
-            \includegraphics[width=10cm]{cg_convergence_0.9.png}
+            \includegraphics[width=8cm]{cg_convergence_0.9.png}
+            \includegraphics[width=8cm]{cg_convergence_1.png}
             \caption{
                 The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthgonalized with previous 32 residual and conjugate vectors. organed dashed: the Original conjugate gradient. Green dot: The tighter theretical upper bound derived by chebyshev (4.3.20). For this plot: $\rho = 0.9$, the matrix is $256\times 256$. 
             }
         \end{figure}
-        \begin{figure}[h]\label{fig:cg_convergence_1}
-            \centering
-            \includegraphics[width=10cm]{cg_convergence_1.png}
-            \caption{
-                The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthgonalized with previous 32 residual and conjugate vectors. organed dashed: the Original conjugate gradient. Green dot: The tighter theretical upper bound derived by chebyshev (4.3.20). For this plot: $\rho = 0.9$, the matrix is $256\times 256$. 
-            }
-        \end{figure}
-        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues are not perfectly uniform. The partially orthogonalized methods diverges from the exact error after more steps of iterations compare to the relative error without any orthogonalizations. These are seemed in \hyperref[fig:cg_convergence_0.9]{(fig 1)}. 
+        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues are not perfectly uniform. The partially orthogonalized methods diverges from the exact error after more steps of iterations compare to the relative error without any orthogonalizations. These are seemed in \hyperref[fig:1]{(fig 1 left)}. In contrast on the right, then the eigenvalues are uniformlly distributed, the convergence of all 3 types of methods aligns with the exact convergence in \hyperref[fig:1]{(fig 1 right)}. 
         \begin{remark}
             The convergence is disappointing under floating point arithematic and the promised efficiency of the algorithm is not there anymore if the matrix is not neccessarily ill-conditioned. If we were to use a fully re-orthogonalized variant of the CG, the memory needed and the total complexity for a fixed tolerance is going to be on the same scale of solving it by direct methods. 
         \end{remark}
