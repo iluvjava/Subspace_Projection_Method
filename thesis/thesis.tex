@@ -1957,49 +1957,57 @@
             \end{remark}
 
     \subsection{Ghost Eigenvalues and Losing Orthogonality}
-        The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, the extremely close eigenvalues are a single eigenvalue. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues, this follows from (\hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs orthogonalization process. Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. This matrix is particularlly good for reproducing the the pohenomena. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos iterations with $q_1$ being the vector of all ones, we marked the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories from iteration 20 to 64. The results can be seemed in \hyperref[fig:2]{(figure 2 left)}. On \hyperref[fig:2]{figure 2 right}, we made the plot for what would happen if the Lanczos iterations are free of numerical round off error. We didn't use exact arithemtic, instead, we simply reorthogonalized all the Lanczos vector $q_k$ using all previous gotten Lanczos vectors to enmulate the effects, which is just an arnoldi iterations. 
-        \begin{figure}[H]\label{fig:2}
-            \centering
-            \includegraphics[width=8cm]{ritz_trajectory_plot_floats.png}
-            \includegraphics[width=8cm]{ritz_trajectory_plot_exact.png}
-            \caption{The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iterations, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round off error, right is Lanczos iterations that fully reorthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithematic. }
-        \end{figure}
-        Recall from the Cauchy Interlace Theorem, the eigenvalues of the Tridiagonal Matrix $T_{k + 1}$ has to be in between each eigenvalues of $T_{k}$ except for the first and the last eigenvalue of $T_{k + 1}$.  This implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iteration will move monotonically upwards or downwards during the Lanczos iterations. The ghoest eigenvalues on the figure appears when some of the interior eigenvalues suddenly switched to another eigenvalue's trajectory that is on the exterior of the spectrum. It appears as the matrix $T_k$ has repeated eigenvalues but in fact they are not and they are just very close. 
-        \par
-        However, judging the eigenvalues of the matrix $T_k$ alone will distinguish us whether 2 very close eigenvalues correspond to 2 different eigenvalues of $A$ or it's due to the floating point round off error, even if their trajectories seems to sugguest it. We can't tell it because if I keep the matrix $T_k$ generated from an Lanczos iterations with huge amount of round off error and all it $A$, which has eigenvalues that are extremely close to each other and their path shifts over each other on the trajectory like in \hyperref[fig:2]{fig 2}. Now consider performing another Lanczos iteations $A:=T_k$ it but with the initial vector $\xi_1$, then we will exactly reproduce $A$ itself because it's tridiagonal. But in this case, the eigenvalues of $T_k$ is exact after termination of Lanczos iteration. In this case, all eigenvalues are actually presented in the original matrix $A$, which is just $T_k$, itself. 
-        \par
-        In fact, the ghost eigenvalues here are produced by floating point errors because firstly we know what the actual eigenvalues of $A$ is, we made $A$. To make sense of it better intuitivlye, we observe conduct experiments to show that the lost of orthogonality of $Q_k$ happens together with ghost eigenvalues on spetrum of $T_k$. If $Q_k$ matrix is perfectly orthogonal, then there is no ghost eigenvalues, regardless of how the trajectories of the eigevalues of $T_k$ looks like. In fact, a corresponding plot of $Q_k^HQ_k$ are plotted in \hyperref[fig:3]{(fig 3 left)} for demonstrating lost of orthogonality for the same diagonal matrix $A$ proposed earlier. We plotted the heat map of the matrix $Q^H_kQ_k$ directly as well.
-        \begin{figure}[H]\label{fig:3}
-            \centering
-            \includegraphics[width=8cm]{fig3.png}
-            \includegraphics[width=8cm]{fig4.png}
-            \caption{left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^H_kQ_k$. right: The plot of $Q_kAQ_k$ from floating point Lanczos iterations}
-        \end{figure}
-        In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $Q_kAQ_k$ which is plotted in \hyperref[fig:3]{(fig 3 right)}. Observe that most of the off tridiagonal entries are non-zero and relatively huge, which doesn't worry us too much because $A$ itself has an extremely bad conditions number. What is important is the blob of non-zero entries on the top left and the bottom right of the plot, which looks similar to how the $Q_k^HQ_k$. And this is a hint that the lost of orthogonality will create extra errors on the off tridiagonal parts of the matrix $T_k$. 
-        \par
-        To gain a better understanding, let's define the notion of Ritz values and Ritz vectors. For our dicussion, the ritz value $\theta_i^{(k)}$ are the $i$ th eigenvalues of the matrix $T_k$ from the and the Ritz vectors are $Q_ks_{i}^{(k)}$ where $s$ is the $i$ th eigenvector for the matrix $T_k$. Recall from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}, the characteristic polynomial of $T_k$ is the monic that minizes the 2 norm error for the vector $p_k(A)q_1$; intuitively, the ritz values and ritz vectors approximates eigenvalues and eigenvectors of matrix $A$. One would expect once the eigenvalue converged for $T_k$, say $\theta_i^{(k)} = \lambda_i + \epsilon$ where $\lambda_i$ is an eigenvalue of $A$, then the vector $Q_ks_i^{(k)}$ approximate eigenvalue of $A$ because: 
-        \begin{align}
-            AQ_k &= Q_k T_k + q_{k + 1}\beta_k\xi_k^T
-            \\
-            AQ_ks_i^{(k)} &= \theta Q_k s_i^{(k)} + q_{k + 1}\beta_k \xi_k^Tv
-            \\
-            AQ_ks_i^{(k)} &= \theta Q_k s_i^{(k)} + \beta_kq_{k + 1}(s_i^{(k)})_k
-            \\
-            AQ_ks_i^{(k)} &= (\lambda_i + \epsilon) Q_k s_i^{(k)} + \beta_kq_{k + 1}(s_i^{(k)})_k
-            \\
-            AQ_ks_i^{(k)} &= \lambda_i Q_k s_i^{(k)} + \epsilon Q_k s_i^{(k)} + \beta_kq_{k + 1}(s_i^{(k)})_k
-        \end{align}
-        When $\theta$ is close to $\lambda_i$, and the characteristic polynomial of $T_k$ interpolates the eigenvalues of $A$ better and better, $\beta_k$ decreases (\textbf{NONTRIVIAL FACT}), the ritz vector $Q_ks_i^{(k)}$ approximates the eigenvector for $A$. 
-        \begin{figure}\label{fig:4}
-            \centering
-            \includegraphics[width=10cm]{lanczos_proj_on_ritz.png}    
-        \end{figure}
+        The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, those extremely close eigenvalues are a single eigenvalue of the original matrix $A$'s spectrum. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$, especially eigenvaluse in the exterior of $A$'s spectrum. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues, this follows from (\hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}). This phenomena is in fact, due to the limited floating point accuracy of the Lancozs orthogonalization process.
+        \subsection{Ghost Eigenvalues Experiments}
+            Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. This matrix is particularlly good for reproducing the the pohenomena. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos iterations with $q_1$ being the vector of all ones, we marked the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories from iteration 20 to 64. The results can be seemed in \hyperref[fig:2]{(figure 2 left)}. On \hyperref[fig:2]{figure 2 right}, we made the plot for what would happen if the Lanczos iterations are free of numerical round off error. We didn't use exact arithemtic, instead, we simply reorthogonalized all the Lanczos vector $q_k$ using all previous gotten Lanczos vectors to enmulate the effects, which is just an arnoldi iterations. Please bare in mind that there are eigenvalues in the middle interior part of the spectrum, they are just not plotted in the figure. 
+            \begin{figure}[H]\label{fig:2}
+                \centering
+                \includegraphics[width=8cm]{ritz_trajectory_plot_floats.png}
+                \includegraphics[width=8cm]{ritz_trajectory_plot_exact.png}
+                \caption{The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iterations, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round off error, right is Lanczos iterations that fully reorthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithematic. }
+            \end{figure}
+            Recall from the Cauchy Interlace Theorem, the eigenvalues of the tridiagonal matrix $T_{k + 1}$ has to be in between each eigenvalues of $T_{k}$ except for the first and the last eigenvalue of $T_{k + 1}$.  This implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iteration will move monotonically upwards or downwards during the Lanczos iterations. The ghoest eigenvalues on the figure appears when some of the interior eigenvalues suddenly switched to another eigenvalue's trajectory that is on the exterior of the spectrum. It appears as the matrix $T_k$ has repeated eigenvalues but in fact they are not and they are just very close. 
+            \par
+            However, judging the eigenvalues of the matrix $T_k$ alone will distinguish us whether 2 very close eigenvalues correspond to 2 different eigenvalues of $A$ or it's due to the floating point round off error, even if their trajectories seems to sugguest it. We can't tell it because if I keep the matrix $T_k$ generated from an Lanczos iterations with huge amount of round off error and all it $A$, which has eigenvalues that are extremely close to each other and their path shifts over each other on the trajectory like in \hyperref[fig:2]{fig 2}. Now consider performing another Lanczos iteations $A:=T_k$ it but with the initial vector $\xi_1$, then we will exactly reproduce $A$ itself because it's tridiagonal. But in this case, the eigenvalues of $T_k$ is exact after termination of Lanczos iteration. In this case, all eigenvalues are actually presented in the original matrix $A$, which is just $T_k$, itself. 
+            \par
+            In fact, the ghost eigenvalues here are produced by floating point errors because firstly we know what the actual eigenvalues of $A$ is, we made $A$. To make sense of it better intuitivlye, we observe conduct experiments to show that the lost of orthogonality of $Q_k$ happens together with ghost eigenvalues on spetrum of $T_k$. If $Q_k$ matrix is perfectly orthogonal, then there is no ghost eigenvalues, regardless of how the trajectories of the eigevalues of $T_k$ looks like. In fact, a corresponding plot of $Q_k^HQ_k$ are plotted in \hyperref[fig:3]{(fig 3 left)} for demonstrating lost of orthogonality for the same diagonal matrix $A$ proposed earlier. We plotted the heat map of the matrix $Q^H_kQ_k$ directly as well.
+            \begin{figure}[H]\label{fig:3}
+                \centering
+                \includegraphics[width=8cm]{fig3.png}
+                \includegraphics[width=8cm]{fig4.png}
+                \caption{left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^H_kQ_k$. right: The plot of $Q_kAQ_k$ from floating point Lanczos iterations}
+            \end{figure}
+            In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $Q_kAQ_k$ which is plotted in \hyperref[fig:3]{(fig 3 right)}. Observe that most of the off tridiagonal entries are non-zero and relatively huge, which doesn't worry us too much because $A$ itself has an extremely bad conditions number. What is important is the blob of non-zero entries on the top left and the bottom right of the plot, which looks similar to how the $Q_k^HQ_k$. And this is a hint that the lost of orthogonality will create extra errors on the off tridiagonal parts of the matrix $T_k$. 
+            \begin{remark}
+                As a final remark for these numerical experiments, I sugguest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exerior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig 2)}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality corresondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
+            \end{remark}
+        \subsubsection{Losing Orthogonality on Ritz Vectors}
+            To gain a better understanding, let's define the notion of Ritz values and Ritz vectors. For our dicussion, the ritz value $\theta_i^{(k)}$ are the $i$ th eigenvalues of the matrix $T_k$ from the and the Ritz vectors are $Q_ks_{i}^{(k)}$ where $s$ is the $i$ th eigenvector for the matrix $T_k$. Recall from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}, the characteristic polynomial of $T_k$ is the monic that minizes the 2 norm error for the vector $p_k(A)q_1$; intuitively, the ritz values and ritz vectors approximates eigenvalues and eigenvectors of matrix $A$. One would expect once the eigenvalue converged for $T_k$, say $\theta_i^{(k)} = \lambda_i + \epsilon$ where $\lambda_i$ is an eigenvalue of $A$, then the vector $Q_ks_i^{(k)}$ approximate eigenvalue of $A$ because: 
+            \begin{align}
+                AQ_k &= Q_k T_k + q_{k + 1}\beta_k\xi_k^T
+                \\
+                AQ_ks_i^{(k)} &= \theta Q_k s_i^{(k)} + q_{k + 1}\beta_k \xi_k^Tv
+                \\
+                AQ_ks_i^{(k)} &= \theta Q_k s_i^{(k)} + \beta_kq_{k + 1}(s_i^{(k)})_k
+                \\
+                AQ_ks_i^{(k)} &= (\lambda_i + \epsilon) Q_k s_i^{(k)} + \beta_kq_{k + 1}(s_i^{(k)})_k
+                \\
+                AQ_ks_i^{(k)} &= \lambda_i Q_k s_i^{(k)} + \epsilon Q_k s_i^{(k)} + \beta_kq_{k + 1}(s_i^{(k)})_k
+            \end{align}
+            When $\theta$ is close to $\lambda_i$, and the characteristic polynomial of $T_k$ interpolates the eigenvalues of $A$ better and better, $\beta_k$ decreases (\textbf{NONTRIVIAL FACT}), the ritz vector $Q_ks_i^{(k)}$ approximates the eigenvector for $A$. Intuitively, as the Krylov subspace expanded, it contains more and more conponents of the Eigenvectors of $A$, and the Ritz vector will have more ``room'' to get closer to the eigenvector of $A$, by the approximation property of Lanczos. 
+            \par
+            However, under floating point arithematic, once the Ritz vector $s_i^{(k)}$ can be spanned by the Krylov subspace with small error, it will be the case that the projection of the latest Lanczos vector onto the ritz vector begins to grow. On the plot showed in \hyperref[fig:4]{figure 4}, we projected the log absolute value of $q_k^TQ_ks_i^{(k)}$ for $i=1, 2, 3$ for all $k=20, \cdots, 64$, and we used the same setup from the last section where we demonstrated ghost eigenvalues. For comparison, \hyperref[fig:5]{figure 5} showed us the what happen in exact arithematic. One very important observations to make from \hyperref[fig:5]{figure 5} is that the peak of the blue curve, projection onto the largest ritz value happens around iteration 3.8, and around that exact same iteration in \hyperref[fig:2]{figure 2} is when the second largest eigenvalue of $T_k$ decided to shifts over to the blue curve. Bear in mind that this is in a log plot, and without the log it looks like a sharp spike. 
+            \begin{figure}\label{fig:4}
+                \centering
+                \includegraphics[width=14cm]{lanczos_proj_on_ritz_float.png}
+                \caption{figure 4 caption}
+            \end{figure}
+            \begin{figure}\label{fig:5}
+                \centering
+                \includegraphics[width=14cm]{lanczos_proj_on_ritz_exact.png}
+                \caption{figure 5 caption}
+            \end{figure}
 
-        
-        \begin{remark}
-            As a final remark for these numerical experiments, I sugguest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exerior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig 2)}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality corresondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
-        \end{remark}
-    
         
     \subsection{The Rizt Vector's View and Another Paige's Theorem}
         In this section, we prove another analysis of the Lanczos Iterations from Dammel's work(\textbf{Citation Needed}) where he introduced proof of another Paige's theorem that shows exactly how to measure the lost of orthogonality of the Lanczos vectors while Lanczos algorithm is running. Here, we wish to prove it in much more details with more thoroughness.
