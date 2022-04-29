@@ -45,6 +45,8 @@ function (this::IterativeLanczos)()
     end
     qNew -= alphas[this.k]*q
     betaNew = norm(qNew)
+    # Reorthogonalizations goes here
+
     qNew /= betaNew
 
     if length(this.Q) > this.q_store
