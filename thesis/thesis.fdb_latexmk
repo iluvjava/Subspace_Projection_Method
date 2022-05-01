@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1651372582 "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.tex" "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf" "thesis" 1651372584
-  "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux" 1651372583 11823 338a7af5fd04b17a6dacb4677607a872 ""
-  "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.tex" 1651372580 145867 59aeaaa773d9584a4821aa29923d4724 ""
+["pdflatex"] 1651378241 "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.tex" "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf" "thesis" 1651378243
+  "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux" 1651378242 11701 4d44d05a573c807721123c984a76857e ""
+  "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.tex" 1651378238 147197 1bfdf6f89172bb25bedc26fb25a4fba2 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1136768653 3584 402da0b29eafbad07963b1224b222f18 ""
@@ -150,15 +150,15 @@
   "lanczos_proj_on_ritz_float.png" 1651274818 52912 1a2edb4079966a1910dbed130033e114 ""
   "ritz_trajectory_plot_exact.png" 1651271234 323065 8ec41e7a699a7904fb29c188b16d3cd0 ""
   "ritz_trajectory_plot_floats.png" 1651271234 346254 35090aa78aa941b320f2840e6bdebd57 ""
-  "thesis.aux" 1651372583 11823 338a7af5fd04b17a6dacb4677607a872 "pdflatex"
-  "thesis.out" 1651372583 9918 3fd9b8ca31cc769c49197da69f7f0cc7 "pdflatex"
-  "thesis.tex" 1651372580 145867 59aeaaa773d9584a4821aa29923d4724 ""
-  "thesis.toc" 1651372583 4674 530f5687e496cd52553eb2662ad894d7 "pdflatex"
+  "thesis.aux" 1651378242 11701 4d44d05a573c807721123c984a76857e "pdflatex"
+  "thesis.out" 1651378242 10051 a0d3fa19fa33033f4ccb46ebe240cf93 "pdflatex"
+  "thesis.tex" 1651378238 147197 1bfdf6f89172bb25bedc26fb25a4fba2 ""
+  "thesis.toc" 1651378242 4772 07bc4865a2f97b87f7440efda6d3ed17 "pdflatex"
   (generated)
   "thesis.aux"
-  "thesis.out"
-  "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.log"
-  "thesis.log"
   "thesis.toc"
   "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf"
   "thesis.pdf"
+  "/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.log"
+  "thesis.log"
+  "thesis.out"
