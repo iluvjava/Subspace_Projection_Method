@@ -16,8 +16,8 @@
 \contentsline {subsubsection}{\numberline {3.3.5}Conjugate Gradient}{13}{subsubsection.3.3.5}%
 \contentsline {subsubsection}{\numberline {3.3.6}CG and Krylov Subspace}{16}{subsubsection.3.3.6}%
 \contentsline {subsection}{\numberline {3.4}Arnoldi Iterations and Lanczos}{17}{subsection.3.4}%
-\contentsline {subsubsection}{\numberline {3.4.1}The Arnoldi Iterations}{17}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{18}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.1}The Arnoldi Iterations}{18}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Arnoldi Produces Orthogonal Basis for Krylov Subspace}{19}{subsubsection.3.4.2}%
 \contentsline {subsubsection}{\numberline {3.4.3}The Lanczos Iterations}{19}{subsubsection.3.4.3}%
 \contentsline {section}{\numberline {4}Analysis of Conjugate Gradient and Lanczos Iterations}{21}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Conjugate Gradient and Matrix Polynomial}{21}{subsection.4.1}%
@@ -32,17 +32,17 @@
 \contentsline {subsection}{\numberline {4.5}From Lanczos to Conjugate Gradient}{31}{subsection.4.5}%
 \contentsline {subsubsection}{\numberline {4.5.1}Matching the Residual and Conjugate Vectors}{32}{subsubsection.4.5.1}%
 \contentsline {subsubsection}{\numberline {4.5.2}Matching the $a_k, b_k$ in CG}{34}{subsubsection.4.5.2}%
-\contentsline {section}{\numberline {5}Effects of Floating Point Arithematic}{37}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Partial Orthogonalization and Full Orthogonalization}{37}{subsection.5.1}%
+\contentsline {section}{\numberline {5}Effects of Floating Point Arithematic}{36}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Partial Orthogonalization and Full Orthogonalization}{36}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Relative Errors of CG Under Floating Points}{37}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}Paige's Floating Point Analysis}{38}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}Bounding the The Relative Residuals}{39}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Paige's Theorem and Backwards Analysis of CG}{40}{subsubsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.4}Ghost Eigenvalues and Losing Orthogonality}{42}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.3.1}Bounding the Relative Residuals}{38}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Paige's Theorem and Backwards Analysis of CG}{39}{subsubsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.4}Ghost Eigenvalues and Losing Orthogonality}{41}{subsection.5.4}%
 \contentsline {subsubsection}{\numberline {5.4.1}Ghost Eigenvalues Experiments}{42}{subsubsection.5.4.1}%
 \contentsline {subsubsection}{\numberline {5.4.2}Losing Orthogonality on Ritz Vectors}{44}{subsubsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.5}The Rizt Vector's View and Another Paige's Theorem}{45}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{45}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.5}The Rizt Vector's View and Another Paige's Theorem}{44}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{46}{subsection.5.6}%
 \contentsline {section}{\numberline {6}Appendix}{47}{section.6}%
 \contentsline {subsection}{\numberline {6.1}Useful Lemmas}{47}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}Theorems, Propositions}{47}{subsection.6.2}%
