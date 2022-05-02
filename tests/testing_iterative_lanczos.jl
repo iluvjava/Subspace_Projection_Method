@@ -73,11 +73,39 @@ using Test
             @warn "The inf error of Q'AQ - T is $error, which is lager than expected, please check the code. "
         end
         return error < 1e-10
-        return true
+    end
+
+    """
+    Testing the fully re-orthgonalization functionality of the algorithm. 
+    """
+    function test4(n=128)
+        @info "testin fully re-orthgonalization"
+        A = rand(n, n)
+        A = A' + A
+        A = convert(Matrix{Rational{BigInt}}, A)
+        b = convert(Vector{Rational{BigInt}}, rand(n))
+        il = IterativeLanczos(A, b)
+        il.reorthogonalize = true
+        il(n - 1)
+        T = GetTMatrix(il)
+        Q = GetQMatrix(il)
+        println("The T matrix is: ")
+        display(T)
+        println("The Q matrix is: ")
+        display(Q)
+        println("The Q'AQ is: ")
+        QAQ = Q'*A*Q
+        display(QAQ)
+        error = norm(QAQ - T, Inf)
+        if error >= 1e-10
+            @warn "The inf error of Q'AQ - T is $error, which is lager than expected, please check the code. "
+        end
+        return error < 1e-10
     end
 
     @test Test1()
     @test Test2()
     @test Test3()
+    @test test4()
 
 end

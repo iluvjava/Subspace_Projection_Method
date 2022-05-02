@@ -6,6 +6,9 @@ mutable struct IterativeLanczos
     q_store::Int64
     Aq
     Q::Dict
+
+    reorthogonalize::Bool  # whether performing re-orthogonalization for on all stored 
+    # q vectors. 
     
     function IterativeLanczos(A::Function, q1, q_store::Int64=typemax(Int64))
         @assert q_store > 1 "storage must be at least 2. "
@@ -20,6 +23,7 @@ mutable struct IterativeLanczos
         this.Q = Dict{Int64, typeof(this.Aq)}()
         this.Q[1] = q1
         this.alphas[1] = dot(this.Q[1], this.Aq)  # Alpha is computed in Advance!
+        this.reorthogonalize = false
         return this
     end
 
@@ -44,8 +48,14 @@ function (this::IterativeLanczos)()
         qNew = Aq - this.betas[this.k - 1]*qPre
     end
     qNew -= alphas[this.k]*q
-    betaNew = norm(qNew)
     # Reorthogonalizations goes here
+    if this.reorthogonalize
+        for q in this.Q |> values
+            qNew -= dot(q, qNew)*q
+        end
+    end
+    betaNew = norm(qNew)
+    
 
     qNew /= betaNew
 

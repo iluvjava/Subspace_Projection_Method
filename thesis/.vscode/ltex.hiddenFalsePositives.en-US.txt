@@ -1,0 +1,1 @@
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QWhich is: \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q We made use of the fact that the matrix \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is unit upper bidiagonal.\\E$"}
