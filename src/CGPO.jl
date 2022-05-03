@@ -54,7 +54,7 @@ mutable struct CGPO{T <: Number}
         push!(this.R, r̂)
 
         # Default settings
-        this.storage_limit = length(this.r) - 1       # Maximal limit, if not, we have a problem. 
+        this.storage_limit = length(this.r) - 1     # Maximal limit, if not, we have a problem. 
         this.orthon_on = true
 
     return this end
@@ -77,7 +77,7 @@ return reshape(vec, :) end
 
 
 """
-    Evalute One step of the CGPO, perform conjugation processs according to 
+    Evalute one step of the CGPO, perform conjugation processs according to 
     settings. 
 """
 function (this::CGPO)()
@@ -127,7 +127,6 @@ function (this::CGPO)()
     this.r = copy(this.rnew)
     UpdatePR!(this, this.p, this.rnew/norm(this.rnew))
     this.itr += 1
-    
 
 return convert(Float64, rnewNorm) end
 

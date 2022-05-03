@@ -31,6 +31,8 @@
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}The Basics}{6}{subsection.3.1}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Krylov Subspace}{6}{subsubsection.3.1.1}\protected@file@percent }
 \newlabel{prop:When_the_Grade_is_Reached}{{3.1}{6}{When the Grade is Reached}{prop.3.1}{}}
+\abx@aux@cite{book:trefethen}
+\abx@aux@segm{0}{0}{book:trefethen}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Projectors}{7}{subsubsection.3.1.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Subspace Projection Methods}{7}{subsection.3.2}\protected@file@percent }
 \newlabel{sec:Subspace_Projection_Methods}{{3.2}{7}{Subspace Projection Methods}{subsection.3.2}{}}
@@ -82,6 +84,7 @@
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Convergence Rate of CG under Exact Arithmetic}{23}{subsection.4.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Uniformly Distributed Eigenvalues}{23}{subsubsection.4.2.1}\protected@file@percent }
 \newlabel{theorem:CG_Convergence_Rate}{{3}{23}{CG Convergence Rate}{theorem.3}{}}
+\newlabel{line:CG_Cheb_Bound}{{4.2.20}{25}{Uniformly Distributed Eigenvalues}{equation.4.2.20}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}One Outlier Eigenvalue}{25}{subsubsection.4.2.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}From Conjugate Gradient to Lanczos}{27}{subsection.4.3}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}The Base Case}{29}{subsubsection.4.3.1}\protected@file@percent }
@@ -95,6 +98,8 @@
 \abx@aux@segm{0}{0}{paper:FOM}
 \abx@aux@cite{paper:SYMLQ}
 \abx@aux@segm{0}{0}{paper:SYMLQ}
+\abx@aux@cite{paper:cg_original}
+\abx@aux@segm{0}{0}{paper:cg_original}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {5}Effects of Floating Point Arithmetic}{36}{section.5}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Partial Orthogonalization and Full Orthogonalization}{36}{subsection.5.1}\protected@file@percent }
 \abx@aux@cite{book:greenbaum}
@@ -104,7 +109,7 @@
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Relative Errors of CG Under Floating Points}{37}{subsection.5.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Experiments}{37}{subsubsection.5.2.1}\protected@file@percent }
 \newlabel{fig:1}{{5.2.1}{38}{Experiments}{figure.caption.2}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.2.1}{\ignorespaces  The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthogonalized with previous 8 residual and conjugate vectors. orange dashed: the Original conjugate gradient. Green dot: The tighter theoretical upper bound derived by Chebyshev (4.3.20). Left: $\rho = 0.9$; right: $\rho = 1$, the matrix is $64\times 64$ \relax }}{38}{figure.caption.2}\protected@file@percent }
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.2.1}{\ignorespaces  The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthogonalized with previous 8 residual and conjugate vectors. orange dashed: the Original conjugate gradient. Green dot: The tighter theoretical upper bound derived by Chebyshev (\hyperref  [line:CG_Cheb_Bound]{\ref  *{line:CG_Cheb_Bound}}). Left: $\rho = 0.9$; right: $\rho = 1$, the matrix is $64\times 64$ \relax }}{38}{figure.caption.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Paige's Floating Point Analysis}{38}{subsection.5.3}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.1}Bounding the Relative Residuals}{38}{subsubsection.5.3.1}\protected@file@percent }
 \abx@aux@cite{book:greenbaum}
@@ -115,13 +120,13 @@
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.1}Ghost Eigenvalues Experiments}{42}{subsubsection.5.4.1}\protected@file@percent }
 \@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.1}{\ignorespaces The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iterations, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round off error, right is Lanczos iterations that fully re-orthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithmetic. \relax }}{42}{figure.caption.3}\protected@file@percent }
 \newlabel{fig:2}{{5.4.1}{42}{Ghost Eigenvalues Experiments}{figure.caption.3}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.2}{\ignorespaces left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^H_kQ_k$. right: The plot of $Q_kAQ_k$ from floating point Lanczos iterations\relax }}{43}{figure.caption.4}\protected@file@percent }
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.2}{\ignorespaces left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^T_kQ_k$. right: The plot of $Q_k^TAQ_k$ from floating point Lanczos iterations\relax }}{43}{figure.caption.4}\protected@file@percent }
 \newlabel{fig:3}{{5.4.1}{43}{Ghost Eigenvalues Experiments}{figure.caption.4}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2}Losing Orthogonality on Ritz Vectors}{44}{subsubsection.5.4.2}\protected@file@percent }
 \newlabel{fig:4}{{5.4.2}{44}{Losing Orthogonality on Ritz Vectors}{figure.caption.5}{}}
 \newlabel{fig:5}{{5.4.2}{44}{Losing Orthogonality on Ritz Vectors}{figure.caption.6}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.3}{\ignorespaces figure 4 caption\relax }}{45}{figure.caption.5}\protected@file@percent }
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.4}{\ignorespaces figure 5 caption\relax }}{45}{figure.caption.6}\protected@file@percent }
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.3}{\ignorespaces Projection of floating point lanczos vector $q_k$ onto 3 of the largest ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$ \relax }}{45}{figure.caption.5}\protected@file@percent }
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.4}{\ignorespaces projection of the exact lanczos vector $q_k$ onto 3 of the largest ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$\relax }}{45}{figure.caption.6}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.3}Greenbaum's Tiny Interval Experiments}{46}{subsubsection.5.4.3}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}The Ritz Vector's View and Another Paige's Theorem}{46}{subsection.5.5}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{47}{subsection.5.6}\protected@file@percent }
