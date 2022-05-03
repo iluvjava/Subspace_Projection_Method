@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  1 MAY 2022 19:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  2 MAY 2022 22:21
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -408,29 +408,253 @@ Package graphics Info: Driver file: pdftex.def on input line 105.
 \c@definition=\count304
 \c@remark=\count305
 Package hyperref Info: Option `colorlinks' set `true' on input line 37.
- (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/biblatex.sty
+Package: biblatex 2020/12/31 v3.16 programmable bibliographies (PK/MW)
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count306
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/logreq/logreq.sty
+Package: logreq 2010/08/04 v1.0 xml request logger
+\lrq@indent=\count307
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/logreq/logreq.def
+File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
+)) (/usr/local/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@tabx@nest=\count308
+\c@listtotal=\count309
+\c@listcount=\count310
+\c@liststart=\count311
+\c@liststop=\count312
+\c@citecount=\count313
+\c@citetotal=\count314
+\c@multicitecount=\count315
+\c@multicitetotal=\count316
+\c@instcount=\count317
+\c@maxnames=\count318
+\c@minnames=\count319
+\c@maxitems=\count320
+\c@minitems=\count321
+\c@citecounter=\count322
+\c@maxcitecounter=\count323
+\c@savedcitecounter=\count324
+\c@uniquelist=\count325
+\c@uniquename=\count326
+\c@refsection=\count327
+\c@refsegment=\count328
+\c@maxextratitle=\count329
+\c@maxextratitleyear=\count330
+\c@maxextraname=\count331
+\c@maxextradate=\count332
+\c@maxextraalpha=\count333
+\c@abbrvpenalty=\count334
+\c@highnamepenalty=\count335
+\c@lownamepenalty=\count336
+\c@maxparens=\count337
+\c@parenlevel=\count338
+\blx@tempcnta=\count339
+\blx@tempcntb=\count340
+\blx@tempcntc=\count341
+\blx@maxsection=\count342
+\blx@maxsegment@0=\count343
+\blx@notetype=\count344
+\blx@parenlevel@text=\count345
+\blx@parenlevel@foot=\count346
+\blx@sectionciteorder@0=\count347
+\blx@entrysetcounter=\count348
+\blx@biblioinstance=\count349
+\labelnumberwidth=\skip60
+\labelalphawidth=\skip61
+\biblabelsep=\skip62
+\bibitemsep=\skip63
+\bibnamesep=\skip64
+\bibinitsep=\skip65
+\bibparsep=\skip66
+\bibhang=\skip67
+\blx@bcfin=\read4
+\blx@bcfout=\write4
+\blx@langwohyphens=\language88
+\c@mincomprange=\count350
+\c@maxcomprange=\count351
+\c@mincompwidth=\count352
+Package biblatex Info: Trying to load biblatex default data model...
+Package biblatex Info: ... file 'blx-dm.def' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/blx-dm.def
+File: blx-dm.def 2020/12/31 v3.16 biblatex localization (PK/MW)
+)
+Package biblatex Info: Trying to load biblatex custom data model...
+Package biblatex Info: ... file 'biblatex-dm.cfg' not found.
+\c@afterword=\count353
+\c@savedafterword=\count354
+\c@annotator=\count355
+\c@savedannotator=\count356
+\c@author=\count357
+\c@savedauthor=\count358
+\c@bookauthor=\count359
+\c@savedbookauthor=\count360
+\c@commentator=\count361
+\c@savedcommentator=\count362
+\c@editor=\count363
+\c@savededitor=\count364
+\c@editora=\count365
+\c@savededitora=\count366
+\c@editorb=\count367
+\c@savededitorb=\count368
+\c@editorc=\count369
+\c@savededitorc=\count370
+\c@foreword=\count371
+\c@savedforeword=\count372
+\c@holder=\count373
+\c@savedholder=\count374
+\c@introduction=\count375
+\c@savedintroduction=\count376
+\c@namea=\count377
+\c@savednamea=\count378
+\c@nameb=\count379
+\c@savednameb=\count380
+\c@namec=\count381
+\c@savednamec=\count382
+\c@translator=\count383
+\c@savedtranslator=\count384
+\c@shortauthor=\count385
+\c@savedshortauthor=\count386
+\c@shorteditor=\count387
+\c@savedshorteditor=\count388
+\c@labelname=\count389
+\c@savedlabelname=\count390
+\c@institution=\count391
+\c@savedinstitution=\count392
+\c@lista=\count393
+\c@savedlista=\count394
+\c@listb=\count395
+\c@savedlistb=\count396
+\c@listc=\count397
+\c@savedlistc=\count398
+\c@listd=\count399
+\c@savedlistd=\count400
+\c@liste=\count401
+\c@savedliste=\count402
+\c@listf=\count403
+\c@savedlistf=\count404
+\c@location=\count405
+\c@savedlocation=\count406
+\c@organization=\count407
+\c@savedorganization=\count408
+\c@origlocation=\count409
+\c@savedoriglocation=\count410
+\c@origpublisher=\count411
+\c@savedorigpublisher=\count412
+\c@publisher=\count413
+\c@savedpublisher=\count414
+\c@language=\count415
+\c@savedlanguage=\count416
+\c@origlanguage=\count417
+\c@savedoriglanguage=\count418
+\c@pageref=\count419
+\c@savedpageref=\count420
+\shorthandwidth=\skip68
+\shortjournalwidth=\skip69
+\shortserieswidth=\skip70
+\shorttitlewidth=\skip71
+\shortauthorwidth=\skip72
+\shorteditorwidth=\skip73
+\locallabelnumberwidth=\skip74
+\locallabelalphawidth=\skip75
+\localshorthandwidth=\skip76
+\localshortjournalwidth=\skip77
+\localshortserieswidth=\skip78
+\localshorttitlewidth=\skip79
+\localshortauthorwidth=\skip80
+\localshorteditorwidth=\skip81
+Package biblatex Info: Trying to load compatibility code...
+Package biblatex Info: ... file 'blx-compat.def' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/blx-compat.def
+File: blx-compat.def 2020/12/31 v3.16 biblatex compatibility (PK/MW)
+)
+Package biblatex Info: Trying to load generic definitions...
+Package biblatex Info: ... file 'biblatex.def' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/biblatex.def
+File: biblatex.def 2020/12/31 v3.16 biblatex compatibility (PK/MW)
+\c@textcitecount=\count421
+\c@textcitetotal=\count422
+\c@textcitemaxnames=\count423
+\c@biburlbigbreakpenalty=\count424
+\c@biburlbreakpenalty=\count425
+\c@biburlnumpenalty=\count426
+\c@biburlucpenalty=\count427
+\c@biburllcpenalty=\count428
+\biburlbigskip=\muskip18
+\biburlnumskip=\muskip19
+\biburlucskip=\muskip20
+\biburllcskip=\muskip21
+\c@smartand=\count429
+)
+Package biblatex Info: Trying to load bibliography style 'numeric'...
+Package biblatex Info: ... file 'numeric.bbx' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/bbx/numeric.bbx
+File: numeric.bbx 2020/12/31 v3.16 biblatex bibliography style (PK/MW)
+Package biblatex Info: Trying to load bibliography style 'standard'...
+Package biblatex Info: ... file 'standard.bbx' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/bbx/standard.bbx
+File: standard.bbx 2020/12/31 v3.16 biblatex bibliography style (PK/MW)
+\c@bbx:relatedcount=\count430
+\c@bbx:relatedtotal=\count431
+))
+Package biblatex Info: Trying to load citation style 'numeric'...
+Package biblatex Info: ... file 'numeric.cbx' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/cbx/numeric.cbx
+File: numeric.cbx 2020/12/31 v3.16 biblatex citation style (PK/MW)
+Package biblatex Info: Redefining '\cite'.
+Package biblatex Info: Redefining '\parencite'.
+Package biblatex Info: Redefining '\footcite'.
+Package biblatex Info: Redefining '\footcitetext'.
+Package biblatex Info: Redefining '\smartcite'.
+Package biblatex Info: Redefining '\supercite'.
+Package biblatex Info: Redefining '\textcite'.
+Package biblatex Info: Redefining '\textcites'.
+Package biblatex Info: Redefining '\cites'.
+Package biblatex Info: Redefining '\parencites'.
+Package biblatex Info: Redefining '\smartcites'.
+)
+Package biblatex Info: Trying to load configuration file...
+Package biblatex Info: ... file 'biblatex.cfg' found.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/biblatex.cfg
+File: biblatex.cfg 
+)) (/usr/local/texlive/2021/texmf-dist/tex/latex/appendix/appendix.sty
+Package: appendix 2020/02/08 v1.2c extra appendix facilities
+\c@@pps=\count432
+\c@@ppsavesec=\count433
+\c@@ppsaveapp=\count434
+)
+
+Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
+(biblatex)                Loading 'csquotes' recommended.
+
+\@quotelevel=\count435
+\@quotereset=\count436
+(/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-\c@lstlisting=\count306
-Package hyperref Info: Link coloring ON on input line 68.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 75.
+LaTeX Font Info:    ... okay on input line 75.
+\c@lstlisting=\count437
+Package hyperref Info: Link coloring ON on input line 75.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (/usr/local/texlive/2021/texmf-dist/tex/latex/refcount/refcount.sty
@@ -438,27 +662,27 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (/usr/local/texlive/2021/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count307
+\c@section@level=\count438
 )
-LaTeX Info: Redefining \ref on input line 68.
-LaTeX Info: Redefining \pageref on input line 68.
-LaTeX Info: Redefining \nameref on input line 68.
+LaTeX Info: Redefining \ref on input line 75.
+LaTeX Info: Redefining \pageref on input line 75.
+LaTeX Info: Redefining \nameref on input line 75.
  (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.out) (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.out)
-\@outlinefile=\write4
-\openout4 = `thesis.out'.
+\@outlinefile=\write5
+\openout5 = `thesis.out'.
 
  (/usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count308
+\scratchcounter=\count439
 \scratchdimen=\dimen186
 \scratchbox=\box57
-\nofMPsegments=\count309
-\nofMParguments=\count310
+\nofMPsegments=\count440
+\nofMParguments=\count441
 \everyMPshowfont=\toks34
-\MPscratchCnt=\count311
+\MPscratchCnt=\count442
 \MPscratchDim=\dimen187
-\MPnumerator=\count312
-\makeMPintoPDFobject=\count313
+\MPnumerator=\count443
+\makeMPintoPDFobject=\count444
 \everyMPtoPDFconversion=\toks35
 ) (/usr/local/texlive/2021/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -504,113 +728,134 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-[1
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+(/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2020/12/31 v3.16 biblatex localization (PK/MW)
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'utf8'.
+Package biblatex Info: Document encoding is UTF8 ....
+Package biblatex Info: ... and expl3
+(biblatex)             2021-02-18 L3 programming layer (loader) 
+(biblatex)             is new enough (at least 2020/04/06),
+(biblatex)             setting 'casechanger=expl3'.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/blx-case-expl3.sty (/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse-2020-10-01.sty (/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse-generic.tex)))
+Package: blx-case-expl3 2020/12/31 v3.16 expl3 case changing code for biblatex
+)
+\openout4 = `thesis.bcf'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'thesis.bbl' found.
+ (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.bbl)
+Package biblatex Info: Reference section=0 on input line 75.
+Package biblatex Info: Reference segment=0 on input line 75.
+ [1
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.toc
-LaTeX Font Info:    Trying to load font information for U+msa on input line 5.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 10.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 5.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 10.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [2])
-\tf@toc=\write5
-\openout5 = `thesis.toc'.
+\tf@toc=\write6
+\openout6 = `thesis.toc'.
 
  [3] [4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 222--225
+Underfull \hbox (badness 10000) in paragraph at lines 231--234
 
  []
 
 [7] [8] [9] [10] [11] [12] [13] [14] [15]
-Overfull \hbox (16.56534pt too wide) in paragraph at lines 657--658
+Overfull \hbox (16.56534pt too wide) in paragraph at lines 666--667
 []\T1/cmr/m/n/12 The base case is triv-ial and it's di-rectly true from the def-i-ni-tion of CG: $\OML/cmm/m/it/12 r[] \OMS/cmsy/m/n/12 2 K[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 A\OMS/cmsy/m/n/12 j\OML/cmm/m/it/12 r[]\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ; p[] \OT1/cmr/m/n/12 =
  []
 
 [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1586.
+(hyperref)                removing `math shift' on input line 1595.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1586.
+(hyperref)                removing `subscript' on input line 1595.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1586.
+(hyperref)                removing `subscript' on input line 1595.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1586.
+(hyperref)                removing `math shift' on input line 1595.
 
 [34] [35] [36]
-<cg_convergence_0.9.png, id=784, 602.25pt x 401.5pt>
+<cg_convergence_0.9.png, id=809, 602.25pt x 401.5pt>
 File: cg_convergence_0.9.png Graphic file (type png)
 <use cg_convergence_0.9.png>
-Package pdftex.def Info: cg_convergence_0.9.png  used on input line 1767.
+Package pdftex.def Info: cg_convergence_0.9.png  used on input line 1775.
 (pdftex.def)             Requested size: 227.62204pt x 151.75064pt.
-<cg_convergence_1.png, id=785, 602.25pt x 401.5pt>
+<cg_convergence_1.png, id=810, 602.25pt x 401.5pt>
 File: cg_convergence_1.png Graphic file (type png)
 <use cg_convergence_1.png>
-Package pdftex.def Info: cg_convergence_1.png  used on input line 1768.
+Package pdftex.def Info: cg_convergence_1.png  used on input line 1776.
 (pdftex.def)             Requested size: 227.62204pt x 151.75064pt.
  [37] [38 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/cg_convergence_0.9.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/cg_convergence_1.png>] [39] [40] [41]
-<ritz_trajectory_plot_floats.png, id=866, 1882.03125pt x 1882.03125pt>
+<ritz_trajectory_plot_floats.png, id=893, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_floats.png Graphic file (type png)
 <use ritz_trajectory_plot_floats.png>
-Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1965.
+Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1973.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
-<ritz_trajectory_plot_exact.png, id=867, 1882.03125pt x 1882.03125pt>
+<ritz_trajectory_plot_exact.png, id=894, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_exact.png Graphic file (type png)
 <use ritz_trajectory_plot_exact.png>
-Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1966.
+Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1974.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
  [42 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/ritz_trajectory_plot_floats.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/ritz_trajectory_plot_exact.png>]
-<fig3.png, id=877, 724.7075pt x 513.92pt>
+<fig3.png, id=904, 724.7075pt x 513.92pt>
 File: fig3.png Graphic file (type png)
 <use fig3.png>
-Package pdftex.def Info: fig3.png  used on input line 1976.
+Package pdftex.def Info: fig3.png  used on input line 1984.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
-<fig4.png, id=878, 724.7075pt x 513.92pt>
+<fig4.png, id=905, 724.7075pt x 513.92pt>
 File: fig4.png Graphic file (type png)
 <use fig4.png>
-Package pdftex.def Info: fig4.png  used on input line 1977.
+Package pdftex.def Info: fig4.png  used on input line 1985.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
  [43 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/fig3.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/fig4.png>]
-<lanczos_proj_on_ritz_float.png, id=893, 752.8125pt x 501.875pt>
+<lanczos_proj_on_ritz_float.png, id=920, 752.8125pt x 501.875pt>
 File: lanczos_proj_on_ritz_float.png Graphic file (type png)
 <use lanczos_proj_on_ritz_float.png>
-Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 2002.
+Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 2010.
 (pdftex.def)             Requested size: 398.33858pt x 265.56363pt.
-<lanczos_proj_on_ritz_exact.png, id=894, 752.8125pt x 501.875pt>
+<lanczos_proj_on_ritz_exact.png, id=921, 752.8125pt x 501.875pt>
 File: lanczos_proj_on_ritz_exact.png Graphic file (type png)
 <use lanczos_proj_on_ritz_exact.png>
-Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 2007.
+Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 2015.
 (pdftex.def)             Requested size: 398.33858pt x 265.56363pt.
-
-Overfull \hbox (21.64993pt too wide) in paragraph at lines 2013--2014
-\T1/cmr/m/n/12 In this sec-tion, we prove an-other anal-y-sis of the Lanc-zos It-er-a-tions from Dammel's work(\T1/cmr/bx/n/12 Citation
- []
-
-[44] [45 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_float.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_exact.png>] [46] [47] [48] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
+ [44] [45 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_float.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_exact.png>] [46] [47] [48] [49] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: C81836E7B82E9066B7F89C2D58E8CB06;10041.
+(rerunfilecheck)             Checksum: B73004B7D2D7BC43AEA148C4B0B1D57E;10292.
+Package logreq Info: Writing requests to 'thesis.run.xml'.
+\openout1 = `thesis.run.xml'.
+
  ) 
 Here is how much of TeX's memory you used:
- 15031 strings out of 478994
- 226254 string characters out of 5858183
- 587130 words of memory out of 5000000
- 31779 multiletter control sequences out of 15000+600000
- 417562 words of font info for 62 fonts, out of 8000000 for 9000
+ 22441 strings out of 478994
+ 372245 string characters out of 5858183
+ 1143899 words of memory out of 5000000
+ 39103 multiletter control sequences out of 15000+600000
+ 419108 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 81i,22n,117p,1853b,469s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
-Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf (48 pages, 1126133 bytes).
+ 81i,22n,117p,1891b,2009s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
+Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf (49 pages, 1153849 bytes).
 PDF statistics:
- 1115 PDF objects out of 1200 (max. 8388607)
- 1018 compressed objects within 11 object streams
- 501 named destinations out of 1000 (max. 500000)
- 425 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1168 PDF objects out of 1200 (max. 8388607)
+ 1069 compressed objects within 11 object streams
+ 522 named destinations out of 1000 (max. 500000)
+ 433 words of extra memory for PDF output out of 10000 (max. 10000000)
 
