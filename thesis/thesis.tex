@@ -64,7 +64,7 @@
 
 \linespread{1}  % double spaced or single spaced
 
-% For bibilio graphy 
+% For bibliography 
 \usepackage{biblatex}
 \addbibresource{refs.bib}
 
@@ -94,9 +94,9 @@
          
     \vspace{0.8cm}
          
-    Department Name: Department of Applied Mathematics\\
+    Department of Applied Mathematics\\
 
-    University Name: University of Washington\\
+    University of Washington\\
 
     
 
@@ -106,7 +106,7 @@
         Abstract
     \end{center}
 
-    This thesis is expository in nature and we intend to discuss the Conjugate Gradient without pre-conditioning together with the Lanczos iteration in thorough details. We derive the Conjugate Gradient algorithm using the Conjugate Direction method and projector. We derive Lanczos iterations as the symmetric case of Arnoldi iterations. We analyze the convergence rate of Conjugate Gradient in exact arithmetic and prove the equivalence between the Conjugate Gradient algorithm and the Lanczos iterations. In the end, we analyze the behaviors of Lanczos iterations and Conjugate Gradient under floating point arithmetic, illustrate some of their behaviors under floating point arithmetic using numerical experiments. 
+    This thesis is expository in nature. We intend to discuss the Conjugate Gradient without pre-conditioning together with the Lanczos iteration in thorough detail. We derive the Conjugate Gradient algorithm using the Conjugate Direction method and projector. We derive Lanczos iterations as the symmetric case of Arnoldi iterations. We analyze the convergence rate of Conjugate Gradient in exact arithmetic and prove the equivalence between the Conjugate Gradient algorithm and Lanczos iterations. Finally, we analyze the behavior of Lanczos iterations and Conjugate Gradient under floating-point arithmetic and illustrate this behavior using numerical experiments.
          
 
 \newpage
@@ -118,7 +118,7 @@
 \section{Notations}
 \begin{enumerate}
     \item $\text{ran}(A):=\{Ax :\forall x \; \in \mathbb R^n\}, A \in \mathbb R^{m\times n}$, The range of a matrix. 
-    \item $(A)_{i, j}$: The element in i th row and jth column of the matrix $A$.
+    \item $(A)_{i, j}$: The element in ith row and jth column of the matrix $A$.
     \item $(A)_{i:i', j:j'}$: The submatrix whose top left corner is the $(i, j)$ element in matrix $A$, and whose' right bottom corner is the $(i', j ')$ element in the matrix $A$. The notation is similar to MATLAB's rules for indexing. 
     \item $\forall\; 0\le j \le k$: under certain context it indicates the range for an index: $j = 0, 1, \cdots, k-1, k$
     \item Boldface $\mathbf 0$ denotes the zero vector or matrix, depending on the context it can be either a zero row/column vector, or a zero matrix.
@@ -129,9 +129,9 @@
 \section{Introduction}
     The Conjugate Gradient method is an iterative method used for solving linear systems which date back to the period when computers were programmed using punched cards. It didn't receive much attention at the start but was revised and reappeared as a method for solving large sparse linear systems decades later, becoming the best option for positive definite linear systems that are sparse and large and, by extension, for optimizing strongly convex functions as well. In this thesis, we discuss Conjugate Gradient without pre-conditioning by deriving it and analyzing it along with Lanczos Iterations, a closely related algorithm for symmetric eigenproblems. Finally, we use their connections to analyze their behaviors under floating-point arithmetic. The thesis will require some background in numerical linear algebra for the best understanding. 
     \par
-    In the first section, we introduce the projectors and Krylov subspace as important mathematical objects for the subspace projections method, the frameworks for subspace projection methods, and the Lanczos Iteration as a symmetric case of the Arnoldi Iterations. At the end of the section, we proceed and derive the conjugate gradient method using only these ideas and concepts. In the second section, we analyze the behaviors of Conjugate gradient and Lanczos Iterations, including the terminations conditions for both algorithm, their convergence rate, and the equivalence between them. The goal is to show how they can be the same and have similar properties and how the connections between them can spark other methods for solving a symmetric indefinite linear system. And in the final parts of the second section, we derive the convergence bound for the conjugate gradient algorithm. 
+    In the first section, we introduce the projectors and Krylov subspace as important mathematical objects for the subspace projections method, the frameworks for subspace projection methods, and the Lanczos Iteration as a symmetric case of the Arnoldi Iterations. At the end of the section, we proceed and derive the conjugate gradient method using only these ideas and concepts. In the second section, we analyze the behaviors of Conjugate gradient and Lanczos Iterations, including the termination conditions for both algorithms, their convergence rate, and the equivalence between them. The goal is to show how they can be the same and have similar properties and how the connections between them can spark other methods for solving a symmetric indefinite linear system. And in the final parts of the second section, we derive the convergence bound for the conjugate gradient algorithm. 
     \par
-    In the third section, we use numerical experiment to better understand the algorithm behaviors under floating point arithmetic. We show how floating points affect the Lanczos algorithm more rigorously and how it may be fixed and mitigated, consequently improving the conjugate gradient algorithm. 
+    In the third section, we use numerical experiments to better understand the algorithm behaviors under floating-point arithmetic. We show how floating-point arithmetic affects the Lanczos algorithm more rigorously and how it may be fixed and mitigated, consequently improving the conjugate gradient algorithm. 
 
     \newpage
 \begin{center}\large
@@ -144,7 +144,7 @@
 \section{Foundations}
     In this section, we go over the foundations of Conjugate Gradient and the Lanczos Algorithm. We introduce the important ideas at the beginning, and then we proceed to prove the conjugate gradient algorithm via the method conjugate directions, and then we state the Lanczos Iterations as a symmetric case of the Arnoldi Iterations. 
     \subsection{The Basics}
-        In this subsection we go over some basics concepts and mathematical entities that are important to the Subspace Projection methods in general. 
+        In this subsection, we go over some basic concepts and mathematical entities that are important to Subspace Projection methods in general. 
         \subsubsection{Krylov Subspace}
             \begin{definition}[Krylov Subspace]
                 $$
@@ -160,7 +160,7 @@
                 Assuming that matrix $A$ is diagonalizable, $A = V\Lambda V^{-1}$, then $\text{grade}(A|u)$ is the number of unique $\lambda_i$ such that $(V^{-1}u)_i$ is non-zero. 
             \end{prop}
             \begin{proof}
-                Let $k$ be the grade, then it's the minimum number such that the matrix polynomial of $A$ multiplied by $u$ equals to the zero vector, and it's nontrivial. 
+                Let $k$ be the grade, then it's the minimum number such that the matrix polynomial of $A$ multiplied by $u$ equals the zero vector, and it's nontrivial. 
                 \begin{align}
                     & \mathbf 0 = \sum_{j = 0}^{k}
                     w_jA^{j}u
@@ -169,14 +169,14 @@
                     \\
                     & \forall i \quad 0 = \sum_{j = 0}^{k} w_j\lambda_i^{j}(V^{-1}u)_i
                 \end{align}
-                When non-trivial solution exists for some $w_j \neq 0$, then a polynomial will have to interpolate $\lambda_i$ where $(V^{-1}u)_i\neq 0$. Therefore, the minimum $k$ is the number of unique $\lambda_i$ such that $(V^{-1}u)_i\neq 0$
+                When a non-trivial solution exists for some $w_j \neq 0$, then a polynomial will have to interpolate $\lambda_i$ where $(V^{-1}u)_i\neq 0$. Therefore, the minimum $k$ is the number of unique $\lambda_i$ such that $(V^{-1}u)_i\neq 0$
             \end{proof}
             
         \subsubsection{Projectors}
             \begin{definition}
                 A matrix $P$ is a projector when $P^2 = P$, we call this property idempotent. 
             \end{definition}
-            There are 2 types of projectors, oblique and orthogonal projectors. A projector is orthogonal projector when it's Hermitian, it's oblique when it's not Hermitian. 
+            There are two types of projectors, oblique and orthogonal projectors. A projector is an orthogonal projector when it's Hermitian and oblique when it's not Hermitian. 
             \begin{prop}[Projector Complementary]
                 The projector $I - P$ projects onto the null space of $P$ and vice versa. 
                 \begin{align}
@@ -188,7 +188,7 @@
             The proof is immediate from the definition. For more coverage of facts, refer to Trefethen's Book on Numerical Linear Algebra\cite{book:trefethen}.
 
     \subsection{Subspace Projection Methods}\label{sec:Subspace_Projection_Methods}
-        Let $\mathcal K, \mathcal L$ be 2 subspaces. $\mathcal K$ can be viewed as a subspace where we choose our solutions for the $x$ for the linear system $Ax = b$, and $\mathcal L$ is a subspace where we orthogonalize our residual $r = b - Ax$ against $\mathcal L$. This is a description of this framework: 
+        Let $\mathcal K, \mathcal L$ be two subspaces. $\mathcal K$ can be viewed as a subspace where we choose our solutions for the $x$ for the linear system $Ax = b$, and $\mathcal L$ is a subspace where we orthogonalize our residual $r = b - Ax$ against $\mathcal L$. This is a description of this framework: 
         \begin{align}
             \text{choose }\tilde{x} \in x_0 + \mathcal{K} \text{ s.t: } b - A\tilde{x} \perp \mathcal{L}
         \end{align}
@@ -229,7 +229,7 @@
                         \end{aligned}
                 \end{aligned}
             \end{align}
-            Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in later part where it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as a Petrov Galerkin's Conditions (\textbf{TODO CHECK THIS}). 
+            Each time, we increase the span of the subspace $\mathcal K, \mathcal L$, which gives us more space to choose the solution $x$, and more space to reduce the residual vector $r$. This idea is incredibly flexible, and we will see in a later part that it reduces to a more concrete algorithm. Finally, when $\mathcal K = \mathcal L$, this is referred to as Petrov Galerkin's Conditions (\textbf{TODO CHECK THIS}). 
             \\
             \begin{remark}[Projector in the Prototype Algorithm]
                 One may proceed to find a projector in the above prototype algorithm. 
@@ -244,11 +244,11 @@
                     \\
                     & r = r_0 - AV(W^TAV)^{-1}W^Tr_0
                 \end{align}
-                In here, $AV(W^TAV)^{-1}W^T$ is a projector, assuming the invertibility of $W^TAV$. 
+                Here, $AV(W^TAV)^{-1}W^T$ is a projector, assuming the invertibility of $W^TAV$. 
             \end{remark}
         
         \subsubsection{Energy Norm Minimization using Gradient}\label{sec:Energy_Norm_Minimization_using_Gradient}
-            Other times, iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under some norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, and we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$, then one may consider using gradient as a more direct approach instead of projector. 
+            Other times, an iterative method will choose to build up a subspace for each step with a subspace generator, and build up the solution on this expanding subspace, but with the additional objective of minimizing the residual under some norm. Assuming that the vector $x\in x_0 + \mathcal{K}$, we want to minimize the residual under a norm induced by positive definite operator $B$. Let it be the case that the columns of matrix $K$ span subspace $\mathcal{K}$ with $\dim(\mathcal K) = k$, then one may consider using gradient as a more direct approach instead of projector. 
             \begin{align}
                 &\hspace{0.6em} \min_{x\in x_0 + \mathcal{K}} \Vert b - Ax\Vert_B^2 
                 \\
@@ -272,7 +272,7 @@
                 \\
                 (AK)^TBr_0 &= (AK)^TBAKw
             \end{align}
-            The above formulation is powerful. We used gradient instead of projector for the simplicity of the argument. One can derive the same using orthogonal projector to minimizes the equivalent 2 norm of the energy norm, but the math is a bit more tedious. However, this minimization objective is minimizing the residual, which is fine for deriving subspace methods such as the GMRes, or the Minres and Orthomin, however, for the sake of the conjugate gradient, we have to consider the alternative. Let's this be a proposition that we proceed to prove. 
+            The above formulation is powerful. We used gradient instead of projector for the simplicity of the argument. One can derive the same using an orthogonal projector to minimize the equivalent 2-norm of the energy norm, but the math is a bit more tedious. However, this minimization objective is minimizing the residual, which is fine for deriving subspace methods such as the GMRes, or the Minres and Orthomin, however, for the sake of the conjugate gradient, we have to consider the alternative. Let this be a proposition that we proceed to prove. 
             \begin{prop}[Conditions for Minimum Error Under Energy Norm]
                 Here, we let matrix $B$ be positive definite so that it can induce a norm, we let $K$ be a matrix whose columns form a basis for $\mathcal K$, we let $e_k$ denotes the error, given by: $A^{-1}b - x_k$, and we let $r_k$ denotes the residual given as $b - Ax_k$. 
                 \begin{align}
@@ -316,7 +316,7 @@
      
 
     \subsection{Deriving Conjugate Gradient from Conjugate Directions}
-        By the time this is being written, it's been 70 years since the first time Conjugate Gradient algorithm is proposed by Hestenes and Stiefel back in 1952\cite{paper:cg_original}. Upon their first discussion of the algorithm, numerous perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iteration. Here, we use the exact same idea, but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the subspace orthogonality conditions to derive it. The ideas are rehashed and in the end we point out its relations to Krylov Subspace, which ultimately, leads to other important new ideas related to solving symmetric indefinite systems that are not yet present back in 1952. In most time under classroom settings or textbook, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so that we can move on and talk about other things. In this section of the paper, we take a different approach that is similar in spirit to a course note by Shewchuk \cite{notes:painless_cg} where we focus more on that inspirations behind the algorithm and avoid mentioning Lanczos Algorithms and Krylov Subspace until the very end, after CG is derived.   
+        At the time this is being written, it's been 70 years since the Conjugate Gradient algorithm was proposed by Hestenes and Stiefel back in 1952\cite{paper:cg_original}. Upon their first discussion of the algorithm, numerous perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iteration. Here, we use the exact same idea, but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the subspace orthogonality conditions to derive it. The ideas are rehashed and in the end we point out its relations to Krylov Subspace, which ultimately, leads to other important new ideas related to solving symmetric indefinite systems that were not yet present back in 1952. In most time under classroom settings or textbooks, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so that we can move on and talk about other things. In this section of the paper, we take a different approach that is similar in spirit to a course note by Shewchuk \cite{notes:painless_cg} where we focus more on that inspirations behind the algorithm and avoid mentioning Lanczos Algorithms and Krylov Subspace until the very end, after CG is derived.   
         \subsubsection{CG Objective and Framework}
             We introduce the algorithm as an attempt to minimize the energy norm of the error for a system of linear equations $Ax = b$, and we make the assumptions: 
             \begin{itemize}
@@ -333,7 +333,7 @@
             \begin{align}
                 \text{choose: }x \in x_0 + \text{ran}(P_k) \text{ s.t: } b - Ax \perp \text{ran}(P_k)    
             \end{align}
-            Take note that the link between a norm minimization and an equivalent subspace orthogonality conditions don't guarantee to happen for other subspace projection methods, for example the FOM and Bi-Lanczos Methods are orthogonalizations method that doesn't link directly to a norm minimization objective \cite{paper:FOM}. 
+            Take note that the link between a norm minimization and an equivalent subspace orthogonality condition isn't guaranteed to happen for other subspace projection methods. For example, the FOM and Bi-Lanczos Methods are orthogonalization methods that don't directly link to a norm minimization objective \cite{paper:FOM}. 
             \par
             To solve for $w$, we wish to make $P_k^TAP_k$ to be an easy-to-solve matrix. Let the easy-to-solve matrix be a diagonal matrix and hence we let $P_k$ be a \textit{matrix whose columns are A-Orthogonal vectors}.
             \begin{align}
@@ -343,7 +343,7 @@
                 \\
                 w &= D^{-1}_kP_k^Tr_0
             \end{align}
-            The idea here is: accumulate vectors $p_j$ into the matrix $P_k$ and then iteratively improve the solution $x_k$ by reducing the error denote as $e_k$ defined as $A^{-1}b - x_k$. Then, we derive the following expression for $x_k$ and the residual $r_k = b - Ax_k$: 
+            The idea here is: accumulate vectors $p_j$ into the matrix $P_k$ and then iteratively improve the solution $x_k$ by reducing the error denoted as $e_k$ defined as $A^{-1}b - x_k$. Then, we derive the following expression for $x_k$ and the residual $r_k = b - Ax_k$: 
             \begin{align}
                 \begin{cases}
                     x_k = x_0 + P_kD^{-1}_kP^T_kr_0
@@ -371,7 +371,7 @@
                 \end{align}
             \end{proof}
             \noindent
-            Both matrices are indeed projectors. Please take note that they are not Hermitian, which would mean that they are not orthogonal projector, hence, oblique projectors. For notational convenience, we denote $\overline{P}_k = P_kD_k^{-1}P_k^{T}$; then these 2 projectors are: 
+            Both matrices are indeed projectors. Please take note that they are not Hermitian, which would mean that they are not orthogonal projector, hence, oblique projectors. For notational convenience, we denote $\overline{P}_k = P_kD_k^{-1}P_k^{T}$; then these two projectors are: 
             \begin{align}
                 AP_kD^{-1}_kP_k^T &= A\overline{P}_k 
                 \\
@@ -410,7 +410,7 @@
                 \end{align}
             \end{prop}
             \begin{prop}[Generating $A$ Orthogonal Vectors]
-                Given any set of basis vector, for example $\{u_k\}_{i = 0}^{n - 1}$, one can generate a set of A-Orthogonal vectors from it. More specifically: 
+                Given any set of basis vectors, for example $\{u_k\}_{i = 0}^{n - 1}$, one can generate a set of A-Orthogonal vectors from it. More specifically: 
                 \begin{align}
                     p_k &= (I - \overline{P}_kA)u_k
                     \\
@@ -419,7 +419,7 @@
             \end{prop}
             For above propositions, we used the immediate consequence of the range of these oblique projectors. 
         \subsubsection{Method of Conjugate Directions}
-            So far, we have this particular scheme of solving the optimization problem, coupled with the way to computing the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
+            So far, we have this particular scheme of solving the optimization problem, coupled with the way to compute the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
             \begin{definition}[Method of Conjugate Directions]
                 \begin{align}
                     \begin{cases}
@@ -435,9 +435,9 @@
                     \end{cases}
                 \end{align}
             \end{definition}
-            With the assistance of a set of basis vector that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method }(CDM). 
+            With the assistance of a set of basis vectors that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method }(CDM). 
             \begin{remark}
-                This CDM method is nothing new, in the original paper from Hestenes and Stiefel back in 1952\cite{paper:cg_original}, they commented on the method of Conjugate Direction, for each choice of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vector, then the resulting algorithm will be the equivalent of a Gaussian Elimination. 
+                This CDM method is nothing new, in the original paper from Hestenes and Stiefel back in 1952\cite{paper:cg_original}, they commented on the method of Conjugate Direction, for each choice of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vectors, then the resulting algorithm will be the equivalent of a Gaussian Elimination. 
             \end{remark}
             \begin{remark}[Geometric Intuition of CDM]
                 What is happening geometrically is that the A-Orthogonal vectors are orthogonal if described under the alternative eigenspace. Intuitively, one should think of a high-dimensional sphere that sits along some orthogonal basis, and the transformation of $A$ is stretching and rotating sphere, along with the orthogonal axis, resulting in a new ellipsoid in a different orientation; when the transformation is applied, the orthogonal coordinate inside the sphere got stretched along with it, and now these axes had become A-orthogonal vectors. Tracing along the direction of these vectors will ensure minimum redundancy of search directions. 
@@ -457,7 +457,7 @@
                     \\
                     &= p_{k + j}^Tr_0    
                 \end{align}
-                This is true because the vector $p_{k + j}$, a conjugate vector in the future is orthogonal to all previous conjugate vectors. 
+                This is true because the vector $p_{k + j}$, a conjugate vector in the future, is orthogonal to all previous conjugate vectors. 
             \end{proof}
             As a consequence of the above proposition, we can obtain a short recurrence for the residuals and the solution $x$ of CDM: 
             \begin{prop}[CDM Recurrence]\label{prop:CDM_Recurrence}
@@ -480,9 +480,9 @@
                     }
             \end{align}
             \end{prop}
-            On (3.3.36) we used proposition 3.6. We define the value of $a_{k - 1}$, and in above, we have 2 equivalent representation. Please take note that, this proposition remains true for the future CG algorithm that we are going to develop. 
+            On (3.3.36) we used proposition 3.6. We define the value of $a_{k - 1}$, and in above, we have two equivalent representations. Please take note that this proposition remains true for the future CG algorithm that we are going to develop. 
         \subsubsection{Conjugate Gradient}
-            Now, consider the case where, the set of basis vector: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the CDM itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ arises and residuals are all orthogonal. We wish to proceed to prove that part. 
+            Now, consider the case where, the set of basis vectors: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the CDM itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ arises and residuals are all orthogonal. We wish to proceed to prove that part. 
             \begin{lemma}\label{lemma:CG_Lemma_1}
                 \begin{align}
                     \langle p_{k + j}, Ap_k\rangle
@@ -552,7 +552,7 @@
                     r_k\perp \text{ran}(P_k) & \implies 
                     \langle r_k, r_j\rangle =\langle r_k, p_j + \overline{P}_jAr_j\rangle = 0
                 \end{align}
-                The second line(3.3.51) is a result of the first line (3.3.50) rearranged. Here we again make use of the projector $I - A \overline{P}_k$. The last line (3.3.53) is using the second line $3.3.51$. The base case of the argument is simple, because $p_0 = r_0$, and by the property of the projector, $\langle r_1, r_0\rangle = 0$. The theorem is now proven. 
+                The second line (3.3.51) is a result of the first line (3.3.50) rearranged. Here we again make use of the projector $I - A \overline{P}_k$. The last line (3.3.53) is using the second line $3.3.51$. The base case of the argument is simple, because $p_0 = r_0$, and by the property of the projector, $\langle r_1, r_0\rangle = 0$. The theorem is now proven. 
             \end{proof}
             \begin{prop}[CG Recurrences]\label{prop:CG_Recurrences}
                 \begin{align}
@@ -652,9 +652,9 @@
                     \end{aligned}
                 \end{align}
             \end{definition}
-            That is the algorithm, stated with all the iteration number listed as a super script inside parenthesis. Which is equivalent to what we have proven for the CG. 
+            That is the algorithm, stated with all the iteration numbers listed as superscripts inside parentheses. Which is equivalent to what we have proven for the CG.
         \subsubsection{CG and Krylov Subspace}\label{sec:CG_and_Krylov_Subspace}
-            The conjugate Gradient Algorithm is actually a CG, a special case of the algorithm we derived at the start of the excerpt. The full algorithm can be seemed by the short recurrence for the residual and the conjugation vector. This part is trivial. Next, we want to show the relations to the Krylov Subspace, which only occurs for the CG algorithm. 
+            The conjugate Gradient Algorithm is actually a CG, a special case of the algorithm we derived at the start of the excerpt. The full algorithm can be seen by the short recurrence for the residual and the conjugation vector. This part is trivial. Next, we want to show the relations to the Krylov Subspace, which only occurs for the CG algorithm. 
             \begin{prop}
                 \begin{align}
                     p_k \in \mathcal K_{k + 1}(A|r_0)
@@ -694,12 +694,12 @@
                         \text{choose: } x_k\in x_0 + \mathcal K_{k}(A|r_0) \text{ s.t: } r_k \perp \mathcal K_{k}(A|r_0)
                     \end{align}    
                 \end{theorem}
-                Take note that, $\text{ran}(P_k) = \mathcal K_k(A|r_0)$ because the index starts with zero. The above formulations gives theoretical importance for the Conjugate Gradient Algorithm. 
+                Take note that, $\text{ran}(P_k) = \mathcal K_k(A|r_0)$ because the index starts with zero. The above formulation gives theoretical importance for the Conjugate Gradient Algorithm. 
             \end{proof}
     \subsection{Arnoldi Iterations and Lanczos}
-        In this section, we introduce another important algorithm: The Lanczos Algorithm. However, to give more context for the discussion, the Arnoldi iteration is considered as well and it's used to emphasize that Lanczos Iterations is just Arnoldi but with the matrix $A$ being a symmetric matrix. Finally we make the link between Lanczos Iterations and Krylov Subspace, which will inevitably linked back to CG and plays an important role for the analysis of CG. 
+        In this section, we introduce another important algorithm: The Lanczos Algorithm. However, to give more context for the discussion, the Arnoldi iteration is considered as well and it's used to emphasize that Lanczos Iterations is just Arnoldi but with the matrix $A$ being a symmetric matrix. Finally we make the link between Lanczos Iterations and Krylov Subspace, which will inevitably be linked back to CG and plays an important role for the analysis of CG. 
         \subsubsection{The Arnoldi Iterations}
-            We first define the Arnoldi Algorithm, and then we proceed to derive it using the idea of orthogonal projector. Next, we discuss a special case of the Arnoldi Iteration: the Lanczos Algorithm, which is just Arnoldi applied to a symmetric matrix. And such algorithm will inherit the properties of the Arnoldi Iterations. 
+            We first define the Arnoldi Algorithm, and then we proceed to derive it using the idea of an orthogonal projector. Next, we discuss a special case of the Arnoldi Iteration: the Lanczos Algorithm, which is just Arnoldi applied to a symmetric matrix. And such an algorithm will inherit the properties of the Arnoldi Iterations. 
             \par
             Before stating the algorithm, I would like to point out the interpretations of the algorithm and its relations to Krylov Subspace. Consider a matrix of Hessenberg Form:
             \begin{align}
@@ -755,7 +755,7 @@
                 \\
                 (\tilde{H}_k)_{1:k, k} &= Q_kQ_k^HAq_k
             \end{align}
-            Reader please observe that $Q_k$ is going to be orthogonal because how at the start, $q_1q_1^H$ and $I - q_1q_1^H$ are orthogonal projectors. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
+            Reader, please observe that $Q_k$ is going to be orthogonal because at the start, $q_1q_1^H$ and $I - q_1q_1^H$ are orthogonal projectors. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
             \begin{align}
                 AQ_{k} &= Q_{k + 1}\tilde{H}_k
                 \\
@@ -787,7 +787,7 @@
                 The Arnoldi Algorithm terminates if the value $h_{k + 1, k}$ is set to be zero. This is the case because the normalization process is dividing by $h_{k + 1, k}$ to get $q_{k + 1}$. This only happens when $Aq_{k}\in \text{ran}(Q_k)$; because $h_{k +1, k}$ is given by the projector of $I - Q_kQ^H$ applied to $Aq_k$ and the null space of this projector is $\text{ran}(Q_k)$, resulting in $h_{k + 1, k} = 0$. 
             \end{proof}
             \begin{remark}[Arnoldi Produces Minimal Monic in Krylov Subspace]\label{remark:Arnoldi_Produces_Minimal_Monic_in_Krylov_Subspace}
-                The characteristic polynomial of $H$, minimizes $\Vert p(A|w)q_1\Vert_2$ among all monic polynomials. For more information, Trefethen has a coverage on the topic in his works \cite{book:trefethen}. The minimization property in Arnoldi translate to Lanczos Iterations as well. 
+                The characteristic polynomial of $H$, minimizes $\Vert p(A|w)q_1\Vert_2$ among all monic polynomials. For more information, Trefethen has a coverage on the topic in his works \cite{book:trefethen}. The minimization property in Arnoldi translates to Lanczos Iterations as well. 
             \end{remark}
         \subsubsection{The Lanczos Iterations}
             \begin{definition}[Lanczos Iterations]
@@ -841,7 +841,7 @@
                     \end{aligned}
                 \end{align}
             \end{definition}
-            The algorithm generates the following 2 matrices, $Q_k$ which is orthogonal and it spans $\mathcal K_k(A|q_1)$, and a symmetric tridiagonal Matrix: 
+            The algorithm generates the following two matrices, $Q_k$ which is orthogonal and it spans $\mathcal K_k(A|q_1)$, and a symmetric tridiagonal Matrix: 
             \begin{align}
                 Q_k &= \begin{bmatrix}
                     q_1 & q_2 & \cdots & q_k
@@ -858,7 +858,7 @@
                     & & \beta_{k - 1} & \alpha_k
                 \end{bmatrix}
             \end{align}
-            Similar to the recurrence from the Arnoldi Algorithm, the Lanczos also create a recurrence between $Aq_k$ and $Q_k$ and $q_{k + 1}$, but the recurrence is shorter sothat it simply makes use of the previous 2 vectors: 
+            Similar to the recurrence from the Arnoldi Algorithm, the Lanczos also create a recurrence between $Aq_k$ and $Q_k$ and $q_{k + 1}$, but the recurrence is shorter so that it simply makes use of the previous two vectors: 
             \begin{theorem}[Lanczos Recurrences]
                 \begin{align}
                     AQ_k &= Q_kT_k + \beta_k q_{k + 1}\xi_k^T = Q_{k + 1}\tilde{T}_k
@@ -870,7 +870,7 @@
                 \end{align}    
             \end{theorem}
             \par
-            Often time, we refer the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The Lanczos algorithm produces an irreducible symmetric tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any symmetric tridiagonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediately show here is the fact that Lanczos Algorithm will produce such a matrix. 
+            Oftentimes, we refer to the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The Lanczos algorithm produces an irreducible symmetric tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any symmetric tridiagonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediately show here is the fact that Lanczos Algorithm will produce such a matrix. 
             \begin{prop}[Lanczos Termination Conditions]\label{prop:Lanczos_Termination_Conditions}
                 The Lanczos Iteration produces a symmetric tridiagonal Matrix that has no zero element on its super and sub-diagonal, and if $\beta_k$ is zero, then the algorithm must terminate, and $k$ would equal to $\text{grade}(A|q_1)$, the grade of the Krylov Subspace. 
             \end{prop}
@@ -878,7 +878,7 @@
                 It's true because the $\beta_{k}$ in the Lanczos is equivalent to $h_{k + 1, k}$. It's been discussed previously that if $h_{k + 1, 1} = 0$ for the Arnoldi's Iteration, then the Krylov Subspace $\mathcal K_k(A|q_1)$ became an invariant subspace under $A$, and in that sense, the algorithm has to terminate due to a divide by zero error. 
             \end{proof}
             \begin{remark}[Minimal Polynomial from Lanczos Iterations]\label{remark:Minimal_Polynomial_from_Lanczos_Iterations}
-                The characteristic polynomial of $T_k$ has a special minimization property. Here recall \hyperref[remark:Arnoldi_Produces_Minimal_Monic_in_Krylov_Subspace]{remark \ref*{remark:Arnoldi_Produces_Minimal_Monic_in_Krylov_Subspace}}, we make use of the minimization property of the characteristic polynomial of the Hessenberg matrix from the Arnoldi Iterations. Under Lanczos iterations the matrix $H_k$ becomes the tridiagonal $T_k$. Since matrix $A$ is symmetric, we consider its eigendecomposition in the form: $A = V\Lambda V^T$, we let $\bar{p}_k(x)$ denote the characteristic polynomial of matrix $T_k$, then using the 2 norm minimization properties we have: 
+                The characteristic polynomial of $T_k$ has a special minimization property. Here recall \hyperref[remark:Arnoldi_Produces_Minimal_Monic_in_Krylov_Subspace]{remark \ref*{remark:Arnoldi_Produces_Minimal_Monic_in_Krylov_Subspace}}, we make use of the minimization property of the characteristic polynomial of the Hessenberg matrix from the Arnoldi Iterations. Under Lanczos iterations the matrix $H_k$ becomes the tridiagonal $T_k$. Since matrix $A$ is symmetric, we consider its eigendecomposition in the form: $A = V\Lambda V^T$, we let $\bar{p}_k(x)$ denote the characteristic polynomial of matrix $T_k$, then using the 2-norm minimization properties we have: 
                 \begin{align}
                     & \min_{p_k:\text{monic}} \Vert p(A)q_1\Vert_2
                     \\
@@ -890,14 +890,14 @@
                     \\
                     &= \min_{i = 1, \cdots, n} | \bar{p}_n(\lambda_i)(V^Tq_1)_i|
                 \end{align}
-                The last line is saying the conditions that the characteristic polynomial for $T_k$ from the Lanczos iterations is minimizing the weighted sum at the eigenvalues of the matrix $A$. A direct consequence of this is a more refined terminations conditions than \hyperref[prop:Lanczos_Termination_Conditions]{proposition \ref*{prop:Lanczos_Termination_Conditions}} for the Lanczos iterations, giving the information for initial vector $q_1$. Under exact arithmetic, the number of iterations underwent by Lanczos equals to the unique number of eigenvalues $\lambda_i$ where $(V^Tq_1)_i \neq 0$. 
+                The last line is saying the conditions that the characteristic polynomial for $T_k$ from the Lanczos iterations is minimizing the weighted sum at the eigenvalues of the matrix $A$. A direct consequence of this is a more refined terminations conditions than \hyperref[prop:Lanczos_Termination_Conditions]{proposition \ref*{prop:Lanczos_Termination_Conditions}} for the Lanczos iterations, giving the information for the initial vector $q_1$. Under exact arithmetic, the number of iterations underwent by Lanczos equals the unique number of eigenvalues $\lambda_i$ where $(V^Tq_1)_i \neq 0$. 
                 
             \end{remark}
             
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
-    In this section, we state the termination conditions for the Lanczos iterations and the CG algorithm we developed using the property of Krylov Subspace. This is just a thorough discussion about these 2 algorithm and applying the foundations and it's not following any references. 
+    In this section, we state the termination conditions for the Lanczos iterations and the CG algorithm we developed using the property of Krylov Subspace. This is just a thorough discussion of these two algorithms and applying the foundations and is not following any references.
     \subsection{Conjugate Gradient and Matrix Polynomial}
-        One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace\ref*{theorem:CG_and_Krylov_Subspace}} is the connections to matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
+        One important result of the optimization objective listed \hyperref[theorem:CG_and_Krylov_Subspace]{CG and Krylov Subspace\ref*{theorem:CG_and_Krylov_Subspace}} is the connection to the matrix polynomial of $A$ and Conjugate Gradient. More specifically we consider the following proposition: 
         \begin{prop}[CG Relative Energy Error]\label{prop:CG_Relative_Energy Error}
             \begin{align}
                 & x_k \in \mathcal{K}(A|r_0)w + x_0
@@ -912,7 +912,7 @@
                 \min_{p_{k}: p_{k}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}
                 ]} |p_k(x)|
             \end{align}
-            Here we use the notation $e_k = A^{-1}b - x_k$ to denotes the error vector. 
+            Here we use the notation $e_k = A^{-1}b - x_k$ to denote the error vector. 
         \end{prop}
         \begin{proof}
             \begin{align}
@@ -973,7 +973,7 @@
                 \frac{\Vert e_k\Vert_A}{\Vert e_0\Vert_A} &\le 
                 \min_{p_{k}: p_{k}(0) = 1}\max_{x\in [\lambda_{\text{min}}, \lambda_{\text{max}}]} |p_{k}(x)|
             \end{align}
-            (4.1.3) is the Error Energy norm minimization objective of CG, we proceed with writing up the affine subspace where $x_k$ is from: $x_0 + \mathcal K_k(A|r_0)$ at (4.1.4), putting Krylov subspace in terms of a matrix polynomial multiplied by $r_0$ and then use $A^{-1}b$ to subtract both side to get the expression for $e_k$. From the (4.15) line to the (4.16), we use the fact that $r_0 = Ae_0$, allowing us to extract out a factor $A$. 
+            (4.1.3) is the Error Energy norm minimization objective of CG, we proceed with writing up the affine subspace where $x_k$ is from: $x_0 + \mathcal K_k(A|r_0)$ at (4.1.4), putting Krylov subspace in terms of a matrix polynomial multiplied by $r_0$ and then use $A^{-1}b$ to subtract both sides to get the expression for $e_k$. From the (4.15) line to the (4.16), we use the fact that $r_0 = Ae_0$, allowing us to extract out a factor $A$. 
             \par
             Next, from (4.1.6) to (5.1.7), we use the fact that every symmetric definite matrix $A$ has the factorization of $A^{1/2}A^{1/2}$ where $A^{1/2}$ is also a symmetric definite matrix. After that we moved the $A^{1/2}$ to $e_0$ to get $\Vert e_0\Vert_A^2$ from (4.1.7) to (4.1.8), the matrix polynomial part is left with the 2-norm. From (4.1.8) to (4.1.9) we use the eigendecomposition of $A$ which is diagonalizable with a unitary transform, giving us the form of $Q\Lambda Q^T = A$ where $Q$ is an Unitary Matrix and diagonals of $\Lambda$ are the eigenvalues of $A$. Allow me to explain: 
             \begin{align}
@@ -984,7 +984,7 @@
                 \\
                 &= \max_{i=1,\cdots, n}|1 + \lambda_ip_{k - 1}(\lambda_i|w)|^2
             \end{align}
-            Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between the minimum and the maximum of the eigenvalues for the matrix $A$ (from (4.1.9) to (4.1.10)). Finally, please notice that we use an monic $p_{k+1}(x)$ at the and to simplify things. 
+            Where, the 2-norm of a diagonal matrix $\Lambda$ is just its biggest diagonal element. And then we relax the conditions for $\lambda_i$ by reducing it to be some element in the interval between the minimum and the maximum of the eigenvalues for the matrix $A$ (from (4.1.9) to (4.1.10)). Finally, please notice that we use a monic $p_{k+1}(x)$ at the end to simplify things. 
         \end{proof}
         The above results will be useful for proving the convergence of CG. 
         \begin{remark}[The CG Relative Energy Error Norm is Tight]
@@ -992,12 +992,12 @@
         \end{remark}
         \subsubsection{Termination Conditions of CG}
             \begin{prop}[Termination of CG]\label{prop:Termination_of_CG}
-                For all initial guess, the maximum iterations underwent by the CG algorithm is the number of unique eigenvalues for the matrix $A$. 
+                For all initial guesses, the maximum iterations underwent by the CG algorithm is the number of unique eigenvalues for the matrix $A$. 
             \end{prop}
-            This result is direct from (4.1.8), the CG algorithm terminates when a polynomial that interpolates all the unique eigenvalue is found. This bound is true for all initial guess, and sometimes for some given $e_0$, the terminations can come with fewer iterations. 
+            This result is direct from (4.1.8), the CG algorithm terminates when a polynomial that interpolates all the unique eigenvalues is found. This bound is true for all initial guesses, and sometimes for some given $e_0$, the terminations can come with fewer iterations. 
 
     \subsection{Convergence Rate of CG under Exact Arithmetic}
-        In this section discuss Greenbaum's Analysis for convergence rate of the algorithm\cite{book:greenbaum} in thorough details. The core is idea is to use a Chebyshev Polynomial to establish a bound and it's applicable when the linear operator has extremely high dimension and we limit the number of iterations to $k$ where $k$ is much smaller than $n$, the size of the matrix. We will follow Greenbaum's Analysis but with some more details. 
+        In this section discuss Greenbaum's Analysis for convergence rate of the algorithm\cite{book:greenbaum} in thorough details. The core idea is to use a Chebyshev Polynomial to establish a bound and it's applicable when the linear operator has extremely high dimension and we limit the number of iterations to $k$ where $k$ is much smaller than $n$, the size of the matrix. We will follow Greenbaum's Analysis but with some more details. 
         \subsubsection{Uniformly Distributed Eigenvalues}
             \begin{theorem}[CG Convergence Rate]\label{theorem:CG_Convergence_Rate}
                 The relative error squared measured over the energy norm is bounded by: 
@@ -1007,9 +1007,9 @@
                             \frac{\sqrt{\kappa} + 1}{\sqrt{\kappa} - 1}
                     \right)^k
                 \end{align}
-                Where $k$ is the number of iterations, and $e_k = A^{-1}b - x_k$, the upper bound is the most general and it's able to bound the convergence given $\lambda_{\min}, \lambda_{\max}$ of the operator $A$. The bound is loose if there are some kind of clustering of the eigenvalue of matrix $A$, and the bound would be tighter given that $k<<n$ and the eigenvalues of $A$ are evenly spread out on the spectrum. 
+                Where $k$ is the number of iterations, and $e_k = A^{-1}b - x_k$, the upper bound is the most general and it's able to bound the convergence given $\lambda_{\min}, \lambda_{\max}$ of the operator $A$. The bound is loose if there is some kind of clustering of the eigenvalue of matrix $A$, and the bound would be tighter given that $k<<n$ and the eigenvalues of $A$ are evenly spread out on the spectrum. 
             \end{theorem}
-            Before the proof, I need to point out the analysis draws inspiration from the interpolating mononic polynomial for the spectrum of the matrix $A$, and we make use of the Inf Norm minimization property of the Chebyshev Polynomial. Here, we order all the eigenvalues of matrix $A$ so that $\lambda_1, \lambda_n$ denotes the maximum and the minimum eigenvalues for $A$. 
+            Before the proof, I need to point out that the analysis draws inspiration from the interpolating mononic polynomial for the spectrum of the matrix $A$, and we make use of the Inf Norm minimization property of the Chebyshev Polynomial. Here, we order all the eigenvalues of matrix $A$ so that $\lambda_1, \lambda_n$ denotes the maximum and the minimum eigenvalues for $A$. 
             \begin{proof}
                 We start by adapting the Chebyshev Polynomial to the convex hull of the spectrum for matrix $A$, while also making it monic: 
                 \begin{align}
@@ -1043,7 +1043,7 @@
                         \frac{1}{T_k(\varphi(0))}
                     \right|
                 \end{align}
-                Next, our objective is to find any upper bound for the quantities on the RHS in relations to the Condition number for matrix $A$ and the degree of the Chebyshev polynomial. Firstly observe that $\varphi(0) < -1, \varphi(0) \not\in [\lambda_1, \lambda_n]$, because all Eigenvalues are larger than zero, therefore it's out of the range of the Chebyshev polynomial and we need to find the actual value of it by considering alternative form of Chebyshev T for values outside of the $[-1,1]$: 
+                Next, our objective is to find any upper bound for the quantities on the RHS in relation to the Condition number for matrix $A$ and the degree of the Chebyshev polynomial. Firstly observe that $\varphi(0) < -1, \varphi(0) \not\in [\lambda_1, \lambda_n]$, because all Eigenvalues are larger than zero, therefore it's out of the range of the Chebyshev polynomial and we need to find the actual value of it by considering alternative form of Chebyshev T for values outside of the $[-1,1]$: 
                 \begin{align}
                     T_k(x) &= \cosh(k\text{ arccosh}(z)) \quad \forall z \ge 1
                     \\
@@ -1082,7 +1082,7 @@
                     \\
                     y = \frac{\sqrt{\kappa}\pm 1}{\sqrt{\kappa}\mp 1}
                 \end{align}
-                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us 2 roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can substitute and get the value of $T_k(\varphi(0))$ in terms of $y$ and then $\kappa$: 
+                It's a quadratic and we solved it. The above $\pm, \mp$ are correlated, meaning that they are of opposite sign, which gives us two roots for the quadratic expression. Now, given the hyperbolic form for $\varphi(0)$, we can substitute and get the value of $T_k(\varphi(0))$ in terms of $y$ and then $\kappa$: 
                 \begin{align}
                     \varphi(0)&= \frac{1}{2}(y + y^{-1})
                     \\
@@ -1132,7 +1132,7 @@
 
             \end{proof}
         \subsubsection{One Outlier Eigenvalue}
-            Using the derived theorem, we can extend it to other type of distributions of eigenvalues. Imagine one of the extreme case where some matrices that have one group of eigenvalues that are close together and one single eigenvalue that is far away from the cluster. In that case, we can use Chebyshev differently by focusing its minimizing power across the clustered eigenvalues and use a simple polynomial to interpolate the outlier eigenvalue. Consider the following proposition: 
+            Using the derived theorem, we can extend it to other types of distributions of eigenvalues. Imagine an extreme case where some matrices have one group of eigenvalues that are close together and one single eigenvalue that is far away from the cluster. In that case, we can use Chebyshev differently by focusing its minimizing power across the clustered eigenvalues and use a simple polynomial to interpolate the outlier eigenvalue. Consider the following proposition: 
             \begin{prop}[Big Outlier CG Convergence Rate]
                 If, there exists a $\lambda_n$ that is much later than all previous $n - 1$ eigenvalues for the matrix $A$, then a tighter convergence bound that being only parameterized by the range of clustered eigenvalues can be obtained and it is: 
                 \begin{align}
@@ -1142,7 +1142,7 @@
                     \right)^{k - 1}\quad 
                     \kappa_{n - 1} =  \frac{\lambda_{n - 1}}{\lambda_1}
                 \end{align}
-                Reader please observe that, the outlier eigenvalue $\lambda_n$ plays a smaller role in determining the convergence rate of the algorithm compare to the previous bound. 
+                Reader, please observe that the outlier eigenvalue $\lambda_n$ plays a smaller role in determining the convergence rate of the algorithm compared to the previous bound. 
             \end{prop}
             \begin{proof}
                 Here, we wish to show that a more focused use of the Chebyshev will introduce a better convergence rate for the Conjugate Gradient. We define the notation for the adapted k-th degree Chebyshev Polynomial over an closed interval: $[a, b]$ as: 
@@ -1284,15 +1284,15 @@
                 \end{align}
                 We applied the Chebyshev Bound theorem proved in the previous part. And $\kappa_0 = \lambda_n/\lambda_2$, and that is the maximal bound for the absolute value of the polynomial.
                 \par
-                Take notice that it's not immediately clear which type of outlier eigenvalue make the convergence better or worse, but in this case, the weight $w(x)$ introduces a term that grows inversely proportional to $\lambda_1$. 
+                Take notice that it's not immediately clear which type of outlier eigenvalue makes the convergence better or worse, but in this case, the weight $w(x)$ introduces a term that grows inversely proportional to $\lambda_1$. 
             \end{proof}
     \subsection{From Conjugate Gradient to Lanczos}
-        Up until this point of discussion, we had been brewing the fact that, the Iterative Lanczos Algorithm and the Conjugate gradient algorithm are pretty much the same thing. From the previous discussion we can observe that: 
+        Up until this point of discussion, we had been brewing the fact that the Iterative Lanczos Algorithm and the Conjugate gradient algorithm are pretty much the same thing. From the previous discussion we can observe that: 
         \begin{enumerate}
             \item [1.)] Both Lanczos and CG terminates when the grade of Krylov subspace is reached. For Lanczos it's $\mathcal K_k(A|q_1)$ and for CG it's $\mathcal K_k(A|r_0)$.
-            \item [2.)] Both Lanczos and CG generates orthogonal vectors, for Lanczos they are the $q_i$ vector and for CG they are the $r_i$ vectors. 
+            \item [2.)] Both Lanczos and CG generate orthogonal vectors, for Lanczos they are the $q_i$ vector and for CG they are the $r_i$ vectors. 
         \end{enumerate}
-        These 2 properties in particular, is hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived using CDM in the first section, and yet it doesn't make use of any orthogonal projector. Further more, one might also notice that Iterative Lanczos are for General Symmetric Matrices while CG is only for positive definite matrices. To see how everything ties together, we have to go both directions way to show the connections between these 2 iterative algorithms, which are what this section and the subsequent section about. Here, we refer Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
+        These two properties, in particular, are hinting at an equivalence between the residual vectors $r_j$ from CG and the orthogonal vectors $q_j$ from Lanczos. However, it's also not entirely obvious because CG is derived using CDM in the first section, and yet it doesn't make use of any orthogonal projector. Furthermore, one might also notice that Iterative Lanczos are for General Symmetric Matrices while CG is only for positive definite matrices. To see how everything ties together, we have to go both directions to show the connections between these two iterative algorithms, which are what this section and the subsequent section about. Here, we refer to Lanczos vectors as the sequence of $q_j$ generated by the Iterative Lanczos Algorithm. 
         \par
         For this subsection, our objective is to establish the equivalence between the parameters from the Lanczos algorithm: $\alpha_k, \beta_k, q_k$ and the $a_j, b_j, r_j$ from the conjugate gradient algorithm. We establish it by going from the conjugate gradient to the Lanczos Algorithm. 
         \begin{prop}
@@ -1378,7 +1378,7 @@
                         r_{j - 2} - r_{j - 1}
                     \right)
                 \end{align}
-                Here, we can substitute the results of for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
+                Here, we can substitute the results for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
                 \begin{align}
                     r_{j} &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 2}
                     \\
@@ -1413,7 +1413,7 @@
                     \frac{r_{j + 1}}{a_{j}} - 
                     \frac{b_{j - 1}}{a_{j - 1}}r_{j - 1}
                 \end{align}
-                Reader please observe that, this is somewhat similar to the recurrence relations between the Lanczos vectors, however it's failing to match the sign, at the same time, it's not quiet matching the form of the recurrence of $\beta_k$ from the Lanczos algorithm. To match it, we need the coefficients of $r_{j - 1}$ and $r_{j + 1}$ to be in the same form, parameterized by the same iterations parameter: $j$. To do that, consider the doing this:  
+                Reader, please observe that this is somewhat similar to the recurrence relations between the Lanczos vectors, however it's failing to match the sign, at the same time, it's not quite matching the form of the recurrence of $\beta_k$ from the Lanczos algorithm. To match it, we need the coefficients of $r_{j - 1}$ and $r_{j + 1}$ to be in the same form, parameterized by the same iterations parameter: $j$. To do that, consider the doing this:  
                 \begin{align}
                     q_{j + 1} &:= \frac{r_{j}}{\Vert r_j\Vert}
                     \\
@@ -1465,7 +1465,7 @@
                 Take notes that the form is now matched, but the expression for $\alpha_{j + 1}$ has an extra $b_{j - 1}/a_{j - 1}$, to resolve that, we take the audacity to make $b_0$ so that it's consistent with the base case. 
             \end{proof}
         \subsubsection{Fixing the Sign}
-            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalence residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially 2 substitution possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
+            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalence residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially two substitutions possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
             \begin{align}
                 \begin{cases}
                     q_{j + 1} := \pm \frac{r_j}{\Vert r_j\Vert}
@@ -1475,7 +1475,7 @@
                     q_{j + 2} := \pm \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
                 \end{cases}
             \end{align}
-            Under the context, the operations $\pm, \mp$ are correlated, choose a sign for one, the other must be of opposite sign. In this case both substitutions work the same because multiplying the equation by negative one would give the same equality, and we can always multiply by and other negative sign to get it back. The key here is that, the sign going from $q_{j}$ to the next $q_{j - 1}$ will have to alternate. To find out precisely which one it is, we consider the base case for the Lanczos Vectors and Residuals: 
+            Under the context, the operations $\pm, \mp$ are correlated, choose a sign for one, the other must be of opposite sign. In this case both substitutions work the same because multiplying the equation by $-1$ would give the same equality, and we can always multiply by another negative sign to get it back. The key here is that, the sign going from $q_{j}$ to the next $q_{j - 1}$ will have to alternate. To find out precisely which one it is, we consider the base case for the Lanczos Vectors and Residuals: 
             \begin{align}
                 q_1 &= \hat r_0\\
                 q_2 &= -\hat r_1
@@ -1484,10 +1484,10 @@
                 \\
                 q_j &= (-1)^{j + 1}\hat r_{j + 1}
             \end{align}
-            And at this point, we have established the equivalence going from the Conjugate Gradient algorithm to the Lanczos Algorithm. And the moral of the story is, CG is a special case of applying the Lanczos Iterations with $q_1 = r_0$ to a positive definite matrix. However, something is still off and one can ask the following questions to inquiry further, leading us to more discussion between these 2 algorithms. 
+            And at this point, we have established the equivalence going from the Conjugate Gradient algorithm to the Lanczos Algorithm. And the moral of the story is, CG is a special case of applying the Lanczos Iterations with $q_1 = r_0$ to a positive definite matrix. However, something is still off and one can ask the following questions to inquire further, leading us to more discussion between these two algorithms. 
             \begin{enumerate}
-                \item [1.)] How are the solutions $x_k$ generated by CG relates to the Lanczos Iterations? 
-                \item [2.)] How are the A-Orthogonal vectors $p_k$ from CG relates to Lanczos? 
+                \item [1.)] How are the solutions $x_k$ generated by CG related to the Lanczos Iterations? 
+                \item [2.)] How are the A-Orthogonal vectors $p_k$ from CG related to Lanczos? 
             \end{enumerate}
             \begin{remark}[A Better Terminations Conditions for CG]
                 The derivation hinted at a better terminations conditions for the CG algorithm. Because CG is equivalent to the Lanczos Iterations initialized with $q_1 = r_0$, and we can directly apply from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{proposition \ref*{remark:Minimal_Polynomial_from_Lanczos_Iterations}} to get the precise number of iterations of CG under exact arithmetic given $r_0$, improving the bound we got from \hyperref[prop:Termination_of_CG]{proposition \ref*{prop:Termination_of_CG}}. 
@@ -1495,11 +1495,11 @@
     \subsection{From Lanczos to Conjugate Gradient}
             In this section, we show the equivalence of the Conjugate Gradient and Lanczos iterations by deriving the CG using the Lanczos. 
             \par
-            The goal is to show that CG is a special case of Lanczos. In the end we discuss the key that it can inspire solvers for symmetric indefinite systems of linear equations. 
+            The goal is to show that CG is a special case of Lanczos. In the end we discuss the key that can inspire solvers for symmetric indefinite systems of linear equations. 
             \par
-            We start of by considering the LU decomposition of the tridiagonal matrix of Lanczos and us its entries to express the scalars $a_k, b_k$ in CG. In addition, we express the conjugate vectors $p_k$ as a short recurrence of the Lanczos vectors $q_k$. 
+            We start off by considering the LU decomposition of the tridiagonal matrix of Lanczos and use its entries to express the scalars $a_k, b_k$ in CG. In addition, we express the conjugate vectors $p_k$ as a short recurrence of the Lanczos vectors $q_k$. 
         \subsubsection{Matching the Residual and Conjugate Vectors}
-            In this section, we go from the Iterative Lanczos algorithm to the Conjugate Gradient algorithm and we seek to establish a link between the solution $x_k, p_k$ from CG with the Lanczos vectors and the symmetric tridiagonal matrix generated by Lanczos. This section will also play an important role for the backwards analysis for the floating point behaviors for the CG algorithm in the later parts of the paper. At the end, we highlight some of the hidden insights that this particular derivation of equivalence leads to, and how it inspires algorithms that directly solves symmetric indefinite systems. 
+            In this section, we go from the Iterative Lanczos algorithm to the Conjugate Gradient algorithm and we seek to establish a link between the solution $x_k, p_k$ from CG with the Lanczos vectors and the symmetric tridiagonal matrix generated by Lanczos. This section will also play an important role for the backwards analysis for the floating-point behavior of the CG algorithm in the later parts of the paper. At the end, we highlight some of the hidden insights that this particular derivation of equivalence leads to, and how it inspires algorithms that directly solves symmetric indefinite systems. 
             \begin{prop}[Lanczos Vectors and Residuals]\label{prop:Lanczos_Vectors_and_Residuals}
                 The $Q_k$ is the orthogonal matrix generated by Lanczos Iteration. To match the Krylov Subspace generated by the Lanczos iterations and CG, we initialize $q_1 = \hat{r}_0$, then the following relationship between Lanczos and CG occurs between their parameters: 
                 \begin{align}
@@ -1620,7 +1620,7 @@
                     & & & u_k
                 \end{bmatrix}
             \end{align}
-            Reader should agree with some considerations that the upper diagonal of $U_k$ are indeed the same as the upper diagonal of the symmetric tridiagonal matrix $T_k$. And recall the expression for $x_k$ from the previous section, we have: 
+            Reader should agree with some considerations that the upper diagonal of $U_k$ is indeed the same as the upper diagonal of the symmetric tridiagonal matrix $T_k$. And recall the expression for $x_k$ from the previous section, we have: 
             \begin{align}
                 x_k &= x_0 + P_k L_k^{-1}\beta \xi_1 \\ 
                 x_{k} - x_{k - 1} &= 
@@ -1705,7 +1705,7 @@
                     s_k^TL_k + d_{k + 1}l_k \xi_k^T &d_{k + 1}
                 \end{bmatrix} &= I
             \end{align}
-            It equals to the identity matrix therefore $d_{k + 1} = 1$, and it has to be that the lower diagonal sub vector in the results has to be zero. For the bi-lower unit diagonal matrix $L_k$, we cannot predict the structure, most of the time it's likely to be dense and unit lower triangular. We are interested in look for the first element of the vector $s_k^T$, the equality will assert: 
+            It equals the identity matrix therefore $d_{k + 1} = 1$, and it has to be that the lower diagonal sub vector in the results has to be zero. For the bi-lower unit diagonal matrix $L_k$, we cannot predict the structure, most of the time it's likely to be dense and unit lower triangular. We are interested in look for the first element of the vector $s_k^T$, the equality will assert: 
             \begin{align}
                 s^TL_k + d_{k + 1}l_k \xi_k^T &= \mathbf{0}
                 \\
@@ -1725,18 +1725,18 @@
                 (L^{-1}_{k + 1})_{k + 1, 1} &=
                 -l_k(L^{-1}_k)_{k, 1}
             \end{align}
-            To assert the fact that $L_k^{-1}L_k$ is identity, we carefully consider the last row excluding the bottom right element vector: $s^TL_k + d_{k + 1}l_k\xi_k^T$ which will have to be a zero vector. From the first line to the second line, we took the transpose of the vector. From the second to the third line we multiplied both side by inverse of $L_k^{T}$. And from the third to the forth line, we took out only the first element in the vector. Observe that the first element of the vector $L_k^{-1}\xi_k$ is just $(L_k^{-1})_{k, 1}$. 
+            To assert the fact that $L_k^{-1}L_k$ is identity, we carefully consider the last row excluding the bottom right element vector: $s^TL_k + d_{k + 1}l_k\xi_k^T$ which will have to be a zero vector. From the first line to the second line, we took the transpose of the vector. From the second to the third line we multiplied both sides by the inverse of $L_k^{T}$. And from the third to the fourth line, we took out only the first element in the vector. Observe that the first element of the vector $L_k^{-1}\xi_k$ is just $(L_k^{-1})_{k, 1}$. 
             \par
             Therefore, the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm at the same time. 
             \begin{remark}
-                The derivation might seem excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite providing potential to new algorithm that can solve symmetric indefinite system directly. The Lanczos Algorithm for linear system (we refer to the method derived in the above section) is a special case of FOM \cite{paper:FOM} when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrences for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithmetic, CG can be applied to symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the CG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. However there are 2 problems solving Symmetric Indefinite using the CG is that. The first problem is the bad numerical accuracy of using the recurrence to perform LU decomposition on $T_K$ without pivoting. Another problem is when $T_k$ is singular during one iteration of the Lanczos Algorithm. For example, $T_j$ will become singular when $A$ is a symmetric tridiagonal matrix with zeros as its diagonals and all ones on it's subdiagonals. However, these problems can be solved by considering something other than LU without pivoting. In fact, there are works of C.C Paige, M. A. Saunder extending the idea and derived algorithms that can solve a symmetric indefinite system without using the norm equation\cite{paper:SYMLQ}. 
+                The derivation might seem excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite, providing potential to new algorithm that can solve symmetric indefinite systems directly. The Lanczos Algorithm for linear systems (we refer to the method derived in the above section) is a special case of FOM \cite{paper:FOM} when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrence for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithmetic, CG can be applied to a symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the CG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. However there are two problems solving Symmetric Indefinite using the CG. The first problem is the bad numerical accuracy of using the recurrence to perform LU decomposition on $T_K$ without pivoting. Another problem is when $T_k$ is singular during one iteration of the Lanczos Algorithm. For example, $T_j$ will become singular when $A$ is a symmetric tridiagonal matrix with zeros as its diagonals and all ones on its subdiagonals. However, these problems can be solved by considering something other than LU without pivoting. In fact, there is work by C. C. Paige and M. A. Saunders which extends the idea and derives algorithms that can solve a symmetric indefinite system without using the norm equation \cite{paper:SYMLQ}. 
             \end{remark}
         
-\section{Effects of Floating Point Arithmetic}
-    In this section, we highlights the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating point arithmetic. 
+\section{Effects of Floating-Point Arithmetic}
+    In this section, we highlight the practical concerns of the algorithm and showcase it with numerical experiments with analysis, in hope to get deeper insights about the behaviors of Lanczos and Conjugate Gradient under floating-point arithmetic. 
     % TODO: ADD SOME MORE STUFF HERE. 
     \subsection{Partial Orthogonalization and Full Orthogonalization}
-        In this section, we use some of the results and insight obtained from the derivation of the CG algorithm to develop a theoretical fix for the loss of precision under floating point arithmetic for the CG algorithm. The floating errors inside CG algorithm is manifested as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the CDM algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orthogonality and Orthogonality are both preserved for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952\cite{paper:cg_original}; here we present the second more computationally expensive idea in the paper by Hestenes and Stiefel, but using the quantities we derived in the first section. Firstly recall the proof for \hyperref[prop:CG_Recurrences]{proposition \ref*{prop:CG_Recurrences}}. Next, we inductively consider the case where the newest residual vector is involving some round off error $\overline{r}_{k + 1}$ and it breaks the orthogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
+        In this section, we use some of the results and insight obtained from the derivation of the CG algorithm to develop a theoretical fix for the loss of precision under floating-point arithmetic for the CG algorithm. The floating-point errors inside the CG algorithm manifest as a loss of orthogonality and loss of conjugacy for the vectors $r_k, p_k$. To fix this, we simply use the CDM algorithm's projector to re-orthogonalize the conjugate vectors and the residual vectors so the A-Orthogonality and Orthogonality are both preserved for the $r_k, p_k$ vectors. Such idea is not new and it's stated in the original paper by Hestenes and Stiefel back in 1952\cite{paper:cg_original}; here we present the second more computationally expensive idea in the paper by Hestenes and Stiefel, but using the quantities we derived in the first section. Firstly recall the proof for \hyperref[prop:CG_Recurrences]{proposition \ref*{prop:CG_Recurrences}}. Next, we inductively consider the case where the newest residual vector is involving some round-off error $\overline{r}_{k + 1}$ and it breaks the orthogonality conditions $\overline{r}_{k + 1} \perp r_{j} \; \forall \; 0 \le j \le k$: 
         \begin{align}
             (AP_k)^T\overline{r}_k &= 
             \begin{bmatrix}
@@ -1759,10 +1759,10 @@
             r_k &:= \overline{r}_k - \sum_{j = 0}^{k - 1} \langle \hat{r}_j,\overline{r}_k\rangle \hat{r}_j
         \end{align}
         Here, we generate the conjugate vectors $p_k$ correctly by faithfully reproducing the term $(AP_k)^T\overline{r}_k$, and then we update the residual $\overline{r}_k$ into $r_k$ by orthogonalizing it against all previous residual vectors. Doing this requires the expensive storage of previous vectors $p_k$. One can use alternative formulas to A-orthogonalize $p_k$ and re-orthogonalize $r_k$. In addition, we have the options for partially orthogonalizing the $r_k, p_k$ vectors for less memory usage. 
-    \subsection{Relative Errors of CG Under Floating Points}
+    \subsection{Relative Errors of CG Under Floating-Point Arithmetic}
         We investigate the relative energy norm of the error for fully re-orthogonalized CG, partially re-orthogonalized CG, and CG without re-orthogonalization numerically. 
         \subsubsection{Experiments}
-        Here we use full re-orthogonalization to emulate the effects of exact arithmetic. the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part \hyperref[prop:Termination_of_CG]{Termination of CG \ref*{prop:Termination_of_CG}} of the discussion. However, in practice, this is not always the case. Similar experiments are conducted in Greenbaum's book chapter 4 \cite{book:greenbaum}. In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. For testing the convergence of the algorithm we use a 16 digits floats. The spectrum of the matrix we are using are taken to be the same from Greenbaum's book\cite{book:greenbaum}. 
+        Here we use full re-orthogonalization to emulate the effects of exact arithmetic. the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part \hyperref[prop:Termination_of_CG]{Termination of CG \ref*{prop:Termination_of_CG}} of the discussion. However, in practice, this is not always the case. Similar experiments are conducted in Greenbaum's book chapter 4 \cite{book:greenbaum}. In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. For testing the convergence of the algorithm, we use 16-digit floats. The spectrum of the matrix we are using is taken to be the same from Greenbaum's book \cite{book:greenbaum}. 
         \begin{align}
             \lambda_{\min} + \left(
                 \frac{j}{N - 1}
@@ -1775,19 +1775,19 @@
             \includegraphics[width=8cm]{cg_convergence_0.9.png}
             \includegraphics[width=8cm]{cg_convergence_1.png}
             \caption{
-                The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dotdashed: The conjugate gradient that is partially orthogonalized with previous 8 residual and conjugate vectors. orange dashed: the Original conjugate gradient. Green dot: The tighter theoretical upper bound derived by Chebyshev (\hyperref[line:CG_Cheb_Bound]{\ref*{line:CG_Cheb_Bound}}). Left: $\rho = 0.9$; right: $\rho = 1$, the matrix is $64\times 64$
+                The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dot dashed: The conjugate gradient that is partially orthogonalized with previous 8 residual and conjugate vectors. orange dashed: the Original conjugate gradient. Green dot: The tighter theoretical upper bound derived by Chebyshev (\hyperref[line:CG_Cheb_Bound]{\ref*{line:CG_Cheb_Bound}}). Left: $\rho = 0.9$; right: $\rho = 1$, the matrix is $64\times 64$
             }
         \end{figure}\label{fig:1}
-        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues are not perfectly uniform. The partially orthogonalized methods diverges from the exact error after more steps of iterations compare to the relative error without any orthogonalizations. These are seemed in \hyperref[fig:1]{(fig \ref*{fig:1} left)}. In contrast, on the right, then the eigenvalues are uniformly distributed, the convergence of all 3 types of methods aligns with the exact convergence in \hyperref[fig:1]{(fig \ref*{fig:1} right)}. 
+        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues is not perfectly uniform. The partially orthogonalized methods diverge from the exact error after more steps of iterations compared to the relative error without any orthogonalizations. These are seen in \hyperref[fig:1]{(fig \ref*{fig:1} left)}. In contrast, on the right, then the eigenvalues are uniformly distributed, the convergence of all 3 types of methods aligns with the exact convergence in \hyperref[fig:1]{(fig \ref*{fig:1} right)}. 
         \begin{remark}
-            The convergence is disappointing under floating point arithmetic and the promised efficiency of the algorithm is not there anymore if the matrix is not necessarily ill-conditioned. Just from \hyperref[fig:1]{(fig \ref*{fig:1})} it seems like outlier eigenvalues provide fast convergence under full orthogonalization, but not for floating point. 
+            The convergence is disappointing under floating-point arithmetic and the promised efficiency of the algorithm is not there anymore if the matrix is not necessarily ill-conditioned. Just from \hyperref[fig:1]{(fig \ref*{fig:1})} it seems like outlier eigenvalues provide fast convergence under full orthogonalization, but not for floating point. 
         \end{remark}
-    \subsection{Paige's Floating Point Analysis}
-        In this section we present the backwards analysis of the algorithm in a more thorough manner and exam its consequences. When floating point arithmetic is used, the eigenvalues of the tridiagonal matrices might introduce ghost eigenvectors for the Lanczos Iterations, and using the equivalence of the Lanczos iterations and CG, we can capture a posteriori bound on how much the error is exactly during the iterations of CG. 
+    \subsection{Paige's Floating-Point Analysis}
+        In this section we present the backwards analysis of the algorithm in a more thorough manner and examine its consequences. When floating-point arithmetic is used, the eigenvalues of the tridiagonal matrices might introduce ghost eigenvectors for the Lanczos Iterations, and using the equivalence of the Lanczos iterations and CG, we can capture a posteriori bound on how much the error is exactly during the iterations of CG. 
         \subsubsection{Bounding the Relative Residuals}
-            Recall from proposition \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition \ref*{prop:Lanczos_Vectors_and_Residuals}} that the residual of the CG can be expressed in terms of the Lanczos vectors. However, the Lanczos iterations under floating doesn't produces perfectly orthogonal Lanczos Vectors (The lost of orthogonality is experimented and visualized in the next section), $\tilde{Q}_k$ is not quiet orthogonal, which would also means that $\tilde{Q}_k^HA\tilde{Q}_k\approx T_k$ where $T_k$ is the results from the Lanczos iterations will not equal to $\tilde{Q}^T_KA\tilde{Q}_k$. However the Lanczos iterations will still solve for $y_k$ using the expression $y_k = \beta T^{-1}_k\xi_1$, the algorithm still thought $T_k$ produced by itself is perfectly tridiagonal. As a result the algorithm never quiet find the optimal under the conjugate basis. At first glance, tiny round-off errors in the Lanczos vectors is very problematic. 
+            Recall from proposition \hyperref[prop:Lanczos_Vectors_and_Residuals]{Proposition \ref*{prop:Lanczos_Vectors_and_Residuals}} that the residual of the CG can be expressed in terms of the Lanczos vectors. However, the Lanczos iterations under floating doesn't produces perfectly orthogonal Lanczos Vectors (The lost of orthogonality is experimented and visualized in the next section), $\tilde{Q}_k$ is not quiet orthogonal, which would also means that $\tilde{Q}_k^HA\tilde{Q}_k\approx T_k$ where $T_k$ is the results from the Lanczos iterations will not equal to $\tilde{Q}^T_KA\tilde{Q}_k$. However the Lanczos iterations will still solve for $y_k$ using the expression $y_k = \beta T^{-1}_k\xi_1$, the algorithm still thought $T_k$ produced by itself is perfectly tridiagonal. As a result, the algorithm never quite finds the optimal under the conjugate basis. At first glance, tiny round-off errors in the Lanczos vectors are very problematic. 
             \par
-            Surprisingly the recurrence formula for Lanczos still holds to some extend, in addition we can leverage the fact that $y_k$ is solved exactly and assume: $y_k = \beta T^{-1}\xi_1$ is at least, exact. Then it left us with fewer type of floating errors to keep track of. Next, we proceed to look for the residual of the CG algorithm by assuming that the Lanczos recurrences: 
+            Surprisingly, the recurrence formula for Lanczos still holds to some extent, in addition we can leverage the fact that $y_k$ is solved exactly and assume: $y_k = \beta T^{-1}\xi_1$ is at least, exact. Then it left us with fewer types of floating-point errors to keep track of. Next, we proceed to look for the residual of the CG algorithm by assuming that the Lanczos recurrences: 
             \begin{align}
                 AQ_k = Q_{k + 1} \begin{bmatrix}
                     T_k
@@ -1795,7 +1795,7 @@
                     \beta_k \xi_k^T
                 \end{bmatrix} + F_k
             \end{align}
-            Reader please reflect on the fact that the $Q_k$ which is not orthogonal, and we are fixing the recurrences with $F_k$, a matrix representing the floating error to correct it so that the equality holds true. $\Vert F_k\Vert$ is small and it will be stated later.  
+            Reader, please reflect on the fact that the $Q_k$ which is not orthogonal, and we are fixing the recurrences with $F_k$, a matrix representing the floating error to correct it so that the equality holds true. $\Vert F_k\Vert$ is small and it will be stated later.  
             \begin{align}
                 r_k &= r_0 - AQ_ky_k
                 \\
@@ -1840,7 +1840,7 @@
                 | + 
                 \Vert F_k\Vert  \Vert T_k^{-1}\xi_1\Vert
             \end{align}
-            We make use of \hyperref[prop:Lanczos_Vectors_and_Residuals]{Propposition \ref*{prop:Lanczos_Vectors_and_Residuals}} and obtain a similar expression because it didn't make use of the fact that $Q_k$ is orthogonal. This time, we take $F_k$ into account. The residual is now bounded by the sum of scalar $\xi_k^T T_k^{-1}\xi_1$ and the floating point error matrix $F_k$ produced by the Lanczos iterations. 
+            We make use of \hyperref[prop:Lanczos_Vectors_and_Residuals]{Proposition \ref*{prop:Lanczos_Vectors_and_Residuals}} and obtain a similar expression because it didn't make use of the fact that $Q_k$ is orthogonal. This time, we take $F_k$ into account. The residual is now bounded by the sum of scalar $\xi_k^T T_k^{-1}\xi_1$ and the floating-point error matrix $F_k$ produced by the Lanczos iterations. 
             \begin{remark}\label{remark:CG_Float_Remark}
                 We can bound the first term that made up the upper bound for the residual of CG using previous convergence results of CG under exact arithmetic; recall \hyperref[theorem:CG_Convergence_Rate]{CG convergence rate (theorem \ref*{theorem:CG_Convergence_Rate})}. It can be applied here for the first term in (5.3.6): 
                 $\beta_k |
@@ -1850,7 +1850,7 @@
             \end{remark}
 
         \subsubsection{Paige's Theorem and Backwards Analysis of CG}
-            We now introduce a new theorem proposed by Paige in chapter 4 of Greenbaum's book\cite{book:greenbaum}. It gives a bound to the floating point errors for the Conjugate gradient by bounding the conditions number of $T_k$ from Lanczos iterations. It's stated as follows: 
+            We now introduce a new theorem proposed by Paige in chapter 4 of Greenbaum's book\cite{book:greenbaum}. It gives a bound to the floating-point errors for the Conjugate gradient by bounding the condition number of $T_k$ from Lanczos iterations. It's stated as follows: 
             \begin{theorem}[Paige's Theorem]
                 The eigenvalues $\theta_i^{(j)}, i = 1, \cdots, j$ of the tridiagonal matrix $T_j$ satisfies: 
                 \begin{align}
@@ -1878,8 +1878,8 @@
                 \\
                 & \beta_j \le \Vert A\Vert(1 + (2n + 6)\epsilon + j(3\epsilon_0 + \epsilon_1))
             \end{align}
-            The quantity $k$ is the current iterations number of the Lanczos Iterations, $j\le k$. $m$ is the maximum number of non-zero element in the matrix $A$. 
-            Using Paige's theorem, we can bound the conditions number for the matrix $T_{k + 1}$ produced by the finite precision Lanczos, which is given by: 
+            The quantity $k$ is the current iterations number of the Lanczos Iterations, $j\le k$. $m$ is the maximum number of non-zero elements in the matrix $A$. 
+            Using Paige's theorem, we can bound the condition number for the matrix $T_{k + 1}$ produced by the finite precision Lanczos, which is given by: 
             \begin{align}
                 \tilde{\kappa} = \frac{\lambda_n + (k + 1)^{5/2}\epsilon_2\Vert A\Vert}
                 {\lambda_1 - (k + 1)^{5/2} \epsilon_2\Vert A\Vert}
@@ -1895,7 +1895,7 @@
                 Where $\tilde\kappa$ is the bound of the condition number of the $T_k$ matrix (from (5.3.15)), the tridiagonal matrix produced by the finite precision Lanczos. 
             \end{prop}
             \begin{proof}
-                Using the \hyperref[lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions]{lemma \ref*{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions} in appendix}, we can derive the relations between the 2 norm of the relative residuals and the energy norm of the relative error: 
+                Using the \hyperref[lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions]{lemma \ref*{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions} in appendix}, we can derive the relations between the 2-norm of the relative residuals and the energy norm of the relative error: 
                 \begin{align}
                     \frac{\Vert Ae_k\Vert}{\Vert Ae_0\Vert}
                     & \le 
@@ -1915,7 +1915,7 @@
                         \frac{\sqrt{\tilde{\kappa}} - 1}{\sqrt{\tilde{\kappa}} + 1}
                     \right)^k
                 \end{align}
-                The third inequality is simply from \hyperref[theorem:CG_Convergence_Rate]{CG Convergence Rate (theorem \ref*{theorem:CG_Convergence_Rate})} when we assume that the eigenvalues are uniformly distributed convex hull of the spectrum of $A$. The first fraction is actually the relative error of the 2 norm of the residual because $Ae_k = r_k$ by definition. Substituting the quantity $\kappa(T_k)$, the conditions number of the matrix $T_k$, which we figured out using Paige's theorem and denoted it as $\tilde{\kappa}$. 
+                The third inequality is simply from \hyperref[theorem:CG_Convergence_Rate]{CG Convergence Rate (theorem \ref*{theorem:CG_Convergence_Rate})} when we assume that the eigenvalues are uniformly distributed convex hull of the spectrum of $A$. The first fraction is actually the relative error of the 2-norm of the residual because $Ae_k = r_k$ by definition. Substituting the quantity $\kappa(T_k)$, the condition number of the matrix $T_k$, which we figured out using Paige's theorem and denoted it as $\tilde{\kappa}$. 
             \end{proof}
             Finally, if we assume that $T_k^{-1}$ is actually invertible, which requires that the conditions for all the quantities: $\epsilon_0, \epsilon_1$ holds true, and $\lambda_1 - (k + 1)^{5/2} \epsilon_2\Vert A\Vert > 0$. Finally, we make can bound the relative residual of the CG algorithm by considering: 
             \begin{align}
@@ -1957,40 +1957,40 @@
                     \right)^k
                 + \sqrt{k}(\epsilon_1) \tilde{\kappa}
             \end{align}
-            Which completes the proof for the upper bound on the convergence rate for the Conjugate Gradient Method under floating point arithmetic. 
+            Which completes the proof for the upper bound on the convergence rate for the Conjugate Gradient Method under floating-point arithmetic. 
             \begin{remark}
-                This proof showed that the Conjugate Gradient method for $T_{k + 1}$ that is non-singular then it will be backwards stable. As long as the value of $\beta_k$ is non-zero, and the eigenvalues of $T_{k + 1}$ is not containing zero, the conjugate gradient method will continue to converge in the future iterations. So in layman's terms, it doesn't matter if the round-off error accumulated, Conjugate Gradient will converge as long as the problem is not too insane, or $A$ being too pathological to deal with. 
+                This proof showed that the Conjugate Gradient method for $T_{k + 1}$ that is nonsingular then it will be backwards stable. As long as the value of $\beta_k$ is non-zero, and the eigenvalues of $T_{k + 1}$ is not containing zero, the conjugate gradient method will continue to converge in the future iterations. So in layman's terms, it doesn't matter if the round-off error accumulated, Conjugate Gradient will converge as long as the problem is not too insane, or $A$ being too pathological to deal with. 
                 \par
-                Finally, I want to point out the fact that Paige's theorem is derived using forward error analysis on the Lanczos Iterations, which is the absolute worst case. For most cases in modern computing platforms, the summation process of vector dot products has much higher floating-accuracy compare to older computing platforms due to the use of parallelism, or floating point specific summation instructions, which reduces the relative sizes for the summands, hence reducing the total round-off error accumulations. 
+                Finally, I want to point out the fact that Paige's theorem is derived using forward error analysis on the Lanczos Iterations, which is the absolute worst case. For most cases in modern computing platforms, the summation process of vector dot products has much higher floating-accuracy compare to older computing platforms due to the use of parallelism, or floating-point specific summation instructions, which reduces the relative sizes for the summands, hence reducing the total round-off error accumulations. 
             \end{remark}
 
     \subsection{Ghost Eigenvalues and Losing Orthogonality}
-        The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, those extremely close eigenvalues are a single eigenvalue of the original matrix $A$'s spectrum. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$, especially eigenvalues in the exterior of $A$'s spectrum. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues, this follows from (\hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark \ref*{remark:Minimal_Polynomial_from_Lanczos_Iterations}}). The phenomena is due to the limited floating point accuracy of the Lanczos iteration.
+        The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, those extremely close eigenvalues are a single eigenvalue of the original matrix $A$'s spectrum. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$, especially eigenvalues in the exterior of $A$'s spectrum. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues, this follows from (\hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark \ref*{remark:Minimal_Polynomial_from_Lanczos_Iterations}}). The phenomena is due to the limited floating-point accuracy of the Lanczos iteration.
         \subsubsection{Ghost Eigenvalues Experiments}
-            Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. This matrix is particularly good for reproducing the phenomena. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos iterations with $q_1$ being the vector of all ones, we marked the smallest and largest 10 eigenvalues during the iterations and plotted out their trajectories from iteration 20 to 64. The results can be seemed in \hyperref[fig:2]{(figure \ref*{fig:2} left)}. On \hyperref[fig:2]{figure \ref*{fig:2} right}, we made the plot for what would happen if the Lanczos iterations are free of numerical round off error. We didn't use exact arithmetic, instead, we simply re-orthogonalized all the Lanczos vector $q_k$ using all previous gotten Lanczos vectors to emulate the effects, which is just an Arnoldi iterations. Please bear in mind that there are eigenvalues in the middle interior part of the spectrum, they are just not plotted in the figure. 
+            Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. This matrix is particularly good for reproducing the phenomena. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos iterations with $q_1$ being the vector of all ones, we marked the smallest and largest 10 eigenvalues during the iterations and plotted their trajectories from iteration 20 to 64. The results can be seen in \hyperref[fig:2]{(figure \ref*{fig:2} left)}. On \hyperref[fig:2]{figure \ref*{fig:2} right}, we made the plot for what would happen if the Lanczos iterations are free of numerical round-off error. We didn't use exact arithmetic, instead, we simply re-orthogonalized all the Lanczos vector $q_k$ using all previously obtained Lanczos vectors to emulate the effect, which is just an Arnoldi iteration. Please bear in mind that there are eigenvalues in the middle interior part of the spectrum, they are just not plotted in the figure. 
             \begin{figure}[H]
                 \centering
                 \includegraphics[width=8cm]{ritz_trajectory_plot_floats.png}
                 \includegraphics[width=8cm]{ritz_trajectory_plot_exact.png}
-                \caption{The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iterations, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round off error, right is Lanczos iterations that fully re-orthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithmetic. }
+                \caption{The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iteration, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round-off error, right is Lanczos iterations that fully re-orthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithmetic. }
             \end{figure}\label{fig:2}
-            Recall from the Cauchy Interlace Theorem, the eigenvalues of the tridiagonal matrix $T_{k + 1}$ has to be in between each eigenvalues of $T_{k}$ except for the first and the last eigenvalue of $T_{k + 1}$.  This implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iteration will move monotonically upwards or downwards during the Lanczos iterations. The ghost eigenvalues on the figure appears when some of the interior eigenvalues suddenly switched to another eigenvalue's trajectory that is on the exterior of the spectrum. It appears as the matrix $T_k$ has repeated eigenvalues but in fact they are not, they are just very close. 
+            Recall from the Cauchy Interlace Theorem, the eigenvalues of the tridiagonal matrix $T_{k + 1}$ has to be in between each eigenvalues of $T_{k}$ except for the first and the last eigenvalue of $T_{k + 1}$.  This implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iteration will move monotonically upwards or downwards during the Lanczos iterations. The ghost eigenvalues on the figure appear when some of the interior eigenvalues suddenly switch to another eigenvalue's trajectory that is on the exterior of the spectrum. It appears as though the matrix $T_k$ has repeated eigenvalues, but in fact, they are not, they are just very close. 
             \par
-            However, judging the eigenvalues of the matrix $T_k$ alone will NOT distinguish between 2 very close eigenvalues correspond to 2 different eigenvalues of $A$ or it's due to the floating point round off error, even if their trajectories seems to suggest it. We can't tell it because if I keep the matrix $T_k$ generated from a Lanczos iterations with huge amount of round off error and all it $A$, which has eigenvalues that are extremely close to each other and their path shifts over each other on the trajectory like in \hyperref[fig:2]{fig \ref*{fig:2}}. Now consider performing another Lanczos iterations $A:=T_k$ it but with the initial vector $\xi_1$, then we will exactly reproduce $A$ itself because it's tridiagonal. But in this case, the eigenvalues of $T_k$ is exact after termination of Lanczos iteration. In this case, all eigenvalues are actually presented in the original matrix $A$, which is just $T_k$, itself. 
+            However, judging the eigenvalues of the matrix $T_k$ alone will NOT distinguish between two very close eigenvalues correspond to two different eigenvalues of $A$ or it's due to the floating-point round-off error, even if their trajectories seems to suggest it. We can't tell it because if I keep the matrix $T_k$ generated from a Lanczos iterations with huge amount of round-off error and all it $A$, which has eigenvalues that are extremely close to each other and their path shifts over each other on the trajectory like in \hyperref[fig:2]{fig \ref*{fig:2}}. Now consider performing another Lanczos iterations $A:=T_k$ it but with the initial vector $\xi_1$, then we will exactly reproduce $A$ itself because it's tridiagonal. But in this case, the eigenvalues of $T_k$ are exact after termination of Lanczos iteration. In this case, all eigenvalues are actually presented in the original matrix $A$, which is just $T_k$, itself. 
             \par
-            In fact, the ghost eigenvalues here are produced by floating point errors because firstly we know what the actual eigenvalues of $A$ is, we made $A$. To make sense of it better intuitively, we observe conduct experiments to show that the lost of orthogonality of $Q_k$ happens together with ghost eigenvalues on spectrum of $T_k$. If $Q_k$ matrix is perfectly orthogonal, then there is no ghost eigenvalues, regardless of how the trajectories of the eigenvalues of $T_k$ looks like. In fact, a corresponding plot of $Q_k^HQ_k$ are plotted in \hyperref[fig:3]{(fig \ref*{fig:3} left)} for demonstrating lost of orthogonality for the same diagonal matrix $A$ proposed earlier. We plotted the heat map of the matrix $Q^H_kQ_k$ directly as well.
+            In fact, the ghost eigenvalues here are produced by floating-point errors because firstly we know what the actual eigenvalues of $A$ is, we made $A$. To make sense of it better intuitively, we observe conduct experiments to show that the loss of orthogonality of $Q_k$ happens together with ghost eigenvalues on the spectrum of $T_k$. If the $Q_k$ matrix is perfectly orthogonal, then there are no ghost eigenvalues, regardless of what the trajectories of the eigenvalues of $T_k$ look like. In fact, a corresponding plot of $Q_k^HQ_k$ are plotted in \hyperref[fig:3]{(fig \ref*{fig:3} left)} for demonstrating the loss of orthogonality for the same diagonal matrix $A$ proposed earlier. We plotted the heat map of the matrix $Q^H_kQ_k$ directly as well.
             \begin{figure}[H]
                 \centering
                 \includegraphics[width=8cm]{fig3.png}
                 \includegraphics[width=8cm]{fig4.png}
-                \caption{left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^T_kQ_k$. right: The plot of $Q_k^TAQ_k$ from floating point Lanczos iterations}
+                \caption{left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^T_kQ_k$. right: The plot of $Q_k^TAQ_k$ from floating-point Lanczos iterations}
             \end{figure}\label{fig:3}
-            In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $Q_kAQ_k$ which is plotted in \hyperref[fig:3]{(fig \ref*{fig:3} right)}. Observe that most of the off tridiagonal entries are non-zero and relatively huge, which doesn't worry us too much because $A$ itself has an large conditions number. What is important is the blob of non-zero entries on the top left and the bottom right of the plot. And this is a hint that the lost of orthogonality will create extra errors on the off tridiagonal parts of the matrix $T_k$. 
+            In addition to the lost orthogonality of the matrix $Q_k$, we also visualized the actual tridiagonal matrix reproduced by $Q_kAQ_k$ which is plotted in \hyperref[fig:3]{(fig \ref*{fig:3} right)}. Observe that most of the off tridiagonal entries are non-zero and relatively huge, which doesn't worry us too much because $A$ itself has a large condition number. What is important is the blob of non-zero entries on the top left and the bottom right of the plot. And this is a hint that the loss of orthogonality will create extra errors on the off-tridiagonal parts of the matrix $T_k$. 
             \begin{remark}
                 As a final remark for these numerical experiments, I suggest an intuitive way of understanding them. Which will be useful when we actually wish to analyze it rigorously. Simply put, the Lanczos Iterations might ``forget'' about the eigenvalues when it converged (Manifested as the usually stable trajectories of eigenvalues on the exterior of the spectrum for the matrix $T_k$ in \hyperref[fig:2]{(fig \ref*{fig:2})}), and when it happens, the Lanczos vectors produced by the algorithm has lost its orthogonality correspondingly, which then causes the interior eigenvalues of $T_k$ to shift, creating ghost eigenvalues for the matrix $T_k$. 
             \end{remark}
         \subsubsection{Losing Orthogonality on Ritz Vectors}
-            To gain a better understanding, let's define the notion of Ritz values and Ritz vectors. For our discussion, the Ritz value $\theta_i^{(k)}$ are the $i$ th eigenvalues of the matrix $T_k$ from the and the Ritz vectors are $Q_ks_{i}^{(k)}$ where $s$ is the $i$ th eigenvector for the matrix $T_k$. Recall from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}, the characteristic polynomial of $T_k$ is the monic polynomial that minimizes the 2 norm error for the vector $p_k(A)q_1$; intuitively, the Ritz values and Ritz vectors approximates eigenvalues and eigenvectors of matrix $A$. One would expect once the eigenvalue converged for $T_k$, say $\theta_i^{(k)} = \lambda_i + \epsilon$ where $\lambda_i$ is an eigenvalue of $A$, then the vector $Q_ks_i^{(k)}$ approximate eigenvalue of $A$ because: 
+            To gain a better understanding, let's define the notion of Ritz values and Ritz vectors. For our discussion, the Ritz value $\theta_i^{(k)}$ are the $i$ th eigenvalues of the matrix $T_k$ from the and the Ritz vectors are $Q_ks_{i}^{(k)}$ where $s$ is the $i$ th eigenvector for the matrix $T_k$. Recall from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}, the characteristic polynomial of $T_k$ is the monic polynomial that minimizes the 2-norm error for the vector $p_k(A)q_1$; intuitively, the Ritz values and Ritz vectors approximates eigenvalues and eigenvectors of matrix $A$. One would expect once the eigenvalue converged for $T_k$, say $\theta_i^{(k)} = \lambda_i + \epsilon$ where $\lambda_i$ is an eigenvalue of $A$, then the vector $Q_ks_i^{(k)}$ approximate eigenvalue of $A$ because: 
             \begin{align}
                 AQ_k &= Q_k T_k + q_{k + 1}\beta_k\xi_k^T
                 \\
@@ -2004,36 +2004,36 @@
             \end{align}
             When $\theta_i^{(k)}$ is close to $\lambda_i$, and the characteristic polynomial of $T_k$ interpolates the eigenvalues of $A$ better and better, $\beta_k$ decreases (\textbf{NONTRIVIAL FACT}), the Ritz vector $Q_ks_i^{(k)}$ approximates the eigenvector for $A$. Intuitively, as the Krylov subspace expanded, it contains more and more components of the Eigenvectors of $A$, and the Ritz vector will have more ``room'' to get closer to the eigenvector of $A$, by the approximation property of Lanczos. 
             \par
-            However, under floating point arithmetic, once the Ritz vector $s_i^{(k)}$ can be spanned by the Krylov subspace with small error, it will be the case that the projection of the latest Lanczos vector onto the Ritz vector begins to grow. On the plot showed in \hyperref[fig:4]{figure \ref*{fig:4}}, we projected the log absolute value of $q_k^TQ_ks_i^{(k)}$ for $i=1, 2, 3$ for all $k=20, \cdots, 64$, and we used the same setup from the last section where we demonstrated ghost eigenvalues. For comparison, \hyperref[fig:5]{figure \ref*{fig:5}} showed us what happen in exact arithmetic. One very important observation to make from \hyperref[fig:5]{figure \ref*{fig:5}} is that the peak of the blue curve, projection onto the largest Ritz value happens around iteration 3.8, and around that exact same iteration in \hyperref[fig:2]{figure \ref*{fig:2}} is when the second-largest eigenvalue of $T_k$ decided to shifts over to the blue curve. Bear in mind that this is in a log plot, and without the log it looks like a sharp spike. 
+            However, under floating-point arithmetic, once the Ritz vector $s_i^{(k)}$ can be spanned by the Krylov subspace with small error, it will be the case that the projection of the latest Lanczos vector onto the Ritz vector begins to grow. On the plot showed in \hyperref[fig:4]{figure \ref*{fig:4}}, we projected the log absolute value of $q_k^TQ_ks_i^{(k)}$ for $i=1, 2, 3$ for all $k=20, \cdots, 64$, and we used the same setup from the last section where we demonstrated ghost eigenvalues. For comparison, \hyperref[fig:5]{figure \ref*{fig:5}} showed us what happens in exact arithmetic. One very important observation to make from \hyperref[fig:5]{figure \ref*{fig:5}} is that the peak of the blue curve, projection onto the largest Ritz value happens around iteration 3.8, and around that exact same iteration in \hyperref[fig:2]{figure \ref*{fig:2}} is when the second-largest eigenvalue of $T_k$ decides to shift over to the blue curve. Bear in mind that this is in a log plot, and without the log it looks like a sharp spike. 
             \begin{figure}
                 \centering
                 \includegraphics[width=14cm]{lanczos_proj_on_ritz_float.png}
-                \caption{Projection of floating point lanczos vector $q_k$ onto 3 of the largest ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$
+                \caption{Projection of floating-point Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$
                 }
             \end{figure}\label{fig:4}
             \begin{figure}
                 \centering
                 \includegraphics[width=14cm]{lanczos_proj_on_ritz_exact.png}
-                \caption{projection of the exact lanczos vector $q_k$ onto 3 of the largest ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$}
+                \caption{projection of the exact Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$}
             \end{figure}\label{fig:5}
             \begin{remark}[Ritz Values, a Bound on Ritz Values, and Tiny Intervals]
-                The above presentation for what a Ritz Value and Ritz vector is an over simplification. What happen is complicated. Firstly, $\beta_k$ from the tridiagonal matrix is positive, and it's the norm of the characteristic polynomial of $T$ under some weighted measured (\textbf{PROOFS MISSING}) along eigenvalues of $A$, which tends to decrease as the polynomial interpolates the eigenvalues on the spectrum of $A$ as iterations increases. 
+                The above presentation for what a Ritz Value and Ritz vector is an oversimplification. What happened is complicated. Firstly, $\beta_k$ from the tridiagonal matrix is positive, and it's the norm of the characteristic polynomial of $T$ under some weighted measured (\textbf{PROOFS MISSING}) along eigenvalues of $A$, which tends to decrease as the polynomial interpolates the eigenvalues on the spectrum of $A$ as iterations increases. 
                 \par
-                Secondly, there is another phenomenon of Ritz values during the iterations of Lanczos iterations called misconvergence. It describes the process which a Ritz value is stucked between 2 eigenvalues of $A$, stagnated for few iterations and then suddenly shifts away, which is extremely similar to the shifting we observed in \hyperref[fig:2]{figure \ref*{fig:2}}; however it should not be confused with ghost eigenvalues because they are 2 distinct phenomenon. For more description of such phenomenon, refers to the book by M.G. Cox and S. Hammarling (\textbf{CITATION NEEDED}). 
+                Secondly, there is another phenomenon of Ritz values during the iterations of Lanczos iterations called misconvergence. It describes the process which a Ritz value is stuck between two eigenvalues of $A$, stagnated for few iterations and then suddenly shifts away, which is extremely similar to the shifting we observed in \hyperref[fig:2]{figure \ref*{fig:2}}; however it should not be confused with ghost eigenvalues because they are two distinct phenomena. For more description of such phenomena, refer to the book by M. G. Cox and S. Hammarling (\textbf{CITATION NEEDED}). 
                 \par
-                Finally, take notice that, it's not always the case that $\theta_1^{(j)}$ for example, it's the best approximation for $\lambda_1$ of $A$, and it's especially true when iterations $j$ is relative small compare to $n$.The theoretical importance is to find an interval of how far are the $\lambda_i$ from $\theta_{i'}^{(k)}$, where $\lambda_i$ denotes the actualy eigenvalue in $A$ where the Ritz value $\theta_{i'}^{(k)}$ is trying to approximate. The bound for Ritz interval is refined by by Y.Saad back in 1980 (\textbf{CITATION NEEDED}), first discovered by Shmuel Kaniel back in 1966 (\textbf{CITATION NEEDED}). 
+                Finally, take notice that, it's not always the case that $\theta_1^{(j)}$ for example, it's the best approximation for $\lambda_1$ of $A$, and it's especially true when iterations $j$ is relative small compare to $n$. The theoretical importance is to find an interval of how far are the $\lambda_i$ from $\theta_{i'}^{(k)}$, where $\lambda_i$ denotes the actual eigenvalue in $A$ where the Ritz value $\theta_{i'}^{(k)}$ is trying to approximate. The bound for the Ritz interval was refined by Y. Saad back in 1980 (\textbf{CITATION NEEDED}) and first discovered by Shmuel Kaniel back in 1966 (\textbf{CITATION NEEDED}). 
             \end{remark}
     \subsubsection{Greenbaum's Tiny Interval Experiments}
-        A smarter way of looking at the phenomenon of ghost eigenvalues is to take advantage of the clustering of the ghost eigenvalues and think of them as the eigenvalues of a potentially a larger matrix, denoted as $\tilde{A}$ whose eigenvalues are clustered around the eigenvalues of $A$ within a tiny interval. The idea is if we perform exact Lanczos on $A$, then we get similar results for applying floating point Lanczos on $\tilde{A}$. Simply put, due to the effect of round of errors, the floating point Lanczos iterations gained some kind of myopia and can't see the spectrum of $A$ clearly and instead, it sees $\tilde{A}$ whose eigenvalues are smeared out version of $A$, and there are many of them clustered around. More specifically, assuming $A$ has eigenvalues: $\lambda_1, \cdots, \lambda_n$, the eigenvalues of $\tilde{A}$ lies in: 
+        A smarter way of looking at the phenomenon of ghost eigenvalues is to take advantage of the clustering of the ghost eigenvalues and think of them as the eigenvalues of a potentially a larger matrix, denoted as $\tilde{A}$ whose eigenvalues are clustered around the eigenvalues of $A$ within a tiny interval. The idea is if we perform exact Lanczos on $A$, then we get similar results for applying floating-point Lanczos on $\tilde{A}$. Simply put, due to the effect of round of errors, the floating-point Lanczos iterations gained some kind of myopia and can't see the spectrum of $A$ clearly and instead, it sees $\tilde{A}$ whose eigenvalues are smeared out version of $A$, and there are many of them clustered around. More specifically, assuming $A$ has eigenvalues: $\lambda_1, \cdots, \lambda_n$, the eigenvalues of $\tilde{A}$ lies in: 
         \begin{align}
             \bigcup_{n = 1}^n[\lambda_i - \delta, \lambda_i + \delta]
         \end{align}
-        As a result, running an exact Lanczos/CG on $\tilde{A}$ produces similar convergence compare to floating point version of the algorithm. This idea was prposed by A.Greenbaum and Z. Strakos in 1992 (\textbf{CITATION NEEDED}). Here, we reprocudes the experiment on CG and checks on the convergence rate of the algorithm. 
+        As a result, running an exact Lanczos/CG on $\tilde{A}$ produces similar convergence compared to the floating-point version of the algorithm. This idea was proposed by A. Greenbaum and Z. Strakos in 1992 (\textbf{CITATION NEEDED}). Here, we reproduce the experiment on CG and check on the convergence rate of the algorithm. 
 
     \subsection{The Ritz Vector's View and Another Paige's Theorem}
-        In this section, we prove another analysis of the Lanczos Iterations from Dammel's textbook(\textbf{Citation Needed}) where he introduced a proof of another Paige's theorem that shows exactly how to measure the lost of orthogonality of the Lanczos vectors against Ritz vectors. Here, we wish to follow the same proof with more details and thoroughness.
+        In this section, we prove another analysis of the Lanczos Iterations from Dammel's textbook(\textbf{Citation Needed}) where he introduced a proof of another Paige's theorem that shows exactly how to measure the loss of orthogonality of the Lanczos vectors against Ritz vectors. Here, we wish to follow the same proof with more details and thoroughness.
         \par
-        The theorem highlights 2 important facts. The first is the lost of orthogonality of Lanczos Vector and Ghost eigenvalues appears at the same time and they are systematic. The second is that the projection of the Lanczos vector onto the converged Ritz vectors can be numerically attained, which tells us how much lost of orthogonality is occurring and which direction we need to re-orthogonalize so that the Lanczos vectors retains orthogonality. Here is the statement of the theorem: 
+        The theorem highlights two important facts. The first is that the loss of orthogonality of Lanczos Vector and Ghost eigenvalues appears at the same time and they are systematic. The second is that the projection of the Lanczos vector onto the converged Ritz vectors can be numerically attained, which tells us how much lost of orthogonality is occurring and which direction we need to re-orthogonalize so that the Lanczos vectors retains orthogonality. Here is the statement of the theorem: 
         \begin{theorem}[Another Paige's Theorem]
             \begin{align}
                 (y_i^{(k)})^Tq_{k + 1} &= \frac{\mathcal O(\epsilon \Vert A\Vert)}{\beta_k (v_i)_k}    
@@ -2063,7 +2063,7 @@
 \begin{appendices}
     
     \section{Useful Lemmas}
-        \begin{lemma}[Relative Energy Norm and Relative 2 Norm Conversions]\label{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}
+        \begin{lemma}[Relative Energy Norm and Relative 2-Norm Conversions]\label{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}
             Let $A$ be a Positive Symmetric Positive Definite Matrix, then it can be said that: 
             $$
             \frac{\Vert A x\Vert}{\Vert Ay \Vert} \le \kappa(A)\frac{\Vert 
