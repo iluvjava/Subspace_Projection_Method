@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  6 MAY 2022 01:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  6 MAY 2022 12:46
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -807,55 +807,61 @@ Package pdftex.def Info: cg_convergence_1.png  used on input line 1778.
 <ritz_trajectory_plot_floats.png, id=898, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_floats.png Graphic file (type png)
 <use ritz_trajectory_plot_floats.png>
-Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1975.
+Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1981.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
 <ritz_trajectory_plot_exact.png, id=899, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_exact.png Graphic file (type png)
 <use ritz_trajectory_plot_exact.png>
-Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1976.
+Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1982.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
  [42 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/ritz_trajectory_plot_floats.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/ritz_trajectory_plot_exact.png>]
-<fig3.png, id=908, 724.7075pt x 513.92pt>
+<fig3.png, id=909, 724.7075pt x 513.92pt>
 File: fig3.png Graphic file (type png)
 <use fig3.png>
-Package pdftex.def Info: fig3.png  used on input line 1986.
+Package pdftex.def Info: fig3.png  used on input line 1992.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
-<fig4.png, id=909, 724.7075pt x 513.92pt>
+<fig4.png, id=910, 724.7075pt x 513.92pt>
 File: fig4.png Graphic file (type png)
 <use fig4.png>
-Package pdftex.def Info: fig4.png  used on input line 1987.
+Package pdftex.def Info: fig4.png  used on input line 1993.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
  [43 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/fig3.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/fig4.png>] [44]
-<lanczos_proj_on_ritz_float.png, id=935, 752.8125pt x 501.875pt>
+<lanczos_proj_on_ritz_float.png, id=938, 2258.4375pt x 1505.625pt>
 File: lanczos_proj_on_ritz_float.png Graphic file (type png)
 <use lanczos_proj_on_ritz_float.png>
-Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 2014.
-(pdftex.def)             Requested size: 398.33858pt x 265.56363pt.
-<lanczos_proj_on_ritz_exact.png, id=936, 752.8125pt x 501.875pt>
+Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 2026.
+(pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
+<lanczos_proj_on_ritz_exact.png, id=939, 2258.4375pt x 1505.625pt>
 File: lanczos_proj_on_ritz_exact.png Graphic file (type png)
 <use lanczos_proj_on_ritz_exact.png>
-Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 2020.
-(pdftex.def)             Requested size: 398.33858pt x 265.56363pt.
- [45 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_float.png>] [46 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_exact.png>] [47] [48] [49] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
+Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 2032.
+(pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
+ [45]
+<ritz_proj_tridiagonal.png, id=947, 2258.4375pt x 1505.625pt>
+File: ritz_proj_tridiagonal.png Graphic file (type png)
+<use ritz_proj_tridiagonal.png>
+Package pdftex.def Info: ritz_proj_tridiagonal.png  used on input line 2037.
+(pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
+ [46 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_float.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/lanczos_proj_on_ritz_exact.png>] [47 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/ritz_proj_tridiagonal.png>] [48] [49] [50] [51] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 8A3753CF92AF031FD219DB8187255893;10496.
+(rerunfilecheck)             Checksum: 809123EB1ACDC907BF08D2AF6BD399C7;10496.
 Package logreq Info: Writing requests to 'thesis.run.xml'.
 \openout1 = `thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 22442 strings out of 478994
- 372267 string characters out of 5858183
- 1144051 words of memory out of 5000000
- 39105 multiletter control sequences out of 15000+600000
+ 22457 strings out of 478994
+ 372549 string characters out of 5858183
+ 1144184 words of memory out of 5000000
+ 39112 multiletter control sequences out of 15000+600000
  419108 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  81i,22n,117p,1603b,2009s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
-Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf (49 pages, 1164798 bytes).
+Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis/thesis.pdf (51 pages, 1581326 bytes).
 PDF statistics:
- 1175 PDF objects out of 1200 (max. 8388607)
- 1074 compressed objects within 11 object streams
- 521 named destinations out of 1000 (max. 500000)
- 433 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1193 PDF objects out of 1200 (max. 8388607)
+ 1089 compressed objects within 11 object streams
+ 528 named destinations out of 1000 (max. 500000)
+ 438 words of extra memory for PDF output out of 10000 (max. 10000000)
 

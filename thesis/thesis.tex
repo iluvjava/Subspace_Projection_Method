@@ -1969,7 +1969,13 @@
     \subsection{Ghost Eigenvalues and Losing Orthogonality}
         The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, those extremely close eigenvalues are a single eigenvalue of the original matrix $A$'s spectrum. The name for it comes from Trefethen's Book\cite{book:trefethen}. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$, especially eigenvalues in the exterior of $A$'s spectrum. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues(\textbf{NONTRIVIAL FACT}). Floating point error propagating through the Lanczos Iterations will produce this phenomena, but the converse is not necessarily true. 
         \subsubsection{Ghost Eigenvalues Experiments}
-            Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: $\lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3$ where $A\in \mathbb R^{n\times n}$. This matrix is particularly good for reproducing the phenomena. For this experiment, we set $n = 64$ and we use Float64. We run the Lanczos iterations with $q_1$ being the vector of all ones, we marked the smallest and largest 10 eigenvalues during the iterations and plotted their trajectories from iteration 20 to 64. The results can be seen in \hyperref[fig:2]{(figure \ref*{fig:2} left)}. On \hyperref[fig:2]{figure \ref*{fig:2} right}, we made the plot for what would happen if the Lanczos iterations are free of numerical round-off error. We didn't use exact arithmetic, instead, we simply re-orthogonalized all the Lanczos vector $q_k$ using all previously obtained Lanczos vectors to emulate the effect, which is just an Arnoldi iteration. Please bear in mind that there are eigenvalues in the middle interior part of the spectrum, they are just not plotted in the figure. 
+            Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: 
+            \begin{align}
+                \lambda_i = \left(-1 + \frac{2(i - 1)}{(n - 1)}\right)^3
+            \end{align}\label{eqn:the_ill_conditioned_matrix}
+            where $A\in \mathbb R^{n\times n}$. This matrix is particularly good for reproducing the phenomena. For this experiment, we set $n = 64$ and we use Float64. 
+            \par
+            We run the Lanczos iterations with $q_1$ being the vector of all ones, we marked the smallest and largest 10 eigenvalues during the iterations and plotted their trajectories from iteration 20 to 64. The results can be seen in \hyperref[fig:2]{(figure \ref*{fig:2} left)}. On \hyperref[fig:2]{figure \ref*{fig:2} right}, we made the plot for what would happen if the Lanczos iterations are free of numerical round-off error. We didn't use exact arithmetic, instead, we simply re-orthogonalized all the Lanczos vector $q_k$ using all previously obtained Lanczos vectors to emulate the effect, which is just an Arnoldi iteration. Please bear in mind that there are eigenvalues in the middle interior part of the spectrum, they are just not plotted in the figure. 
             \begin{figure}[H]
                 \centering
                 \includegraphics[width=8cm]{ritz_trajectory_plot_floats.png}
@@ -2008,18 +2014,28 @@
             \par
             However, under floating-point arithmetic, once the Ritz vector $s_i^{(k)}$ is converging to an eigebvalue of $A$, then the projection of the latest Lanczos vector onto the Ritz vector begins to grow. On the plot showed in \hyperref[fig:4]{figure \ref*{fig:4}}, we projected the log absolute value of $q_k^TQ_ks_i^{(k)}$ for $i=1, 2, 3$ for all $k=20, \cdots, 64$, and we used the same setup from the last section where we demonstrated ghost eigenvalues. For comparison, \hyperref[fig:5]{figure \ref*{fig:5}} showed us what happens in exact arithmetic. One very important observation to make from \hyperref[fig:5]{figure \ref*{fig:5}} is that the peak of the blue curve, projection onto the largest Ritz value happens around iteration 3.8, and around that exact same iteration in \hyperref[fig:2]{figure \ref*{fig:2}} is when the second-largest eigenvalue of $T_k$ decides to shift over to the blue curve. Bear in mind that this is in a log plot, and without the log it looks like a sharp spike. 
             \par
-            While floating arithematic may sometimes cause the most recent Lanczos vector to loos orthogoality against converged Ritz values, the converse is not true. The phenomena itself doesn't imply the fact that floating point error is presence and it's causing lost of orthogonality of Lanczos iterations. 
-            \begin{figure}
+            While floating arithematic may sometimes cause the most recent Lanczos vector to lose orthogoality against converged Ritz vectors, the converse is not true. The phenomena itself doesn't imply the fact that floating point error is present and it's causing lost of orthogonality of Lanczos iterations, much similar to what had been discussed about ghost eigenvalues. To illustrate, an experiment is conducted in this way: 
+            \begin{enumerate}
+                \item [1.] $T_n$ is generated from the diagonal matrix $A$ from finite precision Lanczos iterations. The same setup from \hyperref[eqn:the_ill_conditioned_matrix]{ghost eigenvalues \ref*{eqn:the_ill_conditioned_matrix}}. 
+                \item [2.] Lanczos is then performed on $T_k$ initalized with $q_1 = \xi_i$. 
+                \item [3.] The projection the most recent lanczos vector $q_k$ is projected onto $Q_ks_i^{(k)}$ for $1\le i \le 3$. Notice that $Q_k$ is gonna be the $k\times k$ identity matrix. 
+            \end{enumerate}
+            The results of the projection is showed in \hyperref[fig:6]{fig \ref*{fig:6}}. Please observe that prjection onto the second Ritzvector $Q_ks_2^{(k)}$ seems to decrease and them jumped up again. This happens around the same iterations when the second largest eigenvalue of $T_k$ shift to the trajectory of the largest eigenvalue in \hyperref[fig:2]{fig \ref*{fig:2} left}. 
+            \begin{figure}[H]
                 \centering
                 \includegraphics[width=14cm]{lanczos_proj_on_ritz_float.png}
                 \caption{Projection of floating-point Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$
                 }
             \end{figure}\label{fig:4}
-            \begin{figure}
+            \begin{figure}[H]
                 \centering
                 \includegraphics[width=14cm]{lanczos_proj_on_ritz_exact.png}
-                \caption{projection of the exact Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$}
+                \caption{prHjection of the exact Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$}
             \end{figure}\label{fig:5}
+            \begin{figure}[H]
+                \centering 
+                \includegraphics[width=14cm]{ritz_proj_tridiagonal.png}
+            \end{figure}\label{fig:6}
             \begin{remark}[Convergence Bounds on Ritzvalues]
                 The above presentation for the convergence of a Ritz Value and Ritz vector is an oversimplification. What happened is complicated. Firstly, $\beta_k$ from the tridiagonal matrix is positive because it's the norm of the characteristic polynomial of $T$ under some weighted measured (\textbf{PROOFS MISSING}), so it's positive. It empirally tends to decrease but it's just an empiracal rule, and this would implies that to prove the convergecne one would need to look into the quantity $(s_i^{(k)})_k$ as well. 
                 \par
@@ -2142,7 +2158,15 @@
             \end{align}
             $A^2K_k$ will span the same space as the range of the matrix $K_k$.
         \end{proof}
-
+        \begin{prop}
+            The Lanczos algorithm orthogonaly polynomial under a discrete weighted measure under the eigenvalues of matrix $A$. 
+        \end{prop}
+        \begin{prop}
+            The subdiagonal and super diagonal of the tridiagonal matrix generated by Lanczos iteration contains all strictly positive number. $\beta_k\ge 0\; \forall 1\le k < n$ 
+        \end{prop}
+        \begin{prop}
+            The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. 
+        \end{prop}
 \end{appendices}
 \newpage
 
