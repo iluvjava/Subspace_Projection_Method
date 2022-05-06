@@ -124,6 +124,7 @@
     \item Boldface $\mathbf 0$ denotes the zero vector or matrix, depending on the context it can be either a zero row/column vector, or a zero matrix.
     \item The $\hat{}$ decorator is reserved for denoting the unit vector of some non zero vector. For example $\hat{x}:= x/\Vert x\Vert, x \neq \mathbf 0$. 
     \item $p_k(A|w)$ denotes the matrix polynomial $\sum_{j = 0}^k w_jA^j$. 
+    \item $\xi_i$ are used for the $i$ standard basis vector, the size of the vector depends on the context, sometimes it's denoted without ambguity for example: $\xi_i^{(k)}$ would denote the $i$ th standard basis vector for $\mathbb R^k$. 
 \end{enumerate}
 
 \section{Introduction}
@@ -1604,7 +1605,7 @@
                     q_1 & q_2 & \cdots & q_k
                 \end{bmatrix}
             \end{align}
-            Assuming matrix $A$ is invertible and using the Cauchy Interlace Theorem, $T_k$ is invertible, we consider the LU decomposition of the symmetric tridiagonal matrix: 
+            Assuming matrix $A$ is invertible and using the \hyperref[theorem:cauchy_interlace]{Cauchy Interlace Theorem (theorem \ref*{theorem:cauchy_interlace})}, $T_k$ is invertible, we consider the LU decomposition of the symmetric tridiagonal matrix: 
             \begin{align}
                 T_k = L_k U_k =
                 \begin{bmatrix}
@@ -1982,7 +1983,7 @@
                 \includegraphics[width=8cm]{ritz_trajectory_plot_exact.png}
                 \caption{The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iteration, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round-off error, right is Lanczos iterations that fully re-orthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithmetic. }
             \end{figure}\label{fig:2}
-            Recall from the Cauchy Interlace Theorem, the eigenvalues of the tridiagonal matrix $T_{k + 1}$ has to be in between each eigenvalues of $T_{k}$ except for the first and the last eigenvalue of $T_{k + 1}$.  This implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iteration will move monotonically upwards or downwards during the Lanczos iterations. The ghost eigenvalues on the figure appear when some of the interior eigenvalues suddenly switch to another eigenvalue's trajectory that is on the exterior of the spectrum. It appears as though the matrix $T_k$ has repeated eigenvalues, but in fact, they are not, they are just very close. 
+            Recall from the \hyperref[theorem:cauchy_interlace]{Cauchy Interlace Theorem (theorem \ref*{theorem:cauchy_interlace})}, the eigenvalues of the tridiagonal matrix $T_{k + 1}$ has to be in between each eigenvalues of $T_{k}$ except for the first and the last eigenvalue of $T_{k + 1}$.  This implies that, the $\theta_i^{(k)}$, the $i$ th eigenvalues during the $k$ th iteration will move monotonically upwards or downwards during the Lanczos iterations. The ghost eigenvalues on the figure appear when some of the interior eigenvalues suddenly switch to another eigenvalue's trajectory that is on the exterior of the spectrum. It appears as though the matrix $T_k$ has repeated eigenvalues, but in fact, they are not, they are just very close. 
             \par
             However, judging the eigenvalues of the matrix $T_k$ alone WILL NOT distinguish between two very close eigenvalues correspond to two different eigenvalues of $A$ or it's due to the floating-point round-off error. It also will NOT tell whether the Lanczos vectors are losing orthogonality, even if the eigenvalue trajectories seem to suggest it. We can't tell it because if I keep the matrix $T_k$ generated from a Lanczos iterations with huge amount of round-off error and all it $A$, which has eigenvalues that are extremely close to each other and their path shifts over each other on the trajectory like in \hyperref[fig:2]{fig \ref*{fig:2}}. Now consider performing another Lanczos iterations $A:=T_k$ it but with the initial vector $\xi_1$, then we will exactly reproduce $A$ itself because it's tridiagonal. But in this case, the eigenvalues of $T_k$ are exact after termination of Lanczos iteration. In this case, all eigenvalues are actually presented in the original matrix $A$, which is just $T_k$, itself. 
             \par
@@ -2018,9 +2019,9 @@
             \begin{enumerate}
                 \item [1.] $T_n$ is generated from the diagonal matrix $A$ from finite precision Lanczos iterations. The same setup from \hyperref[eqn:the_ill_conditioned_matrix]{ghost eigenvalues \ref*{eqn:the_ill_conditioned_matrix}}. 
                 \item [2.] Lanczos is then performed on $T_k$ initalized with $q_1 = \xi_i$. 
-                \item [3.] The projection the most recent lanczos vector $q_k$ is projected onto $Q_ks_i^{(k)}$ for $1\le i \le 3$. Notice that $Q_k$ is gonna be the $k\times k$ identity matrix. 
+                \item [3.] The projection the most recent lanczos vector $q_k$ is projected onto $Q_ks_i^{(k)}$ for $1\le i \le 3$. Notice that $Q_k$ is gonna be the $k\times k$ identity matrix. `'
             \end{enumerate}
-            The results of the projection is showed in \hyperref[fig:6]{fig \ref*{fig:6}}. Please observe that prjection onto the second Ritzvector $Q_ks_2^{(k)}$ seems to decrease and them jumped up again. This happens around the same iterations when the second largest eigenvalue of $T_k$ shift to the trajectory of the largest eigenvalue in \hyperref[fig:2]{fig \ref*{fig:2} left}. 
+            The results of the projection are showed in \hyperref[fig:6]{fig \ref*{fig:6}}. Please observe that prjection onto the second Ritzvector $Q_ks_2^{(k)}$ seems to decrease and them jumped up again. This happens around the same iterations when the second largest eigenvalue of $T_k$ shift to the trajectory of the largest eigenvalue in \hyperref[fig:2]{fig \ref*{fig:2} left}. However, this time the matrix $Q_k$ is perfect orthogonal. Therefore, small ritz projections of the most recent Lanczos vector doesn't mean that the Ritz value has converged for all future iterations. If $q_k$ is losing orthgonality against some Ritzvectors after it has converged, it doesn't mean that $Q_k$ is losing orthogonality. 
             \begin{figure}[H]
                 \centering
                 \includegraphics[width=14cm]{lanczos_proj_on_ritz_float.png}
@@ -2035,6 +2036,7 @@
             \begin{figure}[H]
                 \centering 
                 \includegraphics[width=14cm]{ritz_proj_tridiagonal.png}
+                \caption{The projection of most recent Lanczos vector $q_k$ onto the first 3 Ritzvectors: $Q_ks_i^{(k)}$ for $1\le i \le 3$, it's performed on a Tridiagonal matrix $T_k$ generated by finite precision lanczos with $q_1 = \xi_1$. }
             \end{figure}\label{fig:6}
             \begin{remark}[Convergence Bounds on Ritzvalues]
                 The above presentation for the convergence of a Ritz Value and Ritz vector is an oversimplification. What happened is complicated. Firstly, $\beta_k$ from the tridiagonal matrix is positive because it's the norm of the characteristic polynomial of $T$ under some weighted measured (\textbf{PROOFS MISSING}), so it's positive. It empirally tends to decrease but it's just an empiracal rule, and this would implies that to prove the convergecne one would need to look into the quantity $(s_i^{(k)})_k$ as well. 
@@ -2158,6 +2160,17 @@
             \end{align}
             $A^2K_k$ will span the same space as the range of the matrix $K_k$.
         \end{proof}
+        \begin{theorem}[Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices]\label{theorem:cauchy_interlace}
+            Let $T_k$ be a $k\times k$ symmetric tridiagonal matrix, then its top left upper submatrix: $T_{k-1}=(T_k)_{:k - 1, :k -1}$ has eigenvalues interlaced between the eigenvalues of $T_k$. Denotes all $k$ eigenvalues of $T_k$ as $\theta_i^{(k)}$, and all $k - 1$ eigenvalues of $T_{k - 1}$ as $\theta_i^{(k - 1)}$. Order them so that: $\theta_1^{(k - 1)} \le \cdots, \le \theta_i^{(k - 1)}$, similarly: $\theta_1^{(k)}\le \cdots \le \theta_i^{(k)}$, then: 
+            \begin{align}
+                & \theta_{k}^{(k)} \ge \theta_{k - 1}^{(k - 1)}
+                \\
+                & \theta_{1}^{(k)} \le \theta_{1}^{(k - 1)}
+                \\
+                & \theta_{i -1}^{(k - 1)} \le \theta_{i}^{(k)} \le \theta_{i}^{(k - 1)}
+            \end{align}
+            Theorem taken from first chapter of \cite{book:greenbaum} and it's adated for symmetric tridiagonal matrix. 
+        \end{theorem}
         \begin{prop}
             The Lanczos algorithm orthogonaly polynomial under a discrete weighted measure under the eigenvalues of matrix $A$. 
         \end{prop}
@@ -2165,7 +2178,7 @@
             The subdiagonal and super diagonal of the tridiagonal matrix generated by Lanczos iteration contains all strictly positive number. $\beta_k\ge 0\; \forall 1\le k < n$ 
         \end{prop}
         \begin{prop}
-            The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. 
+            The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. It's what referred to as a irreducible symmetric tridiagonal matrix. 
         \end{prop}
 \end{appendices}
 \newpage

@@ -41,8 +41,8 @@ return A, Diagonal(u) end
         a diagonal matrix. 
 """
 function EigDistribution(
-    N=64, 
-    rho::Number=0.9, 
+    N=64;
+    rho::Number=0.9,
     eigen_min=1e-4, 
     eigen_max=1, 
     inverted=false

@@ -24,6 +24,7 @@ function PerformAndProject(n=64; offset=20, exact=false)
 
 return vcat(ProjOnRitz...) end
 
+# ----- Floats ----- 
 ProjOnRitz = PerformAndProject()
 ProjOnRitz = ProjOnRitz .|> abs
 Iters = 20:63
@@ -32,8 +33,9 @@ fig1 = plot(
     ProjOnRitz[:, 1], 
     yaxis=:log, 
     legend=:bottomleft, size=(750, 500), 
-    label="\$q^T_kQ_ks_1\$"
-    )
+    label="\$q^T_kQ_ks_1\$", 
+    dpi=300
+)
 plot!(fig1, Iters, ProjOnRitz[:, 2], linestyle=:dashdot, label="\$q^T_kQ_ks_2\$")
 plot!(fig1, Iters, ProjOnRitz[:, 3], linestyle=:dash, label="\$q^T_kQ_ks_3\$")
 title!("Lanczos vec proj onto Ritz Vectors (Floats)")
@@ -42,6 +44,7 @@ xaxis!("iterations")
 fig1|>display
 savefig(fig1, "$(@__DIR__)/plots/lanczos_proj_on_ritz_float.png")
 
+# ------ Exact--------
 ProjOnRitz = PerformAndProject(exact=true)
 ProjOnRitz = ProjOnRitz .|> abs
 Iters = 20:63
@@ -50,8 +53,9 @@ fig1 = plot(
     ProjOnRitz[:, 1], 
     yaxis=:log, 
     legend=:bottomleft, size=(750, 500), 
-    label="\$q^T_kQ_ks_1\$"
-    )
+    label="\$q^T_kQ_ks_1\$", 
+    dpi=300
+)
 plot!(fig1, Iters, ProjOnRitz[:, 2], linestyle=:dashdot, label="\$q^T_kQ_ks_2\$")
 plot!(fig1, Iters, ProjOnRitz[:, 3], linestyle=:dash, label="\$q^T_kQ_ks_3\$")
 title!("Lanczos vec proj on ritz vectors (largest 3) (Exact)")
