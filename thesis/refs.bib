@@ -56,6 +56,37 @@
   publisher={American Mathematical Society}
 }
 
+@article{paper:saad_ritz_convergence,
+	author = {Saad, Y.},
+	title = {On the Rates of Convergence of the Lanczos and the Block-Lanczos Methods},
+	journal = {SIAM Journal on Numerical Analysis},
+	volume = {17},
+	number = {5},
+	pages = {687-706},
+	year = {1980},
+	doi = {10.1137/0717059},
+	URL = { 
+			https://doi.org/10.1137/0717059
+
+	},
+	eprint = { 
+			https://doi.org/10.1137/0717059
+
+	},
+  abstract = { Theoretical error bounds are established, improving those given by S. Kaniel. Similar inequalities are found for the eigenvectors by using bounds on the acute angle between the exact eigenvectors and the Krylov subspace spanned by \$x\_0 ,Ax\_0 , \cdots ,A^{n - 1} x\_0 \$, where \$x\_0 \$ is the initial vector of the process.All the results obtained are then extended to the block-Lanczos method, and it is shown that the bounds on the rates of the Block version are superior to those of the single vector process. The difference between the two methods is in many respects similar to the difference between the simultaneous iteration method and the single vector power method. Several numerical experiments are described in order to compare the actual rates of convergence with the theoretical bounds. }
+}
+
+@article{paper:kaniel1966,
+  author          = {Kaniel Shmuel},
+  journal         = {Math. of Comp.},
+  number          = {95},
+  title           = {stimates for Some Computational Techniques in Linear Algebra},
+  volume          = {},
+  year            = {1966}, 
+  pages           = {369--378}
+}
+
+
 @article{paper:SYMLQ,
   title={Solutions of Sparse Indefinite System of Linear Equations},
   author={C. C. Paige and M. A. Saunders},
@@ -80,7 +111,29 @@
   abstract = {Eigenvalues and eigenvectors of a large sparse symmetric matrix A can be found accurately and often very quickly using the Lanczos algorithm without reorthogonalization. The algorithm gives essentially correct information on the eigensystem of A, although it does not necessarily give the correct multiplicity of multiple, or even single, eigenvalues. It is straightforward to determine a useful bound on the accuracy of every eigenvalue given by the algorithm. The initial behavior of the algorithm is surprisingly good: it produces vectors spanning the Krylov subspace of a matrix very close to A until this subspace contains an exact eigenvector of a matrix very close to A, and up to this point the effective behavior of the algorithm for the eigenproblem is very like that of the Lanczos algorithm using full reorthogonalization. This helps to explain the remarkable behavior of the basic Lanczos algorithm.}
 }
 
+@article{paper:greenbaum_indefinite_lanczos,
+  author          = {A. Greenbaum and V. Druskin and L. A. Knizhnerman},
+  journal         = {Zh. Vychisl. Mat. Mat. Fiz.},
+  number          = {39},
+  title           = {On solving indefinite symmetric linear systems by means of the Lanczos method},
+  volume          = {},
+  year            = {1999},
+  pages           = {371–-377}
+}
 
+@article{paper:greenbaum_tiny_interval_proof,
+	author = {Greenbaum, A. and Strakos, Z.},
+	title = {Predicting the Behavior of Finite Precision Lanczos and Conjugate Gradient Computations},
+	journal = {SIAM Journal on Matrix Analysis and Applications},
+	volume = {13},
+	number = {1},
+	pages = {121-137},
+	year = {1992},
+	doi = {10.1137/0613011},
+	URL = {https://doi.org/10.1137/0613011},
+	eprint = {https://doi.org/10.1137/0613011},
+	abstract = { It is demonstrated that finite precision Lanczos and conjugate gradient computations for solving a symmetric positive definite linear system \$Ax = b\$ or computing the eigenvalues of A behave very similarly to the exact algorithms applied to any of a certain class of larger matrices. This class consists of matrices \$\hat{A} \$ which have many eigenvalues spread throughout tiny intervals about the eigenvalues of A. The width of these intervals is a modest multiple of the machine precision times the norm of A. This analogy appears to hold, provided only that the algorithms are not run for huge numbers of steps. Numerical examples are given to show that many of the phenomena observed in finite precision computations with A can also be observed in the exact algorithms applied to such a matrix \$\hat{A} \$. }
+}
 
 @misc{notes:painless_cg,
   author        = {Jonathan Richard Shewchuk},
@@ -88,15 +141,4 @@
   month         = {August},
   year          = {1994},
   publisher={School of Computer Science Carnegie Mellon University Pittsburgh}
-}
-
-@inproceedings{lesk:1977,
-  title={Computer Typesetting of Technical Journals on {UNIX}},
-  author={Michael Lesk and Brian Kernighan},
-  booktitle={Proceedings of American Federation of
-             Information Processing Societies: 1977
-             National Computer Conference},
-  pages={879--888},
-  year={1977},
-  address={Dallas, Texas}
 }

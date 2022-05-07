@@ -59,3 +59,37 @@ function EigDistribution(
     end
     return EigenValues
 end
+
+"""
+    Perform CG and collect the relative error under energy norm
+"""
+function PerformCGFor(
+    A::AbstractMatrix, 
+    b::AbstractVecOrMat;
+    epsilon=1e-2,       # tolerance of relative energy norm of the error 
+    exact::Bool=true,   # Whether to use full orthogonalizations
+    partial_ortho=nothing,  # if partial, how many previous iterations? 
+)
+    cg = CGPO(A, b)
+    if !exact
+        if partial_ortho === nothing
+            cg |> TurnOffReorthgonalize!
+        else
+            StorageLimit!(cg, partial_ortho)
+        end
+    end
+
+    ẋ = A\b  # direct soooooolve! 
+    ė = ẋ - cg.x
+    ėAė = dot(ė, A*ė)
+    E = Vector{Float64}()
+    push!(E, 1)
+    RelErr = 1
+    while RelErr > epsilon
+        cg()
+        e = ẋ - cg.x
+        RelErr = (dot(e, A*e)/ėAė)|>sqrt
+        push!(E, RelErr)
+    end
+    return E
+end

@@ -15,6 +15,7 @@
 \usepackage[margin=1in,footskip=0.25in]{geometry}  % margin, foot skip
 \usepackage[fontsize=12pt]{fontsize}
 \usepackage[font=tiny]{caption}
+\usepackage{subcaption}
 \usepackage{wrapfig}
 \usepackage{float}
 \usepackage[final]{graphicx}
@@ -755,7 +756,7 @@
                 \\
                 (\tilde{H}_k)_{1:k, k} &= Q_kQ_k^HAq_k
             \end{align}
-            Reader, please observe that $Q_k$ is going to be orthogonal because at the start, $q_1q_1^H$ and $I - q_1q_1^H$ are orthogonal projectors. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
+            Usually when implementing, the subdiagonal of $H_k$ are chosen to be $$H_{k + 1, k} := \Vert (I - Q_kQ_k^T)Aq_k\Vert$$ which makes then strictly positive, and the sign goes into $q_k$ to assert the equalities above. $Q_k$ is going to be orthogonal because we are using orthogonal projectors. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
             \begin{align}
                 AQ_{k} &= Q_{k + 1}\tilde{H}_k
                 \\
@@ -1731,7 +1732,7 @@
             \begin{remark}
                 The derivation might seem excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite, providing potential to new algorithm that can solve symmetric indefinite systems directly. The Lanczos Algorithm for linear systems (we refer to the method derived in the above section) is a special case of FOM \cite{paper:FOM} when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrence for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithmetic, CG can be applied to a symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the CG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. 
                 \par
-                However there are two problems solving Symmetric Indefinite using the CG. The first problem is the bad numerical accuracy of using the recurrence to perform LU decomposition on $T_K$ without pivoting. Another problem is $T_k$ can be singular during some iterations of the Lanczos Algorithm. For example, $T_j$ will become singular if $A$ is a symmetric tridiagonal matrix with zeros as its diagonals and all ones on its subdiagonals. The good part is that $T_j$ never will not become singular for more than 2 consecutive iteration (\textbf{CITATION NEEDED}). These problems can be overcome by considering something other than LU without pivoting. In fact, there is work by C. C. Paige and M. A. Saunders which extends the idea and derives algorithms that can solve a symmetric indefinite system without using the norm equation \cite{paper:SYMLQ}. 
+                However there are two problems solving Symmetric Indefinite using the CG. The first problem is the bad numerical accuracy of using the recurrence to perform LU decomposition on $T_K$ without pivoting. Another problem is $T_k$ can be singular during some iterations of the Lanczos Algorithm. For example, $T_j$ will become singular if $A$ is a symmetric tridiagonal matrix with zeros as its diagonals and all ones on its subdiagonals. The good part is that $T_j$ never will not become singular for more than 2 consecutive iteration\cite{paper:greenbaum_indefinite_lanczos}. These problems can be overcome by considering something other than LU without pivoting. In fact, there is work by C. C. Paige and M. A. Saunders which extends the idea and derives algorithms that can solve a symmetric indefinite system without using the norm equation \cite{paper:SYMLQ}. 
             \end{remark}
         
 \section{Effects of Floating-Point Arithmetic}
@@ -1764,23 +1765,34 @@
     \subsection{Relative Errors of CG Under Floating-Point Arithmetic}
         We investigate the relative energy norm of the error for fully re-orthogonalized CG, partially re-orthogonalized CG, and CG without re-orthogonalization numerically. 
         \subsubsection{Experiments}
-        Here we use full re-orthogonalization to emulate the effects of exact arithmetic. the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part \hyperref[prop:Termination_of_CG]{Termination of CG \ref*{prop:Termination_of_CG}} of the discussion. However, in practice, this is not always the case. Similar experiments are conducted in Greenbaum's book chapter 4 \cite{book:greenbaum}. In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. For testing the convergence of the algorithm, we use 16-decimal digit floats (float64). The spectrum of the matrix we are using is taken to be the same from Greenbaum's book \cite{book:greenbaum}. 
+        Here we use full re-orthogonalization to emulate the effects of exact arithmetic. the step required for convergence is less than or equal to the number of unique eigenvalues for the symmetric definite matrix, this is established in part \hyperref[prop:Termination_of_CG]{Termination of CG \ref*{prop:Termination_of_CG}} of the discussion. However, in practice, this is not always the case. Similar experiments are conducted in Greenbaum's book chapter 4 \cite{book:greenbaum}. In this section, we replicate the same set of experiments using modern Julia to showcase the extra steps required for the CG algorithm to converge. For testing the convergence of the algorithm, we use float16 (16 digits binary digits), $\lambda_{\min} = 1e-4, \lambda_{\max} = 1$ to exaggerate the convergence a bit, and the RHS vector $b$ is random. The spectrum of the matrix we are using is taken to be the same from Greenbaum's book \cite{book:greenbaum}. 
         \begin{align}
             \lambda_{\min} + \left(
                 \frac{j}{N - 1}
             \right)(\lambda_{\max} - \lambda_{\min})\rho^{N - j + 1}\quad \forall\; 1 \le j \le N - 1, \; 0 \le \rho \le 1
         \end{align}
         If the value of $\rho$ is close to zero, then the eigenvalues are clustered around the origin, if it's close to $1$, then the eigenvalues are tend to be more evenly distributed around the interval $[\lambda_{\min}, \lambda_{\max}]$. 
-        \begin{figure}[h]
-            
+        \begin{figure}[H]
             \centering
-            \includegraphics[width=8cm]{cg_convergence_0.9.png}
-            \includegraphics[width=8cm]{cg_convergence_1.png}
+            \begin{subfigure}[H]{14cm}
+                \centering
+                \includegraphics[width=12cm]{cg_convergence_0.9.png}
+                \caption{$\rho = 0.9$}
+                \label{fig:1top}
+            \end{subfigure}
+            \\[2em]
+            \begin{subfigure}[H]{14cm}
+                \centering
+                \includegraphics[width=12cm]{cg_convergence_1.png}
+                \caption{$\rho = 1$}
+                \label{fig:1bottom}
+            \end{subfigure}
             \caption{
-                The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dot dashed: The conjugate gradient that is partially orthogonalized with previous 8 residual and conjugate vectors. orange dashed: the Original conjugate gradient. Green dot: The tighter theoretical upper bound derived by Chebyshev (\hyperref[line:CG_Cheb_Bound]{\ref*{line:CG_Cheb_Bound}}). Left: $\rho = 0.9$; right: $\rho = 1$, the matrix is $64\times 64$
+                The relative energy norm error for different methods. Blue solid line: The exact conjugate gradient convergence. Purple dot dashed: The conjugate gradient that is partially orthogonalized with previous 8 residual and conjugate vectors. orange dashed: the Original conjugate gradient. Green dot: The tighter theoretical upper bound derived by Chebyshev (\hyperref[line:CG_Cheb_Bound]{\ref*{line:CG_Cheb_Bound}}). The matrix is $256\times 256$
             }
-        \end{figure}\label{fig:1}
-        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues is not perfectly uniform. The partially orthogonalized methods diverge from the exact error after more steps of iterations compared to the relative error without any orthogonalizations. These are seen in \hyperref[fig:1]{(fig \ref*{fig:1} left)}. In contrast, on the right, then the eigenvalues are uniformly distributed, the convergence of all 3 types of methods aligns with the exact convergence in \hyperref[fig:1]{(fig \ref*{fig:1} right)}. 
+            \label{fig:1}
+        \end{figure}
+        The Chebyshev bound is no longer a tight bound because the distribution of the eigenvalues is not perfectly uniform. The partially orthogonalized methods diverge from the exact error after more steps of iterations compared to the relative error without any orthogonalizations. These are seen in \hyperref[fig:1]{(fig \ref*{fig:1top})}. In contrast, on the right, then the eigenvalues are uniformly distributed, the convergence of all 3 types of methods aligns with the exact convergence in \hyperref[fig:1]{(fig \ref*{fig:1bottom})}. 
         \begin{remark}
             The convergence is disappointing under floating-point arithmetic and the promised efficiency of the algorithm is not there anymore if the matrix is not necessarily ill-conditioned. Just from \hyperref[fig:1]{(fig \ref*{fig:1})} it seems like outlier eigenvalues provide fast convergence under full orthogonalization, but not for floating point. 
         \end{remark}
@@ -1999,7 +2011,7 @@
                 \par
                 Secondly, there is another phenomenon of Ritz values during the iterations of Lanczos iterations called misconvergence. It describes the process which a Ritz value is stuck between two eigenvalues of $A$, stagnated for few iterations and then suddenly shifts away, which is extremely similar to the shifting we observed in \hyperref[fig:2]{figure \ref*{fig:2}}. It happens when 2 eigenvalues of matrix $A$ is extremely close to each other. It should not be confused with ghost eigenvalues because they are two distinct phenomena where misconvergence can happen under exact arithmetic. For more description of such phenomena, refer to the book by M. G. Cox and S. Hammarling (\cite{book:reliable_computation}). 
             \end{remark}
-        \subsubsection{Losing Orthogonality on Ritz Vectors}
+        \subsubsection{Lanczos Vectors Losing Orthogonality on converged Ritzvectors}
             To gain a better understanding, let's define the notion of Ritz values and Ritz vectors. For our discussion, the Ritz value $\theta_i^{(k)}$ are the $i$ th eigenvalues of the matrix $T_k$ from the and the Ritz vectors are $Q_ks_{i}^{(k)}$ where $s$ is the $i$ th eigenvector for the matrix $T_k$. Recall from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark 3.4.2}, the characteristic polynomial of $T_k$ is the monic polynomial that minimizes the 2-norm error for the vector $p_k(A)q_1$; intuitively, the Ritz values and Ritz vectors approximates eigenvalues and eigenvectors of matrix $A$ due to the apprixmating characteristic polynomial. Let's suppose that $s_i^{(k)}$ for $T_k$ is a good approximation for $\lambda_j$, let's consider the Lanczos iterations recurrences: 
             \begin{align}
                 AQ_k &= Q_k T_k + q_{k + 1}\beta_k\xi_k^T
@@ -2040,7 +2052,7 @@
             \begin{remark}[Convergence Bounds on Ritzvalues]
                 The above presentation for the convergence of a Ritz Value and Ritz vector is an oversimplification. What happened is complicated. Firstly, $\beta_k$ from the tridiagonal matrix is positive because it's the norm of the characteristic polynomial of $T$ under some weighted measured (\textbf{PROOFS MISSING}), so it's positive. It empirally tends to decrease but it's just an empiracal rule, and this would implies that to prove the convergecne one would need to look into the quantity $(s_i^{(k)})_k$ as well. 
                 \par
-                It's not always the case that $\theta_1^{(j)}$ for example, it's the best approximation for $\lambda_1$ of $A$, and it's especially true when iterations $j$ is relative small compare to $n$. The theoretical importance is to find an interval of how far are the $\lambda_i$ from $\theta_{i'}^{(k)}$, where $\lambda_i$ denotes the actual eigenvalue in $A$ where the Ritz value $\theta_{i'}^{(k)}$ is trying to approximate. The bound for the Ritz interval was refined by Y. Saad back in 1980 (\textbf{CITATION NEEDED}) and first discovered by Shmuel Kaniel back in 1966 (\textbf{CITATION NEEDED}). 
+                It's not always the case that $\theta_1^{(j)}$ for example, it's the best approximation for $\lambda_1$ of $A$, and it's especially true when iterations $j$ is relative small compare to $n$. The theoretical importance is to find an interval of how far are the $\lambda_i$ from $\theta_{i'}^{(k)}$, where $\lambda_i$ denotes the actual eigenvalue in $A$ where the Ritz value $\theta_{i'}^{(k)}$ is trying to approximate. The bound for the Ritz interval was refined by Y. Saad back in 1980\cite{paper:saad_ritz_convergence} and first discovered by Shmuel Kaniel back in 1966\cite{paper:kaniel1966}. 
             \end{remark}
     \subsubsection{Greenbaum's Tiny Interval Experiments}
         A smarter way of looking at the phenomenon of ghost eigenvalues (\hyperref[fig:2]{figure \ref*{fig:2} left}) is to take advantage of the clustering of the ghost eigenvalues and think of them as the eigenvalues of a potentially a larger matrix, denoted as $\tilde{A}$ whose eigenvalues are clustered around the eigenvalues of $A$ within a tiny interval. The idea is if we perform exact Lanczos on $A$, then we get similar results for applying floating-point Lanczos on $\tilde{A}$. Simply put, due to the effect of round of errors, the floating-point Lanczos iterations gained some kind of myopia and can't see the spectrum of $A$ clearly and instead, it sees $\tilde{A}$ whose eigenvalues are smeared out version of $A$, and there are many of them clustered around. More specifically, assuming $A$ has eigenvalues: $\lambda_1, \cdots, \lambda_n$, the eigenvalues of $\tilde{A}$ lies in: 

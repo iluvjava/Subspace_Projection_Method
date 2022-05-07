@@ -52,9 +52,15 @@ function PerformExperiment1(filename, p=0.9)
     RelErr = PerformCGFor(A, b, epsilon=1e-3, exact=true)
     k = length(RelErr)
     fig1 = plot(
-        log10.(RelErr), 
+        RelErr, 
         label="Relative Energy (exact)", 
-        legend=:bottomleft
+        legend=:bottomleft,
+        yaxis=:log10, 
+        xlabel="iterations: k", 
+        ylabel="\$\\frac{\\Vert e_k \\Vert_A}{\\Vert e_0\\Vert_A}\$",
+        title="CG Rel Energy Error \$\\rho = $(p)\$",
+        size=(750, 500), dpi=300, 
+        left_margin = 10Plots.mm
     )
 
     # ==========================================================================
@@ -65,7 +71,7 @@ function PerformExperiment1(filename, p=0.9)
     k = length(RelErr)
     plot!(
         fig1, 
-        log10.(RelErr), 
+        RelErr, 
         label="Relative Energy (floats)",
         linestyle=:dash#, markershape=:+
     )
@@ -76,10 +82,8 @@ function PerformExperiment1(filename, p=0.9)
     ErrorsBound = [TheoreticalErrorBound(A, idx) for idx in 1: k]
     plot!(
         fig1, 
-        log10.(ErrorsBound), 
+        ErrorsBound, 
         label="Theoretical Bound (exact)",
-        xlabel="iteration count", 
-        ylabel="relative error energy norm.",
         linestyle=:dot
     )
 
@@ -90,7 +94,7 @@ function PerformExperiment1(filename, p=0.9)
     k = length(RelErr)
     plot!(
         fig1, 
-        log10.(RelErr), 
+        RelErr, 
         label="Relative Energy (partial)",
         legend=:bottomleft, 
         linestyle=:dashdot # ,  markershape=:x
