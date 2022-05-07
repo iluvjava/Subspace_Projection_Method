@@ -76,7 +76,7 @@
 \newlabel{remark:Minimal_Polynomial_from_Lanczos_Iterations}{{3.4.2}{22}{Minimal Polynomial from Lanczos Iterations}{remark.3.4.2}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {4}Analysis of Conjugate Gradient and Lanczos Iterations}{22}{section.4}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Conjugate Gradient and Matrix Polynomial}{22}{subsection.4.1}\protected@file@percent }
-\newlabel{prop:CG_Relative_Energy Error}{{4.1}{22}{CG Relative Energy Error}{prop.4.1}{}}
+\newlabel{prop:CG_Relative_Energy Error}{{4.1}{23}{CG Relative Energy Error}{prop.4.1}{}}
 \abx@aux@cite{book:greenbaum}
 \abx@aux@segm{0}{0}{book:greenbaum}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}Termination Conditions of CG}{24}{subsubsection.4.1.1}\protected@file@percent }
@@ -110,6 +110,7 @@
 \abx@aux@segm{0}{0}{book:greenbaum}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Relative Errors of CG Under Floating-Point Arithmetic}{38}{subsection.5.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Experiments}{38}{subsubsection.5.2.1}\protected@file@percent }
+\newlabel{eqn:paramaterized_experiment_matrix}{{5.2.1}{38}{Experiments}{equation.5.2.1}{}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:1top}{{5.2.1a}{39}{$\rho = 0.9$\relax }{figure.caption.2}{}}
 \newlabel{sub@fig:1top}{{a}{39}{$\rho = 0.9$\relax }{figure.caption.2}{}}
@@ -150,21 +151,30 @@
 \abx@aux@segm{0}{0}{paper:saad_ritz_convergence}
 \abx@aux@cite{paper:kaniel1966}
 \abx@aux@segm{0}{0}{paper:kaniel1966}
+\abx@aux@cite{paper:greenbaum_tiny_interval_experiments}
+\abx@aux@segm{0}{0}{paper:greenbaum_tiny_interval_experiments}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.3}Greenbaum's Tiny Interval Experiments}{49}{subsubsection.5.4.3}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}The Ritz Vector's View and Another Paige's Theorem}{49}{subsection.5.5}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{50}{subsection.5.6}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{Appendices}{50}{section*.8}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {A}Useful Lemmas}{50}{appendix.1.A}\protected@file@percent }
-\newlabel{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}{{A.0.1}{50}{Relative Energy Norm and Relative 2-Norm Conversions}{lemma.1.A.0.1}{}}
+\newlabel{fig:7.1}{{5.4.6a}{50}{Applying CG without re-orthogonalizations on $Ax = b$, the original matrix without the tiny intervals. \relax }{figure.caption.8}{}}
+\newlabel{sub@fig:7.1}{{a}{50}{Applying CG without re-orthogonalizations on $Ax = b$, the original matrix without the tiny intervals. \relax }{figure.caption.8}{}}
+\newlabel{fig:7.2}{{5.4.6b}{50}{Applying CG with full re-orthogonalizations on $\tilde Ax = \tilde b$. $\tilde A$ has tiny intervals. \relax }{figure.caption.8}{}}
+\newlabel{sub@fig:7.2}{{b}{50}{Applying CG with full re-orthogonalizations on $\tilde Ax = \tilde b$. $\tilde A$ has tiny intervals. \relax }{figure.caption.8}{}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.6}{\ignorespaces \relax }}{50}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:7}{{5.4.6}{50}{\relax }{figure.caption.8}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}The Ritz Vector's View and Another Paige's Theorem}{51}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{51}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{Appendices}{51}{section*.9}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {A}Useful Lemmas}{51}{appendix.1.A}\protected@file@percent }
+\newlabel{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}{{A.0.1}{51}{Relative Energy Norm and Relative 2-Norm Conversions}{lemma.1.A.0.1}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {B}Theorems, Propositions}{52}{appendix.1.B}\protected@file@percent }
+\newlabel{prop:Krylov_Subspace_Grade_Invariant_Theorem}{{B.1}{52}{Krylov Subspace Grade Invariant Theorem}{prop.1.B.1}{}}
 \abx@aux@cite{book:greenbaum}
 \abx@aux@segm{0}{0}{book:greenbaum}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {B}Theorems, Propositions}{51}{appendix.1.B}\protected@file@percent }
-\newlabel{prop:Krylov_Subspace_Grade_Invariant_Theorem}{{B.1}{51}{Krylov Subspace Grade Invariant Theorem}{prop.1.B.1}{}}
-\newlabel{theorem:cauchy_interlace}{{6}{51}{Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}{theorem.6}{}}
-\abx@aux@read@bbl@mdfivesum{ABA90CCD743844105D0990F9B14C75F3}
+\newlabel{theorem:cauchy_interlace}{{6}{53}{Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}{theorem.6}{}}
+\abx@aux@read@bbl@mdfivesum{F19D7CF8AA4F0B7D698FEF65DA985A33}
 \abx@aux@refcontextdefaultsdone
 \abx@aux@defaultrefcontext{0}{book:reliable_computation}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:greenbaum_indefinite_lanczos}{nty/global//global/global}
+\abx@aux@defaultrefcontext{0}{paper:greenbaum_tiny_interval_experiments}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{book:greenbaum}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:cg_original}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:SYMLQ}{nty/global//global/global}
@@ -175,4 +185,4 @@
 \abx@aux@defaultrefcontext{0}{notes:painless_cg}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:kaniel1966}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{book:trefethen}{nty/global//global/global}
-\gdef \@abspage@last{53}
+\gdef \@abspage@last{54}
