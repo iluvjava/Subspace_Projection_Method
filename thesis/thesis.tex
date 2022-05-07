@@ -420,7 +420,7 @@
             For above propositions, we used the immediate consequence of the range of these oblique projectors. 
         \subsubsection{Method of Conjugate Directions}
             So far, we have this particular scheme of solving the optimization problem, coupled with the way to compute the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
-            \begin{definition}[Method of Conjugate Directions]
+            \begin{definition}[Conjugate Direction Method]
                 \begin{align}
                     \begin{cases}
                         \overline{P}_k = P_kD^{-1}_kP_k^T
@@ -435,7 +435,7 @@
                     \end{cases}
                 \end{align}
             \end{definition}
-            With the assistance of a set of basis vectors that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method }(CDM). 
+            With the assistance of a set of basis vectors that span the whole space, this algorithm is possible to achieve the objective. Take note that we can accumulate the solution for $x_k$ accumulatively, instead of computing the whole projector process, we have the choice to update it recursively as the newest $p_k$ vector is introduced at that step. Let's Call this formulation of the algorithm: \textit{Conjugate Direction Method}(CDM). 
             \begin{remark}
                 This CDM method is nothing new, in the original paper from Hestenes and Stiefel back in 1952\cite{paper:cg_original}, they commented on the method of Conjugate Direction, for each choice of basis $\{u_i\}_{i = 1}^n$ there resides a unique algorithm. If one were to choose the basis to be the set of standard basis vectors, then the resulting algorithm will be the equivalent of a Gaussian Elimination. 
             \end{remark}
@@ -654,7 +654,7 @@
             \end{definition}
             That is the algorithm, stated with all the iteration numbers listed as superscripts inside parentheses. Which is equivalent to what we have proven for the CG.
         \subsubsection{CG and Krylov Subspace}\label{sec:CG_and_Krylov_Subspace}
-            The conjugate Gradient Algorithm is actually a CG, a special case of the algorithm we derived at the start of the excerpt. The full algorithm can be seen by the short recurrence for the residual and the conjugation vector. This part is trivial. Next, we want to show the relations to the Krylov Subspace, which only occurs for the CG algorithm. 
+            The conjugate Gradient Algorithm is actually a CDM. It's a special case of the CDM method where the first direction of descend is the gradient at the initial guess (The residual). Next, we want to show how CG is related to the Krylov Subspace, which only happens with CG and not the CDM. 
             \begin{prop}
                 \begin{align}
                     p_k \in \mathcal K_{k + 1}(A|r_0)
