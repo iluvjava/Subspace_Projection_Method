@@ -22,6 +22,7 @@ function LanczosPojectOnRitz(
 
 return offset:(n-1), vcat(ProjOnRitz...) end
 
+
 function Prepare()
     n = 64
     A = Diagonal(LinRange(-1, 1, n).^3)
