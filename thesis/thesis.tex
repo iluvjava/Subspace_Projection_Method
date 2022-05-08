@@ -893,7 +893,7 @@
                 \end{align}
                 The last line is saying the conditions that the characteristic polynomial for $T_k$ from the Lanczos iterations is minimizing the weighted sum at the eigenvalues of the matrix $A$. A direct consequence of this is a more refined terminations conditions than \hyperref[prop:Lanczos_Termination_Conditions]{proposition \ref*{prop:Lanczos_Termination_Conditions}} for the Lanczos iterations, giving the information for the initial vector $q_1$. Under exact arithmetic, the number of iterations underwent by Lanczos equals the unique number of eigenvalues $\lambda_i$ where $(V^Tq_1)_i \neq 0$. 
                 \par
-                In fact, the idea can be taken further and the orthogonality between the Lanczos vector $q_k$ translate to the orthgonality of the polynomial representing $q_k$ in $\mathcal K_k$ which also is a rescaled version of the characterstic polynomial of $T_k$. 
+                In fact, the idea can be taken further and the orthogonality between the Lanczos vector $q_k$ translate to the orthgonality of the polynomial representing $q_k$ in $\mathcal K_k$ (see \hyperref[prop:Orthogonal_Polynomials_and_Lanczos]{proposition \ref*{prop:Orthogonal_Polynomials_and_Lanczos}} in the appendix for a proof) which also is a rescaled version of the characterstic polynomial of $T_k$. 
             \end{remark}
             
 \section{Analysis of Conjugate Gradient and Lanczos Iterations}
@@ -2089,7 +2089,7 @@
         \end{remark}
     
 
-    \subsection{The Ritz Vector's View and Another Paige's Theorem}
+    \subsection{Another Paige's Theorem}
         In this section, we prove another analysis of the Lanczos Iterations from Dammel's textbook(\textbf{Citation Needed}) where he introduced a proof of another Paige's theorem that shows exactly how to measure the loss of orthogonality of the Lanczos vectors against Ritz vectors. Here, we wish to follow the same proof with more details and thoroughness.
         \par
         The theorem highlights two important facts. The first is that the loss of orthogonality of Lanczos Vector and Ghost eigenvalues appears at the same time and they are systematic. The second is that the projection of the Lanczos vector onto the converged Ritz vectors can be numerically attained, which tells us how much lost of orthogonality is occurring and which direction we need to re-orthogonalize so that the Lanczos vectors retains orthogonality. Here is the statement of the theorem: 
@@ -2209,7 +2209,7 @@
             \end{align}
             Theorem taken from first chapter of Greenbuam's book\cite{book:greenbaum} and it's adapted for symmetric tridiagonal matrix. 
         \end{theorem}
-        \begin{prop}
+        \begin{prop}[Orthogonal Polynomials and Lanczos]\label{prop:Orthogonal_Polynomials_and_Lanczos}
             The Lanczos algorithm generates orthogonaly polynomial under a discrete weighted measure under the eigenvalues of matrix $A$, which is also the Lanczos vector $q_k$ represented under the Krylov subspace. 
         \end{prop}
         \begin{proof}
@@ -2219,7 +2219,7 @@
                 \\
                 \exists\; q_{i} &\in \mathcal{P}_{i - 1}: v_i = q_{i - 1}(A) v_1
             \end{align}
-            
+            Since the exact arithematic generates orthogonal lanczos vectors, let's consider $v_i, v_j$ being represented by polynomial $\phi, \varphi$, then we have:
             \begin{align}
                 \langle v_i, v_j\rangle &= 0 
                 \\
@@ -2235,8 +2235,85 @@
                 \\
                 \sum_{i = 1}^{n} (f_1)_i^2\phi(\lambda_i)\varphi(\lambda_i) &= 0
             \end{align}
-
+            Therefore the polynomials $\phi, \varphi$ are orthogonal under the discrete measure over eigenvalues of $A$ weighted by the vector $(f_1)^2$. 
         \end{proof}
+        \begin{prop}[Recursion of the Symmetric Tridiagonal Matrix Determinant]\label{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}
+            Let $T_K$ be a symmetric tridiagonal matrix $\in \mathbb{R}^{k\times k}$ with $\alpha$ on its diagonal and $\beta$ on its subdiagona. Recursively, we define $T_{k - i}$ to be the top left sub matrix of $T_k$, with size $(k - 1)\times(k - 1)$. Using $|\cdot|$ to denote the determinant of a matrix, we have the recurrence relation: 
+            $$
+                |T_k| = \alpha_k|T_{k - 1}| - \beta_{k - 1}^2|T_{k - 2}|
+            $$
+        \end{prop}
+        \begin{proof}
+            Using the notation of $e_{k}^{(m)}$ to denote the $k^{th}$ standard basis vector in $\mathbb{R}^m$, consider the Block Matrix: 
+            \begin{align}
+                T_k &= \begin{bmatrix}
+                    T_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 2)} & 
+                    \\
+                    \beta_{k - 2}e_{k - 2}^{(k - 2)T} & \alpha_{k - 1}  & \beta_{k - 1}e_{k - 1}^{(k - 1)}
+                    \\
+                    & \beta_{k - 1}e_{k - 1}^{(k - 1)T} & \alpha_k&
+                \end{bmatrix}
+            \end{align}
+            Now, we use the Laplace Expansion to figure out the determinant we are expanding the Laplace Expansion on the last row of $T_k$
+            \begin{align}
+                &|T_k| = (-1)^{k+(k - 1)}\beta_{k - 1} \left|\begin{bmatrix}
+                    T_{k - 2} & 
+                    \\
+                    \beta_{k - 2}e^{(k - 2)T}_{k - 2} & \beta_{k - 1}e_{k - 1}^{(k - 1)}
+                \end{bmatrix}\right|&
+                 + 
+                (-1)^{2k} \alpha_k
+                \left|
+                    \underbrace{\begin{bmatrix}
+                        T_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 2)} 
+                        \\
+                        \beta_{k - 2}e_{k - 2}^{(k - 2)T} & \alpha_{k - 1}
+                    \end{bmatrix}}_{=T_{k - 1}}
+                \right|
+                \\
+                &(-1)^{2k - 2}\beta_{k - 1}|T_{k - 2}| 
+                = 
+                \left|\begin{bmatrix}
+                    T_{k - 2} & 
+                    \\
+                    \beta_{k - 1}e^{(k - 2)T}_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 1)}
+                \end{bmatrix}\right|&
+            \end{align}
+            Substituting the last equation back to the first equation of the first term. 
+            \begin{align}
+                |T_k| &= 
+                (-1)^{2k - 2 + 2k - 1}\beta_{k - 1}^2|T_{k - 2}| + \alpha_k|T_{k - 1}|
+                \\
+                &= -\beta_{k - 1}^2|T_{k - 2}| + \alpha_k|T_{k - 1}|
+            \end{align}
+        \end{proof}
+        \begin{theorem}[Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix]
+            \label{theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix}
+            The characteristic polynomial of a symmetric tridiagonal matrix satisfies the recurrences: 
+            $$
+            \begin{cases}
+                p_k(x) = - \beta_{k - 1}^2 p_{k - 2}(x) + (\alpha_k - x)p_{k - 1}(x)
+                \\
+                p_0(x) = 1
+                \\
+                p_{-1}(x) = 0
+            \end{cases}
+            $$
+            Where, $p_k(x) = |T_k - xI|$, and $p_{k - 1}(x) :=|(T_k)_{1:k - 1, 1:k - 1}|$, and $p_{k - 2} = |(T_k)_{1:k - 2, 1:k - 2}|$. 
+        \end{theorem}
+        \begin{proof}
+            Using \hyperref[prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant]{Proposition \ref*{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}}, but replacing $\alpha_k$ to be $\alpha_k - x$ due to the shifting introduced by $T_k - xI$, then: 
+            \begin{align}
+                |T_k - Ix| &= (\alpha_k - x)|T_{k - 1} - xI| -\beta_{k - 1}^2|T_{k - 2} - Ix|
+                \\
+                \implies
+                p_k(x) &= - \beta_{k - 1}^2 p_{k - 2}(x) + (\alpha_k - x)p_{k - 1}(x)
+            \end{align}
+            The recurrence is direct from the recurrences of the determinant of symmetric tridiagonal matrix, and a monic polynomial with degree zero is just $1$, therefore the base case matches up as well. 
+        \end{proof}
+        \begin{prop}[Relations between Tridiagonal Characteristic Polynomials and Lanczos Orthgonal Polynomials]
+
+        \end{prop}
         \begin{prop}
             The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. It's what referred to as a irreducible symmetric tridiagonal matrix in some literatures. 
         \end{prop}
