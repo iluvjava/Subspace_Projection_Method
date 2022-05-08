@@ -8,11 +8,12 @@ function LanczosPojectOnRitz(
     exact=false
 )
     il.reorthogonalize = exact
+    n = il.Q[1]|>length
     for _ in 1: offset - 1
         il()
     end
     ProjOnRitz = Vector()
-    for II in offset:n - 1
+    for II in offset:(n) - 1
         q = il()
         T = il|>GetTMatrix
         Q = il|>GetQMatrix
@@ -41,20 +42,24 @@ fig = plot(
     xaxis, abs.(ys[:, 1]),
     yaxis=:log,
     xlabel="iterations: k", 
-    ylabel="\$\\log(q_k^TQ_ks_i^{(k)})\$", 
+    ylabel="\$q_k^TQ_ks_i^{(k)}\$", 
     label="\$q^T_kQ_ks_1\$",
     legend=:bottomleft, size=(750, 500), 
-    dpi=300
+    dpi=300, leftmargin=5*Plots.mm
 )
+
 plot!(
     fig, xaxis, abs.(ys[:, 2]),
     linestyle=:dashdot, 
     label="\$q^T_kQ_ks_2\$"
 )
+
 plot!(
     fig, xaxis, abs.(ys[:, 3]),
     linestyle=:dash,
     label="\$q^T_kQ_ks_3\$"
 )
+
 title!(fig, "Ritz Proj with Lanczs on \$T_k, q_1=\\xi_1\$")
 savefig(fig,"$(@__DIR__)/plots/ritz_proj_tridiagonal")
+fig|>display

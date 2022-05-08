@@ -34,12 +34,12 @@ fig1 = plot(
     yaxis=:log, 
     legend=:bottomleft, size=(750, 500), 
     label="\$q^T_kQ_ks_1\$", 
-    dpi=300
+    dpi=300, leftmargin=5*Plots.mm
 )
 plot!(fig1, Iters, ProjOnRitz[:, 2], linestyle=:dashdot, label="\$q^T_kQ_ks_2\$")
 plot!(fig1, Iters, ProjOnRitz[:, 3], linestyle=:dash, label="\$q^T_kQ_ks_3\$")
 title!("Lanczos vec proj onto Ritz Vectors (Floats)")
-yaxis!("\$\\log(|q^T_kQS|)\$")
+yaxis!("\$|q^T_kQS|\$")
 xaxis!("iterations") 
 fig1|>display
 savefig(fig1, "$(@__DIR__)/plots/lanczos_proj_on_ritz_float.png")
@@ -54,13 +54,13 @@ fig1 = plot(
     yaxis=:log, 
     legend=:bottomleft, size=(750, 500), 
     label="\$q^T_kQ_ks_1\$", 
-    dpi=300
+    dpi=300, leftmargin=5*Plots.mm
 )
 
 plot!(fig1, Iters, ProjOnRitz[:, 2], linestyle=:dashdot, label="\$q^T_kQ_ks_2\$")
 plot!(fig1, Iters, ProjOnRitz[:, 3], linestyle=:dash, label="\$q^T_kQ_ks_3\$")
 title!("Lanczos vec proj on ritz vectors (largest 3) (Exact)")
-yaxis!("\$\\log(|q^T_kQS|)\$")
+yaxis!("\$|q^T_kQS|\$")
 xaxis!("iterations") 
 fig1|>display
 savefig(fig1, "$(@__DIR__)/plots/lanczos_proj_on_ritz_exact.png")
