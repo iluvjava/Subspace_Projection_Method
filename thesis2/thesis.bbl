@@ -1,0 +1,463 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{book:reliable_computation}{book}{}
+      \name{author}{4}{}{%
+        {{hash=a815ff56b53b911f1bccbeb9c573ba8e}{%
+           family={Cox},
+           familyi={C\bibinitperiod},
+           given={M.G.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=a815ff56b53b911f1bccbeb9c573ba8e}{%
+           family={Cox},
+           familyi={C\bibinitperiod},
+           given={M.G.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=5ef20d4ea6e6fc0e62048a1111806703}{%
+           family={Hammarling},
+           familyi={H\bibinitperiod},
+           given={S.J.},
+           giveni={S\bibinitperiod}}}%
+        {{hash=4796426128f80cbbadb24aa86b432d19}{%
+           family={Wilkinson},
+           familyi={W\bibinitperiod},
+           given={J.H.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Clarendon Press}%
+      }
+      \strng{namehash}{c5b987d9ecfd03fdf993f785b6428eb0}
+      \strng{fullhash}{5ad75baab37af7cede068172a09d4744}
+      \strng{bibnamehash}{c5b987d9ecfd03fdf993f785b6428eb0}
+      \strng{authorbibnamehash}{c5b987d9ecfd03fdf993f785b6428eb0}
+      \strng{authornamehash}{c5b987d9ecfd03fdf993f785b6428eb0}
+      \strng{authorfullhash}{5ad75baab37af7cede068172a09d4744}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{9780198535645}
+      \field{series}{Oxford science publications}
+      \field{title}{Reliable Numerical Computation}
+      \field{year}{1990}
+      \verb{urlraw}
+      \verb https://books.google.com/books?id=CBnvAAAAMAAJ
+      \endverb
+      \verb{url}
+      \verb https://books.google.com/books?id=CBnvAAAAMAAJ
+      \endverb
+    \endentry
+    \entry{paper:greenbaum_indefinite_lanczos}{article}{}
+      \name{author}{3}{}{%
+        {{hash=c39f7dabd95a216ddc46272a22b9812f}{%
+           family={Greenbaum},
+           familyi={G\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=568036b4cd9e4e9b59229d045edbf10a}{%
+           family={Druskin},
+           familyi={D\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+        {{hash=557f4c5566fabc5fe72970efc0d1ae3e}{%
+           family={Knizhnerman},
+           familyi={K\bibinitperiod},
+           given={L.\bibnamedelimi A.},
+           giveni={L\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{090169ededb2709196aec26501254c40}
+      \strng{fullhash}{090169ededb2709196aec26501254c40}
+      \strng{bibnamehash}{090169ededb2709196aec26501254c40}
+      \strng{authorbibnamehash}{090169ededb2709196aec26501254c40}
+      \strng{authornamehash}{090169ededb2709196aec26501254c40}
+      \strng{authorfullhash}{090169ededb2709196aec26501254c40}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Zh. Vychisl. Mat. Mat. Fiz.}
+      \field{number}{39}
+      \field{title}{On solving indefinite symmetric linear systems by means of the Lanczos method}
+      \field{year}{1999}
+      \field{pages}{371\bibrangedash 377}
+      \range{pages}{7}
+    \endentry
+    \entry{paper:greenbaum_tiny_interval_experiments}{article}{}
+      \name{author}{2}{}{%
+        {{hash=c39f7dabd95a216ddc46272a22b9812f}{%
+           family={Greenbaum},
+           familyi={G\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=50cb0465adf954f6f5cfe66332b8d2db}{%
+           family={Strakos},
+           familyi={S\bibinitperiod},
+           given={Z.},
+           giveni={Z\bibinitperiod}}}%
+      }
+      \strng{namehash}{197a42170cf92a6584d39128728dba4e}
+      \strng{fullhash}{197a42170cf92a6584d39128728dba4e}
+      \strng{bibnamehash}{197a42170cf92a6584d39128728dba4e}
+      \strng{authorbibnamehash}{197a42170cf92a6584d39128728dba4e}
+      \strng{authornamehash}{197a42170cf92a6584d39128728dba4e}
+      \strng{authorfullhash}{197a42170cf92a6584d39128728dba4e}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{It is demonstrated that finite precision Lanczos and conjugate gradient computations for solving a symmetric positive definite linear system \$Ax = b\$ or computing the eigenvalues of A behave very similarly to the exact algorithms applied to any of a certain class of larger matrices. This class consists of matrices \$\hat{A} \$ which have many eigenvalues spread throughout tiny intervals about the eigenvalues of A. The width of these intervals is a modest multiple of the machine precision times the norm of A. This analogy appears to hold, provided only that the algorithms are not run for huge numbers of steps. Numerical examples are given to show that many of the phenomena observed in finite precision computations with A can also be observed in the exact algorithms applied to such a matrix \$\hat{A} \$.}
+      \field{journaltitle}{SIAM Journal on Matrix Analysis and Applications}
+      \field{number}{1}
+      \field{title}{Predicting the Behavior of Finite Precision Lanczos and Conjugate Gradient Computations}
+      \field{volume}{13}
+      \field{year}{1992}
+      \field{pages}{121\bibrangedash 137}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1137/0613011
+      \endverb
+      \verb{eprint}
+      \verb https://doi.org/10.1137/0613011
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1137/0613011
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1137/0613011
+      \endverb
+    \endentry
+    \entry{book:greenbaum}{book}{}
+      \name{author}{1}{}{%
+        {{hash=949db8761147ea6163f7ffd8d0b5880a}{%
+           family={Greenbaum},
+           familyi={G\bibinitperiod},
+           given={Anne},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Society for Industrial}%
+        {Applied Mathematics}%
+      }
+      \strng{namehash}{949db8761147ea6163f7ffd8d0b5880a}
+      \strng{fullhash}{949db8761147ea6163f7ffd8d0b5880a}
+      \strng{bibnamehash}{949db8761147ea6163f7ffd8d0b5880a}
+      \strng{authorbibnamehash}{949db8761147ea6163f7ffd8d0b5880a}
+      \strng{authornamehash}{949db8761147ea6163f7ffd8d0b5880a}
+      \strng{authorfullhash}{949db8761147ea6163f7ffd8d0b5880a}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Iterative Methods for Solving Linear Systems}
+      \field{year}{1997}
+    \endentry
+    \entry{paper:cg_original}{article}{}
+      \name{author}{2}{}{%
+        {{hash=f6c6be7ca0c4fd448c1ed3d1f5586b29}{%
+           family={Hestenes},
+           familyi={H\bibinitperiod},
+           given={Magnus\bibnamedelima R.},
+           giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=21b4a8741247ba566d702dfa0c9fef9b}{%
+           family={Stiefel},
+           familyi={S\bibinitperiod},
+           given={Eduard},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {National Institute of Standards}%
+        {Technology}%
+      }
+      \strng{namehash}{60eabe8de5d9700d9da9f2aee6e8c630}
+      \strng{fullhash}{60eabe8de5d9700d9da9f2aee6e8c630}
+      \strng{bibnamehash}{60eabe8de5d9700d9da9f2aee6e8c630}
+      \strng{authorbibnamehash}{60eabe8de5d9700d9da9f2aee6e8c630}
+      \strng{authornamehash}{60eabe8de5d9700d9da9f2aee6e8c630}
+      \strng{authorfullhash}{60eabe8de5d9700d9da9f2aee6e8c630}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Research of the National Bureau of Standards}
+      \field{number}{6}
+      \field{title}{Methods of Conjugate Gradient for Solving Linear Systems}
+      \field{volume}{49}
+      \field{year}{1952}
+      \field{pages}{409\bibrangedash 436}
+      \range{pages}{28}
+    \endentry
+    \entry{paper:SYMLQ}{article}{}
+      \name{author}{2}{}{%
+        {{hash=d35ea0c6e503123255c30f3a3298acc9}{%
+           family={Paige},
+           familyi={P\bibinitperiod},
+           given={C.\bibnamedelimi C.},
+           giveni={C\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=7409c44804596d75c9402c84b2a4f3e5}{%
+           family={Saunders},
+           familyi={S\bibinitperiod},
+           given={M.\bibnamedelimi A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Society for Industrial}%
+        {Applied Mathematics}%
+      }
+      \strng{namehash}{d99558da12c5a0a44059edfe259ea633}
+      \strng{fullhash}{d99558da12c5a0a44059edfe259ea633}
+      \strng{bibnamehash}{d99558da12c5a0a44059edfe259ea633}
+      \strng{authorbibnamehash}{d99558da12c5a0a44059edfe259ea633}
+      \strng{authornamehash}{d99558da12c5a0a44059edfe259ea633}
+      \strng{authorfullhash}{d99558da12c5a0a44059edfe259ea633}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{SIAM.J Numerical Analysis}
+      \field{number}{4}
+      \field{title}{Solutions of Sparse Indefinite System of Linear Equations}
+      \field{volume}{12}
+      \field{year}{1975}
+      \field{pages}{617\bibrangedash 629}
+      \range{pages}{13}
+    \endentry
+    \entry{paper:paige1980}{article}{}
+      \name{author}{1}{}{%
+        {{hash=d35ea0c6e503123255c30f3a3298acc9}{%
+           family={Paige},
+           familyi={P\bibinitperiod},
+           given={C.C.},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{d35ea0c6e503123255c30f3a3298acc9}
+      \strng{fullhash}{d35ea0c6e503123255c30f3a3298acc9}
+      \strng{bibnamehash}{d35ea0c6e503123255c30f3a3298acc9}
+      \strng{authorbibnamehash}{d35ea0c6e503123255c30f3a3298acc9}
+      \strng{authornamehash}{d35ea0c6e503123255c30f3a3298acc9}
+      \strng{authorfullhash}{d35ea0c6e503123255c30f3a3298acc9}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Eigenvalues and eigenvectors of a large sparse symmetric matrix A can be found accurately and often very quickly using the Lanczos algorithm without reorthogonalization. The algorithm gives essentially correct information on the eigensystem of A, although it does not necessarily give the correct multiplicity of multiple, or even single, eigenvalues. It is straightforward to determine a useful bound on the accuracy of every eigenvalue given by the algorithm. The initial behavior of the algorithm is surprisingly good: it produces vectors spanning the Krylov subspace of a matrix very close to A until this subspace contains an exact eigenvector of a matrix very close to A, and up to this point the effective behavior of the algorithm for the eigenproblem is very like that of the Lanczos algorithm using full reorthogonalization. This helps to explain the remarkable behavior of the basic Lanczos algorithm.}
+      \field{issn}{0024-3795}
+      \field{journaltitle}{Linear Algebra and its Applications}
+      \field{title}{Accuracy and effectiveness of the Lanczos algorithm for the symmetric eigenproblem}
+      \field{volume}{34}
+      \field{year}{1980}
+      \field{pages}{235\bibrangedash 258}
+      \range{pages}{24}
+      \verb{doi}
+      \verb https://doi.org/10.1016/0024-3795(80)90167-6
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/0024379580901676
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/0024379580901676
+      \endverb
+    \endentry
+    \entry{paper:saad_ritz_convergence}{article}{}
+      \name{author}{1}{}{%
+        {{hash=b8b77550570993a3cb19b5c5f3130501}{%
+           family={Saad},
+           familyi={S\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{b8b77550570993a3cb19b5c5f3130501}
+      \strng{fullhash}{b8b77550570993a3cb19b5c5f3130501}
+      \strng{bibnamehash}{b8b77550570993a3cb19b5c5f3130501}
+      \strng{authorbibnamehash}{b8b77550570993a3cb19b5c5f3130501}
+      \strng{authornamehash}{b8b77550570993a3cb19b5c5f3130501}
+      \strng{authorfullhash}{b8b77550570993a3cb19b5c5f3130501}
+      \field{extraname}{1}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Theoretical error bounds are established, improving those given by S. Kaniel. Similar inequalities are found for the eigenvectors by using bounds on the acute angle between the exact eigenvectors and the Krylov subspace spanned by \$x\_0 ,Ax\_0 , \cdots ,A^{n - 1} x\_0 \$, where \$x\_0 \$ is the initial vector of the process.All the results obtained are then extended to the block-Lanczos method, and it is shown that the bounds on the rates of the Block version are superior to those of the single vector process. The difference between the two methods is in many respects similar to the difference between the simultaneous iteration method and the single vector power method. Several numerical experiments are described in order to compare the actual rates of convergence with the theoretical bounds.}
+      \field{journaltitle}{SIAM Journal on Numerical Analysis}
+      \field{number}{5}
+      \field{title}{On the Rates of Convergence of the Lanczos and the Block-Lanczos Methods}
+      \field{volume}{17}
+      \field{year}{1980}
+      \field{pages}{687\bibrangedash 706}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1137/0717059
+      \endverb
+      \verb{eprint}
+      \verb https://doi.org/10.1137/0717059
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1137/0717059
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1137/0717059
+      \endverb
+    \endentry
+    \entry{book:saad_sparse_linear}{book}{}
+      \name{author}{1}{}{%
+        {{hash=7fe737d5e37812399cf79c29f4385a66}{%
+           family={Saad},
+           familyi={S\bibinitperiod},
+           given={Yousef},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Society for Industrial}%
+        {Applied Mathematics}%
+      }
+      \strng{namehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{fullhash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{bibnamehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{authorbibnamehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{authornamehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{authorfullhash}{7fe737d5e37812399cf79c29f4385a66}
+      \field{extraname}{2}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2}
+      \field{title}{Iterative Methods for Sparse Linear Systems}
+      \field{year}{2003}
+    \endentry
+    \entry{paper:FOM}{article}{}
+      \name{author}{1}{}{%
+        {{hash=7fe737d5e37812399cf79c29f4385a66}{%
+           family={Saad},
+           familyi={S\bibinitperiod},
+           given={Yousef},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {American Mathematical Society}%
+      }
+      \strng{namehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{fullhash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{bibnamehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{authorbibnamehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{authornamehash}{7fe737d5e37812399cf79c29f4385a66}
+      \strng{authorfullhash}{7fe737d5e37812399cf79c29f4385a66}
+      \field{extraname}{3}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Mathematics of Computations}
+      \field{number}{155}
+      \field{title}{Krylov Subspace Methods for Solving Large Unsymmetric Linear Systems}
+      \field{volume}{37}
+      \field{year}{1981}
+      \field{pages}{105\bibrangedash 126}
+      \range{pages}{22}
+    \endentry
+    \entry{notes:painless_cg}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=19892fe98fc08cb8c38ec8b806632cd9}{%
+           family={Shewchuk},
+           familyi={S\bibinitperiod},
+           given={Jonathan\bibnamedelima Richard},
+           giveni={J\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {School of Computer Science Carnegie Mellon University Pittsburgh}%
+      }
+      \strng{namehash}{19892fe98fc08cb8c38ec8b806632cd9}
+      \strng{fullhash}{19892fe98fc08cb8c38ec8b806632cd9}
+      \strng{bibnamehash}{19892fe98fc08cb8c38ec8b806632cd9}
+      \strng{authorbibnamehash}{19892fe98fc08cb8c38ec8b806632cd9}
+      \strng{authornamehash}{19892fe98fc08cb8c38ec8b806632cd9}
+      \strng{authorfullhash}{19892fe98fc08cb8c38ec8b806632cd9}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{8}
+      \field{title}{An Introduction to the Conjugate Gradient Method Without the Agonizing Pain}
+      \field{year}{1994}
+    \endentry
+    \entry{paper:kaniel1966}{article}{}
+      \name{author}{1}{}{%
+        {{hash=8f65f9c981dd3f53403250e8a69c8012}{%
+           family={Shmuel},
+           familyi={S\bibinitperiod},
+           given={Kaniel},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{8f65f9c981dd3f53403250e8a69c8012}
+      \strng{fullhash}{8f65f9c981dd3f53403250e8a69c8012}
+      \strng{bibnamehash}{8f65f9c981dd3f53403250e8a69c8012}
+      \strng{authorbibnamehash}{8f65f9c981dd3f53403250e8a69c8012}
+      \strng{authornamehash}{8f65f9c981dd3f53403250e8a69c8012}
+      \strng{authorfullhash}{8f65f9c981dd3f53403250e8a69c8012}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Math. of Comp.}
+      \field{number}{95}
+      \field{title}{stimates for Some Computational Techniques in Linear Algebra}
+      \field{year}{1966}
+      \field{pages}{369\bibrangedash 378}
+      \range{pages}{10}
+    \endentry
+    \entry{book:trefethen}{book}{}
+      \name{author}{2}{}{%
+        {{hash=e3376455eaec77b00950a1dc9ce095f5}{%
+           family={Trefethen},
+           familyi={T\bibinitperiod},
+           given={Lloyd\bibnamedelima N.},
+           giveni={L\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=22ad692c20b3b8f8f6a32384dae0ac10}{%
+           family={Bau},
+           familyi={B\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Philadelphia}%
+      }
+      \list{publisher}{2}{%
+        {Society for Industrial}%
+        {Applied Mathematics}%
+      }
+      \strng{namehash}{37975382dbce969c6946ec910a13d1f7}
+      \strng{fullhash}{37975382dbce969c6946ec910a13d1f7}
+      \strng{bibnamehash}{37975382dbce969c6946ec910a13d1f7}
+      \strng{authorbibnamehash}{37975382dbce969c6946ec910a13d1f7}
+      \strng{authornamehash}{37975382dbce969c6946ec910a13d1f7}
+      \strng{authorfullhash}{37975382dbce969c6946ec910a13d1f7}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{3}
+      \field{title}{Numerical Linear Algebra}
+      \field{year}{1997}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
