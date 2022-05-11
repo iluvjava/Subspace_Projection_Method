@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  10 MAY 2022 22:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  11 MAY 2022 00:20
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -792,12 +792,12 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1398.
 
 [28] [29] [30]
-<cg_convergence_0.9.png, id=743, 2258.4375pt x 1505.625pt>
+<cg_convergence_0.9.png, id=745, 2258.4375pt x 1505.625pt>
 File: cg_convergence_0.9.png Graphic file (type png)
 <use cg_convergence_0.9.png>
 Package pdftex.def Info: cg_convergence_0.9.png  used on input line 1512.
 (pdftex.def)             Requested size: 341.43306pt x 227.603pt.
-<cg_convergence_1.png, id=744, 2258.4375pt x 1505.625pt>
+<cg_convergence_1.png, id=746, 2258.4375pt x 1505.625pt>
 File: cg_convergence_1.png Graphic file (type png)
 <use cg_convergence_1.png>
 Package pdftex.def Info: cg_convergence_1.png  used on input line 1519.
@@ -805,50 +805,50 @@ Package pdftex.def Info: cg_convergence_1.png  used on input line 1519.
  [31] [32 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/cg_convergence_0.9.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/cg_convergence_1.png>]
 LaTeX Font Info:    Calculating math sizes for size <10.00012> on input line 1537.
  [33] [34] [35] [36]
-<ritz_trajectory_plot_floats.png, id=838, 1882.03125pt x 1882.03125pt>
+<ritz_trajectory_plot_floats.png, id=841, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_floats.png Graphic file (type png)
 <use ritz_trajectory_plot_floats.png>
 Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1726.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
-<ritz_trajectory_plot_exact.png, id=839, 1882.03125pt x 1882.03125pt>
+<ritz_trajectory_plot_exact.png, id=842, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_exact.png Graphic file (type png)
 <use ritz_trajectory_plot_exact.png>
 Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1727.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
  [37 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/ritz_trajectory_plot_floats.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/ritz_trajectory_plot_exact.png>]
-<fig3.png, id=852, 724.7075pt x 513.92pt>
+<fig3.png, id=855, 724.7075pt x 513.92pt>
 File: fig3.png Graphic file (type png)
 <use fig3.png>
 Package pdftex.def Info: fig3.png  used on input line 1737.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
-<fig4.png, id=853, 724.7075pt x 513.92pt>
+<fig4.png, id=856, 724.7075pt x 513.92pt>
 File: fig4.png Graphic file (type png)
 <use fig4.png>
 Package pdftex.def Info: fig4.png  used on input line 1738.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
  [38 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/fig3.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/fig4.png>] [39]
-<lanczos_proj_on_ritz_float.png, id=884, 2258.4375pt x 1505.625pt>
+<lanczos_proj_on_ritz_float.png, id=887, 2258.4375pt x 1505.625pt>
 File: lanczos_proj_on_ritz_float.png Graphic file (type png)
 <use lanczos_proj_on_ritz_float.png>
 Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 1771.
 (pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
-<lanczos_proj_on_ritz_exact.png, id=885, 2258.4375pt x 1505.625pt>
+<lanczos_proj_on_ritz_exact.png, id=888, 2258.4375pt x 1505.625pt>
 File: lanczos_proj_on_ritz_exact.png Graphic file (type png)
 <use lanczos_proj_on_ritz_exact.png>
 Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 1777.
 (pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
-<ritz_proj_tridiagonal.png, id=886, 2258.4375pt x 1505.625pt>
+<ritz_proj_tridiagonal.png, id=889, 2258.4375pt x 1505.625pt>
 File: ritz_proj_tridiagonal.png Graphic file (type png)
 <use ritz_proj_tridiagonal.png>
 Package pdftex.def Info: ritz_proj_tridiagonal.png  used on input line 1782.
 (pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
  [40 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/lanczos_proj_on_ritz_float.png>] [41 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/lanczos_proj_on_ritz_exact.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/ritz_proj_tridiagonal.png>]
-<floats_cg_on_exact_matrix.png, id=904, 2258.4375pt x 1505.625pt>
+<floats_cg_on_exact_matrix.png, id=907, 2258.4375pt x 1505.625pt>
 File: floats_cg_on_exact_matrix.png Graphic file (type png)
 <use floats_cg_on_exact_matrix.png>
 Package pdftex.def Info: floats_cg_on_exact_matrix.png  used on input line 1804.
 (pdftex.def)             Requested size: 341.43306pt x 227.603pt.
-<exact_cg_on_smeared_matrix.png, id=905, 2258.4375pt x 1505.625pt>
+<exact_cg_on_smeared_matrix.png, id=908, 2258.4375pt x 1505.625pt>
 File: exact_cg_on_smeared_matrix.png Graphic file (type png)
 <use exact_cg_on_smeared_matrix.png>
 Package pdftex.def Info: exact_cg_on_smeared_matrix.png  used on input line 1811.
@@ -861,18 +861,18 @@ Package logreq Info: Writing requests to 'thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 22606 strings out of 478994
- 376151 string characters out of 5858183
- 1146510 words of memory out of 5000000
- 39252 multiletter control sequences out of 15000+600000
+ 22607 strings out of 478994
+ 376198 string characters out of 5858183
+ 1145537 words of memory out of 5000000
+ 39253 multiletter control sequences out of 15000+600000
  423092 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  81i,22n,117p,1319b,1991s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
-Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/thesis.pdf (54 pages, 2073530 bytes).
+Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis2/thesis.pdf (54 pages, 2075164 bytes).
 PDF statistics:
- 1295 PDF objects out of 1440 (max. 8388607)
- 1180 compressed objects within 12 object streams
+ 1297 PDF objects out of 1440 (max. 8388607)
+ 1182 compressed objects within 12 object streams
  529 named destinations out of 1000 (max. 500000)
  512 words of extra memory for PDF output out of 10000 (max. 10000000)
 

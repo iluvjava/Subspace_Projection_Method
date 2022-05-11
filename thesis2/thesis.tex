@@ -800,7 +800,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                         & q_{j + 1} := \tilde{q}_{j + 1}/\beta_j
                     \end{aligned}
                 \end{align}
-                Here, let it be the case that $H_k$ is a symmetric tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the Lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product.Other variants of the Lanczos Iterations algorithm exists. See \hyperref[def:Lanczos Iterations Variants]{appendix item \ref*{def:Lanczos Iterations Variants}}. 
+                Here, let it be the case that $H_k$ is a symmetric tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the Lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product.Other variants of the Lanczos Iterations algorithm exists. See \hyperref[def:Lanczos Iterations Variants]{appendix item \ref*{def:Lanczos Iterations Variants}} for one such variant. 
                 
             \end{definition}
             The algorithm generates the following two matrices, $Q_k$ which is orthogonal and it spans $\mathcal K_k(A|q_1)$, and a symmetric tridiagonal Matrix: 
@@ -820,7 +820,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                     & & \beta_{k - 1} & \alpha_k
                 \end{bmatrix}
             \end{align}
-            Similar to the recurrence from the Arnoldi Algorithm, the Lanczos also create a recurrence between $Aq_k$ and $Q_k$ and $q_{k + 1}$, but the recurrence is shorter so that it simply makes use of the previous two vectors: 
+            Similar to the recurrence from the Arnoldi Algorithm, the Lanczos also create a recurrence between $Aq_k$ and $Q_k$ and $q_{k + 1}$, but the recurrence is shorter so that it simply makes use of the previous two vectors. In addition, the tridiagonal matrix that is produced has no repeated eigenvalues, which is a useful fact and for a proof, see \hyperref[prop:Irreducible Symmetric Tridiagonal Matrix]{appendix item \ref*{prop:Irreducible Symmetric Tridiagonal Matrix}}. 
             \begin{theorem}[Lanczos Recurrences]
                 \begin{align}
                     AQ_k &= Q_kT_k + \beta_k q_{k + 1}\xi_k^T = Q_{k + 1}\tilde{T}_k
@@ -1712,7 +1712,7 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{remark}
 
     \subsection{Ghost Eigenvalues and Losing Orthogonality}
-        The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, those extremely close eigenvalues are a single eigenvalue of the original matrix $A$'s spectrum. The name for it comes from Trefethen's Book\cite{book:trefethen}. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$, especially eigenvalues in the exterior of $A$'s spectrum. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues(\textbf{NONTRIVIAL FACT}). Floating point error propagating through the Lanczos Iterations will produce this phenomena, but the converse is not necessarily true. 
+        The name Ghost Eigenvalues refers to the phenomena where the Lanczos Algorithm seems to find eigenvalues that are extremely close to each other, when in fact, those extremely close eigenvalues are a single eigenvalue of the original matrix $A$'s spectrum. The name for it comes from Trefethen's Book\cite{book:trefethen}. More specifically, the eigenvalues in $T_k$ seems to cluster closely around the true eigenvalues of the original matrix $A$, especially eigenvalues in the exterior of $A$'s spectrum. We know for a fact that the tridiagonal matrix produced via Lanczos can't have any repeated eigenvalues(\hyperref[prop:Irreducible Symmetric Tridiagonal Matrix]{appendix item \ref*{prop:Irreducible Symmetric Tridiagonal Matrix}}). Floating point error propagating through the Lanczos Iterations will produce this phenomena, but the converse is not necessarily true. 
         \subsubsection{Ghost Eigenvalues Experiments}
             Here, we conducted numerical experiments and carefully reproduce the phenomena for a diagonal matrix $A$ with diagonals given by the formula: 
             \begin{align}
@@ -2056,9 +2056,16 @@ We review results from the literature on the conjugate gradient algorithm for so
                 The polynomial from \hyperref[theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix]{Theorem \ref*{theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix}} is a scalar multiple of the polynomial that represents the lanczos vector $q_k$ under the Krylov Subspace. 
             \end{prop}
         \subsection{Irreducible Symmetric Tridiagonal Matrix}
-            \begin{prop}
+            \begin{prop}\label{prop:Irreducible Symmetric Tridiagonal Matrix}
                 The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. It's what referred to as a irreducible symmetric tridiagonal matrix in some literature. 
             \end{prop}
+            \begin{proof}
+                Let $T_k$ be symmetric tridiaognal $k\times k$ matrix, its all sub/super diagonals are nonzeros. Consider the submatrix $(T_k - \lambda I)_{2:k, 1:k-1}$ with the first row and last column removed. Regardless of $\lambda$, $(T_k - \lambda I)_{2:k, 1:k-1}$ whose diagonals are the sub diagonals of $T_k$, which is all non-zero. Hence $\text{det}((T_k - \lambda I)_{2:k, 1:k-1})\neq 0 \;\forall \lambda$. 
+                \par
+                The determinant of $(T_k - \lambda I)_{2:k, 1:k-1}$ is always full rank implies that the full matrix $T_k - \lambda I$ has a rank of at least $k - 1$ for all $\lambda$; which implies that all roots of $\det(T_k - \lambda I)$ has algebraic multiplicity of strictly 1.
+                \par
+                Since the matrix is symmetric, it must be diagonalizable. For contradiction assuming that it has repeated eigenvalues and still diagonalizable, it must have repeated roots, which is a contradiction. Therefore all its eigenvalues are unique. 
+            \end{proof}
     \subsection{From CG to Lanczos: The Proof}\label{sec:From_CG_to_Lanczos:The_Proof}
         We will break the proof into several parts. Firstly we address the base case, and then we address the inductive case to establish the parameters between the Tridiagonal matrix and $a_k, b_k$, finally we resolve the sign problem between the Lanczos vectors and the residual vectors. 
         \subsubsection{The Base Case}
