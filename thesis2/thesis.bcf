@@ -2367,7 +2367,8 @@
     <bcf:citekey order="21">paper:saad_ritz_convergence</bcf:citekey>
     <bcf:citekey order="22">paper:kaniel1966</bcf:citekey>
     <bcf:citekey order="23">paper:greenbaum_tiny_interval_experiments</bcf:citekey>
-    <bcf:citekey order="24">book:greenbaum</bcf:citekey>
+    <bcf:citekey order="24">paper:greenbaum_tiny_interval_experiments</bcf:citekey>
+    <bcf:citekey order="25">book:greenbaum</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

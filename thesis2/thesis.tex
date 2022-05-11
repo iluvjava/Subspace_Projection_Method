@@ -237,12 +237,16 @@ We review results from the literature on the conjugate gradient algorithm for so
         If $A$ itself is symmetric and positive definite, then we can take $B = A^{-1}$ and minimize the $A^{-1}$-norm of the 
         residual or, equivalently, the $A$-norm of the error $\langle A^{-1} b - \tilde{x} , A ( A^{-1} b - \tilde{x} ) \rangle$.
         The formula for $y$ then becomes
-        \begin{align}
+        \begin{align}\label{eqn:Energy_Norm_Minimization_Conditions}
             V^T A V y = V^T r_0
         \end{align}
-        This is what the conjugate gradient algorithm does, taking the columns of $V$ to be an orthonormal basis of the Krylov space $\mathcal{K} = \mathcal{K}(A|b)$.  Note that this also involves a projection but the two spaces $\mathcal{K}$ and $\mathcal{L}$ and their bases $V$ and $W$ described above, are the same.  Now
+        This is what the conjugate gradient algorithm does, taking the columns of $V$ to be an orthonormal basis of the Krylov space $\mathcal{K} = \mathcal{K}(A|b)$.  Note that this also involves a projection but the two spaces $\mathcal{K}$ and $\mathcal{L}$ and their bases $V$ and $W$ described above, are the same. Now
         \begin{align}
-            \tilde{r} = b - A \tilde{x} = b - A x_0 - A V y = r_0 - A V ( V^T A V )^{-1} V^T r_0
+            \tilde{r} &= b - A \tilde{x}
+            \\
+            &= b - A x_0 - A V y
+            \\
+            &= r_0 - A V ( V^T A V )^{-1} V^T r_0
         \end{align}
         and the matrix $A V ( V^T A V )^{-1} V^T$ satisfies
         \begin{align}
@@ -355,7 +359,7 @@ We review results from the literature on the conjugate gradient algorithm for so
 \fi
 
     \subsection{Deriving Conjugate Gradient from Conjugate Directions}
-        At the time this is being written, it's been 70 years since the Conjugate Gradient algorithm was proposed by Hestenes and Stiefel back in 1952\cite{paper:cg_original}. Upon their first discussion of the algorithm, numerous perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iteration. Here, we use the exact same idea, but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the subspace orthogonality conditions to derive it. The ideas are rehashed and in the end we point out its relations to Krylov Subspace, which ultimately, leads to other important new ideas related to solving symmetric indefinite systems that were not yet present back in 1952. In most time under classroom settings or textbooks, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so that we can move on and talk about other things. In this section of the paper, we take a different approach that is similar in spirit to a course note by Shewchuk \cite{notes:painless_cg} where we focus more on that inspirations behind the algorithm and avoid mentioning Lanczos Algorithms and Krylov Subspace until the very end, after CG is derived.   
+        At the time this is being written, it's been 70 years since the Conjugate Gradient algorithm was proposed by Hestenes and Stiefel back in 1952\cite{paper:cg_original}. Upon their first discussion of the algorithm, numerous perspectives were explored. Three of the most important ideas are using Conjugate Directions, minimizing the energy norm of the error of the linear system and coming up with an update of the conjugate vectors using the residual vector at the current iteration. Here, we use the exact same idea, but we diverge from Hestenes and Stiefel's approach in favor of using the oblique projector and the subspace orthogonality conditions to derive it. The ideas are rehashed we point out its relations to Krylov Subspace only at the end. Usually under classroom settings or textbooks, the relations of Conjugate Gradient, Lanczos Iterations and Krylov Subspaces are discussed together to explain some of the more important properties of the algorithm so that we can move on and talk about other things. However, in this section we derive it in similar to a course note by Shewchuk \cite{notes:painless_cg}. 
         \subsubsection{CG Objective and Framework}
             We introduce the algorithm as an attempt to minimize the energy norm of the error for a system of linear equations $Ax = b$, and we make the assumptions: 
             \begin{itemize}
@@ -368,13 +372,13 @@ We review results from the literature on the conjugate gradient algorithm for so
                     A^{-1}b - (x_0 + P_kw)
                 \Vert_A^2 \iff P^T_kr_0 = P_k^TAP_kw
             \end{align}
-            Refer back to \hyperref[sec:Energy_Norm_Minimization_using_Gradient]{Energy Norm Minimization using Gradient (\ref*{sec:Energy_Norm_Minimization_using_Gradient})} for how to obtain the above minimization objective. Using the matrix from the \hyperref[sec:Subspace_Projection_Methods]{subspace projection method (\ref*{sec:Subspace_Projection_Methods})} where $W, V$ are both $P_k$, we reformulate the norm minimization conditions as: 
+            Refer back to \hyperref[eqn:Energy_Norm_Minimization_Conditions]{equation (\ref*{eqn:Energy_Norm_Minimization_Conditions})} for how to obtain the above condition. Using the matrix from the \hyperref[sec:Subspace_Projection_Methods]{subspace projection method (\ref*{sec:Subspace_Projection_Methods})} where $W, V$ are both $P_k$, we reformulate the norm minimization conditions as: 
             \begin{align}
                 \text{choose: }x \in x_0 + \text{ran}(P_k) \text{ s.t: } b - Ax \perp \text{ran}(P_k)    
             \end{align}
             Take note that the link between a norm minimization and an equivalent subspace orthogonality condition isn't guaranteed to happen for other subspace projection methods. For example, the FOM and Bi-Lanczos Methods are orthogonalization methods that don't directly link to a norm minimization objective \cite{paper:FOM}. 
             \par
-            To solve for $w$, we wish to make $P_k^TAP_k$ to be an easy-to-solve matrix. Let the easy-to-solve matrix be a diagonal matrix and hence we let $P_k$ be a \textit{matrix whose columns are A-Orthogonal vectors}.
+            To solve for $w$, we wish to make $P_k^TAP_k$ to be an easy-to-solve matrix. Let the easy-to-solve matrix be a diagonal matrix and hence we let $P_k$ be a \textit{matrix whose columns are A-Orthogonal vectors}. It's also referred to as \textit{conjugate vectors}. 
             \begin{align}
                 P^T_kAP_k &= D_k \text{ where: } (D_k)_{i,i} = \langle p_{i - 1}, Ap_{i - 1}\rangle
                 \\
@@ -394,69 +398,51 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{align}
             Let this algorithm be the prototype. 
         \subsubsection{Using the Projector}
-            Here, we consider the above prototype algorithm. Please observe that $AP_kD_k^{-1}P_k$ is a projector, and so is $P_kD^{-1}_kP_k^TA$. 
-            \begin{proof}
-                \begin{align}
-                    AP_kD^{-1}_kP_k^T(AP_kD^{-1}_kP_k^T) &= AP_kD^{-1}_kP_k^TAP_kD^{-1}_kP_k^T 
-                    \\
-                    &= AP_kD_k^{-1}D_kD_k^{-1}P_k^{T}
-                    \\
-                    &= AP_kD_k^{-1}P_k^T 
-                    \\[1.1em]
-                    P_kD^{-1}_kP_k^{T}A(P_kD^{-1}_kP_k^{T}A) &= P_kD^{-1}_kD_kD_{k}^{-1}P^T_kA
-                    \\
-                    &= 
-                    P_kD^{-1}_kP^T_kA
-                \end{align}
-            \end{proof}
-            \noindent
-            Both matrices are indeed projectors. Please take note that they are not Hermitian, which would mean that they are not orthogonal projector, hence, oblique projectors. For notational convenience, we denote $\overline{P}_k = P_kD_k^{-1}P_k^{T}$; then these two projectors are: 
+            Observe that $AP_kD_k^{-1}P_k$ is a projector, and so is $P_kD^{-1}_kP_k^TA$. We can check by: 
             \begin{align}
-                AP_kD^{-1}_kP_k^T &= A\overline{P}_k 
+                AP_kD^{-1}_kP_k^T(AP_kD^{-1}_kP_k^T) 
+                &= 
+                AP_kD^{-1}_k
+                    \underbrace{(P_k^TAP_k)}_{D_k}
+                D^{-1}_kP_k^T  = AP_kD_k^{-1}P_k^T 
                 \\
-                P_kD^{-1}_kP_k^TA &= \overline{P}_kA
+                P_kD^{-1}_k
+                \underbrace{P_k^{T}A(P_k}_{D_k}
+                D^{-1}_kP_k^{T}
+                A) &= P_kD^{-1}_kD_kD_{k}^{-1}P^T_kA
+                = P_kD^{-1}_kP^T_kA
             \end{align}
-            One immediate consequence is: 
+            \noindent
+            They are not Hermitian,therefore they are oblique projectors. For convenience, we denote $\overline{P}_k = P_kD_k^{-1}P_k^{T}$; So we can simply denotes them by $A\overline{P}_k, \overline{P}_kA$. Observe that: 
             \begin{align}
                 & \text{ran}(I - A\overline{P}_k )\perp \text{ran}(P_k)
                 \\
                 & \text{ran}(I - \overline{P}_kA) \perp \text{ran}(AP_k)
             \end{align}
+            because:
+            \begin{align}
+                P_k^T(I - A\overline{P}_k) &= P_k^T - P_k^{T}A\overline{P}_k
+                \\
+                &= P_k^{T} - D_kD_k^{-1}P^T_k = \mathbf{0}
+                \\
+                (AP_k)^T(I - \overline{P}_kA) &=P_k^TA - P_k^TA\overline{P}_kA
+                \\
+                &= P_k^TA - P_k^TAP_kD_k^{-1}P_k^TA
+                \\
+                &= P_k^TA - P^T_kA = \mathbf{0}
+            \end{align}
+            
+            
+            \begin{prop}[Generating $A$-Orthogonal Vectors]
+                Given any set of basis vectors, for example $\{u_k\}_{i = 0}^{n - 1}$, one can generate a set of A-Orthogonal vectors from it. More specifically:
+                \begin{align}
+                    p_k &= (I - \overline{P}_kA)u_k \implies\text{span}(p_k) \perp \text{ran}(AP_k)
+                \end{align}
+            \end{prop}
             \begin{proof}
-                \begin{align}
-                    P_k^T(I - A\overline{P}_k) &= P_k^T - P_k^{T}A\overline{P}_k
-                    \\
-                    &= P_k^{T} - D_kD_k^{-1}P^T_k
-                    \\
-                    &= \mathbf{0}
-                    \\
-                    (AP_k)^T(I - \overline{P}_kA) &=P_k^TA - P_k^TA\overline{P}_kA
-                    \\
-                    &= P_k^TA - P_k^TAP_kD_k^{-1}P_k^TA
-                    \\
-                    &= P_k^TA - P^T_kA 
-                    \\
-                    &= \mathbf{0}
-                \end{align}
+                It's direct from the properties of the projectors.
             \end{proof}
-            Using the properties of the oblique projector, we can prove two facts about this simple norm minimization method we developed: 
-            \begin{prop}[Residuals are Orthogonal to $P_k$]\label{prop:Residuals_are_Orthogonal_to_P_k}
-                \begin{align}
-                    r_k &= r_0 - A\overline{P}_kr_0 = (I - A\overline{P}_k)r_0
-                    \\
-                    \implies 
-                    r_k &\perp \text{ran}(P_k)
-                \end{align}
-            \end{prop}
-            \begin{prop}[Generating $A$ Orthogonal Vectors]
-                Given any set of basis vectors, for example $\{u_k\}_{i = 0}^{n - 1}$, one can generate a set of A-Orthogonal vectors from it. More specifically: 
-                \begin{align}
-                    p_k &= (I - \overline{P}_kA)u_k
-                    \\
-                    \text{span}(p_k) &\perp \text{ran}(AP_k)
-                \end{align}
-            \end{prop}
-            For above propositions, we used the immediate consequence of the range of these oblique projectors. 
+            
         \subsubsection{Method of Conjugate Directions}
             So far, we have this particular scheme of solving the optimization problem, coupled with the way to compute the solution $x_k$ at each step, and the residual at each step, while also getting the residual vector at each step too. However, it would be great if we can accumulate on the same subspace $P_k$ and look for a chance to reuse the computational results from the previous iterations of the algorithm: 
             \begin{definition}[Conjugate Direction Method]
@@ -483,7 +469,7 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{remark}
         \subsubsection{Properties of CDM}
             Here we set up several useful lemma and propositions that can derive the short recurrences of A-Orthogonal vectors 
-            \begin{prop}
+            \begin{prop}[CDM Property 1]
                 \begin{align}
                     p_{k + j}^Tr_k &= p_{k + j}^Tr_0 \quad \forall \; 0 \le j \le n - k
                 \end{align}
@@ -496,9 +482,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                     \\
                     &= p_{k + j}^Tr_0    
                 \end{align}
-                This is true because the vector $p_{k + j}$, a conjugate vector in the future, is orthogonal to all previous conjugate vectors. 
             \end{proof}
-            As a consequence of the above proposition, we can obtain a short recurrence for the residuals and the solution $x$ of CDM: 
             \begin{prop}[CDM Recurrence]\label{prop:CDM_Recurrence}
                 \begin{align}
                     r_k - r_{k - 1} &= r_0 - A\overline{P}_kr_0 - (r_0 - A\overline{P}_{k - 1}r_0)
@@ -519,9 +503,9 @@ We review results from the literature on the conjugate gradient algorithm for so
                     }
             \end{align}
             \end{prop}
-            On (3.3.36) we used proposition 3.6. We define the value of $a_{k - 1}$, and in above, we have two equivalent representations. Please take note that this proposition remains true for the future CG algorithm that we are going to develop. 
+            On (3.3.26) we used CDM Property 1. The value of $a_{k - 1}$ is defined above,, we have two equivalent representations for $a_{k - 1}$. This recurrence remains true for the future regardless of the set $\{u\}_{i = 1}^{n}$ that generates these conjugate vectors. 
         \subsubsection{Conjugate Gradient}
-            Now, consider the case where, the set of basis vectors: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the CDM itself. Then there are a series of new added lemmas that are true. However, this is where things started to get exciting, because a short recurrence for $p_k$ arises and residuals are all orthogonal. We wish to proceed to prove that part. 
+            Now, consider the case where, the set of basis vectors: $\{u\}_{i = 0}^{n - 1}$ to be the residual vector generated from the CDM itself. This generates the CG method.
             \begin{lemma}\label{lemma:CG_Lemma_1}
                 \begin{align}
                     \langle p_{k + j}, Ap_k\rangle
@@ -549,14 +533,9 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{lemma}
             \begin{proof}
                 \begin{align}
-                    &\; 
-                    \langle r_k, p_k\rangle
-                    \\
-                    &= \langle r_k, r_k\rangle - \langle r_k, \overline{P}_kAr_k\rangle
-                    \\
-                    &= \langle r_k, r_k\rangle
+                    \langle r_k, p_k\rangle = \langle r_k, r_k\rangle - \langle r_k, \overline{P}_kAr_k\rangle = \langle r_k, r_k\rangle
                 \end{align}
-                From (3.3.42) to (3.3.43) we used $p_k = (I - \overline{P}_kA)r_k$, in addition we also make use of \hyperref[prop:Residuals_are_Orthogonal_to_P_k]{Residual are Orthogonal (\ref*{prop:Residuals_are_Orthogonal_to_P_k})} from (3.3.43) to (3.3.44). 
+                First equality used $p_k = (I - \overline{P}_kA)r_k$, from (3.3.43) to (3.3.44); second equality used the fact that $r_k$ is orthogonal to $P_k$. 
             \end{proof}
             \begin{prop}[CG Generates Orthogonal Residuals]\label{prop:CG_Generates_Orthogonal_Residuals}
                 \begin{align}
@@ -564,7 +543,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                 \end{align}
             \end{prop}
             \noindent
-            Let this above claim be inductively true then consider the following proof: 
+            Let this above claim be inductively true then consider: 
             \begin{proof}
                 \begin{align}
                     r_{k + 1} &= r_k - a_kAp_k
@@ -591,7 +570,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                     r_k\perp \text{ran}(P_k) & \implies 
                     \langle r_k, r_j\rangle =\langle r_k, p_j + \overline{P}_jAr_j\rangle = 0
                 \end{align}
-                The second line (3.3.51) is a result of the first line (3.3.50) rearranged. Here we again make use of the projector $I - A \overline{P}_k$. The last line (3.3.53) is using the second line $3.3.51$. The base case of the argument is simple, because $p_0 = r_0$, and by the property of the projector, $\langle r_1, r_0\rangle = 0$. The theorem is now proven. 
+                The second line (3.3.39) is a result of the first line (3.3.38) rearranged. Here we again make use of the projector $I - A \overline{P}_k$. The last line (3.3.53) is using the second line $3.3.39$. The base case of the argument is simple, because $p_0 = r_0$, and by the property of the projector, $\langle r_1, r_0\rangle = 0$. The theorem is now proven. 
             \end{proof}
             \begin{prop}[CG Recurrences]\label{prop:CG_Recurrences}
                 \begin{align}
@@ -758,49 +737,21 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{align}
             We initialize the orthogonal projector with the vector $q_1$, which is $q_1q_1^H$, next, we apply the linear operator $A$ on the current range of the projector: $Aq_1$, then, we orthogonalize it against $q$. Let the projection of $Aq_1$ onto $I - q_1q_1^H$ be $h_{1, 2}q_2$, and let the projection onto $q_1q_1^H$ be $h_{1,1}$. This completes the first column of $H_k$, we do this recursively. Please allow me to demonstrate: 
             \begin{align}
-                (\tilde{H}_k)_{2, 1}q_2 &= (I - q_1q_1^H)Aq_1
+                (\tilde{H}_k)_{j + 1, k}q_{j + 1}&= (I - Q_jQ_j^H)Aq_j
                 \\
-                (\tilde{H}_k)_{1, 1}q_1 &= q_1q_1^HAq_1
-                \\
-                Q_2 &:= \begin{bmatrix}
-                    q_1 & q_2
-                \end{bmatrix}
-                \\
-                (\tilde{H}_k)_{3, 2}q_3 &= (I - Q_2Q_2^H)Aq_2
-                \\
-                (\tilde{H}_k)_{1:2, 2} &= Q_2Q_2^HAq_2
-                \\
-                Q_3 &:= \begin{bmatrix}
-                    q_1 & q_2 & q_3
-                \end{bmatrix}
-                \\
-                & \vdots 
-                \\
-                Q_j &:= \begin{bmatrix}
-                    q_1 & q_2 & \cdots & q_j
-                \end{bmatrix}
-                \\
-                (\tilde{H}_k)_{j + 1, j}q_{j + 1}&= (I - Q_jQ_j^H)Aq_j
-                \\
-                (\tilde{H}_k)_{1:j, j} &= Q_jQ_j^HAq_j
-                \\
-                &\vdots 
-                \\
-                Q_k &:= \begin{bmatrix}
-                    q_1 & q_2 & \cdots & q_k
-                \end{bmatrix}
-                \\
-                (\tilde{H}_k)_{k + 1, k}q_{k + 1}&= (I - Q_kQ_k^H)Aq_k
-                \\
-                (\tilde{H}_k)_{1:k, k} &= Q_kQ_k^HAq_k
+                (\tilde{H}_j)_{1:j, j} &= Q_jQ_j^HAq_j
             \end{align}
-            Usually when implementing, the subdiagonal of $H_k$ are chosen to be $$H_{k + 1, k} := \Vert (I - Q_kQ_k^T)Aq_k\Vert$$ which makes then strictly positive, and the sign goes into $q_k$ to assert the equalities above. $Q_k$ is going to be orthogonal because we are using orthogonal projectors. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
+            Usually when implementing, the subdiagonal of $H_k$ are chosen to be 
+            $$
+                \tilde H_{k + 1, k} := \Vert (I - Q_kQ_k^T)Aq_k\Vert
+            $$ 
+            which makes then strictly positive, and the sign goes into $q_k$ to assert the equalities above. $Q_k$ is going to be orthogonal because we are using orthogonal projectors. As a consequence, we can express the recurrences of the subspace vector in matrix form: 
             \begin{align}
                 AQ_{k} &= Q_{k + 1}\tilde{H}_k
                 \\
-                Q_{k}^HAQ_{k} &= H_k
+                Q_{k}^HAQ_{k} &=: H_k
             \end{align}
-            And here, we explicitly define $H_k$ to be the principal submatrix of $\tilde{H}_k$. Reader please immediately observe that, if $A$ is symmetric, then it has to be the case that $Q^H_kAQ_k$ is also symmetric, which will make $H_k$ to be symmetric as well, which implies that $H_k$ will be a symmetric tridiagonal Matrix. And under that assumption, we can develop the Lanczos Algorithm. Instead of orthogonalizing against all previous vectors, we have the option to simply orthogonalize against the previous $q_k, q_{k - 1}$ vector. And we can reuse the sub-diagonal elements for $q_{k - 1}$; giving us the Lanczos Algorithm. 
+            We define $H_k$ to be the principal submatrix of $\tilde{H}_k$. Please observe that, if $A$ is symmetric, then $Q^H_kAQ_k$ is also symmetric, which makes $H_k$ symmetric, which implies $H_k$ is a symmetric tridiagonal Matrix. And this assumption, we develop the Lanczos Algorithm. Instead of orthogonalizing against all previous vectors, we have the option to simply orthogonalize against the previous $q_k, q_{k - 1}$ vectors, reusing the sub-diagonal elements for $q_{k - 1}$; giving us the Lanczos Algorithm. 
         \subsubsection{Arnoldi Produces Orthogonal Basis for Krylov Subspace}
             One important observation reader should make about the idea of Arnoldi Iteration is that, during each iteration, the matrix $Q_k$ spans the same range as $\mathcal K_k(A|q_1)$. 
             \begin{prop}
@@ -849,36 +800,8 @@ We review results from the literature on the conjugate gradient algorithm for so
                         & q_{j + 1} := \tilde{q}_{j + 1}/\beta_j
                     \end{aligned}
                 \end{align}
-                Here, let it be the case that $H_k$ is a symmetric tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the Lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product. 
-                Note that another equivalent algorithm where I tweaked it to handle the base case of $T_k$ being a $1\times 1 $ matrix can be phrased in the following way: 
-                \begin{align}
-                    \begin{aligned}
-                        & \text{Given arbitrary: }q_1 \text{ s.t: } \Vert q_1\Vert = 1
-                        \\
-                        & \alpha_1 := \langle q_1, Aq_1\rangle
-                        \\
-                        & \beta_0 := 0
-                        \\
-                        & \text{Memorize}: Aq_1
-                        \\
-                        & \text{For }j = 1, 2, \cdots
-                        \\
-                        &\hspace{1.1em}
-                        \begin{aligned}
-                            & \tilde{q}_{j + 1} := Aq_j - \beta_{j - 1} q_{j - 1}
-                            \\
-                            & \tilde{q}_{j + 1} \leftarrow \tilde{q}_{j + 1} - \alpha_jq_j
-                            \\
-                            & \beta_j = \Vert \tilde{q}_{j + 1}\Vert
-                            \\
-                            & q_{j + 1}:= \tilde{q}_{j + 1}/\beta_j
-                            \\
-                            & \alpha_{j + 1} := \left\langle q_{j + 1}, Aq_{j + 1} \right\rangle
-                            \\
-                            & \text{Memorize: }Aq_{j + 1}
-                        \end{aligned}
-                    \end{aligned}
-                \end{align}
+                Here, let it be the case that $H_k$ is a symmetric tridiagonal Matrix with $\alpha_i$ on the diagonal, $\beta_i$ on the sub and super diagonal; the Lanczos is Arnoldi, but we make use of the symmetric properties to orthogonalize $Aq_j$ against $q_{j - 1}$ using $\beta_{j-1}$, and in this case, each iteration only consists of one vector inner product.Other variants of the Lanczos Iterations algorithm exists. See \hyperref[def:Lanczos Iterations Variants]{appendix item \ref*{def:Lanczos Iterations Variants}}. 
+                
             \end{definition}
             The algorithm generates the following two matrices, $Q_k$ which is orthogonal and it spans $\mathcal K_k(A|q_1)$, and a symmetric tridiagonal Matrix: 
             \begin{align}
@@ -909,7 +832,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                 \end{align}    
             \end{theorem}
             \par
-            Oftentimes, we refer to the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. Finally; I wish to make the following important remark about the algorithm for later use. Given a matrix $A$ and an initial vector $q_1$, The Lanczos algorithm produces an irreducible symmetric tridiagonal Matrix that has unique eigenvalues. The proof for the fact that any symmetric tridiagonal Matrices with Non-zeros on the sub/super diagonal must have unique non-zero eigenvalues is skipped. What we can immediately show here is the fact that Lanczos Algorithm will produce such a matrix. 
+            Oftentimes, we refer to the $k\times k$ symmetric tridiagonal matrix generated from Iterative Lanczos as $T_k$. 
             \begin{prop}[Lanczos Termination Conditions]\label{prop:Lanczos_Termination_Conditions}
                 The Lanczos Iteration produces a symmetric tridiagonal Matrix that has no zero element on its super and sub-diagonal, and if $\beta_k$ is zero, then the algorithm must terminate, and $k$ would equal to $\text{grade}(A|q_1)$, the grade of the Krylov Subspace. 
             \end{prop}
@@ -929,7 +852,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                     \\
                     &= \min_{i = 1, \cdots, n} | \bar{p}_n(\lambda_i)(V^Tq_1)_i|
                 \end{align}
-                The last line is saying the conditions that the characteristic polynomial for $T_k$ from the Lanczos iterations is minimizing the weighted sum at the eigenvalues of the matrix $A$. A direct consequence of this is a more refined terminations conditions than \hyperref[prop:Lanczos_Termination_Conditions]{proposition \ref*{prop:Lanczos_Termination_Conditions}} for the Lanczos iterations, giving the information for the initial vector $q_1$. Under exact arithmetic, the number of iterations underwent by Lanczos equals the unique number of eigenvalues $\lambda_i$ where $(V^Tq_1)_i \neq 0$. 
+                The last line is saying the conditions that the characteristic polynomial for $T_k$ from the Lanczos iterations is minimizing the weighted sum at the eigenvalues of the matrix $A$. we can refine the termination condition from \hyperref[prop:Lanczos_Termination_Conditions]{proposition \ref*{prop:Lanczos_Termination_Conditions}} for the Lanczos iterations using information of the initial vector $q_1$. Given the information for the initial vector $q_1$ and under exact arithmetic, the number of iterations underwent by Lanczos equals the unique number of eigenvalues $\lambda_i$ where $(V^Tq_1)_i \neq 0$ by \hyperref[prop:When_the_Grade_is_Reached]{proposition \ref*{prop:When_the_Grade_is_Reached}}. 
                 \par
                 In fact, the idea can be taken further and the orthogonality between the Lanczos vector $q_k$ translate to the orthgonality of the polynomial representing $q_k$ in $\mathcal K_k$ (see \hyperref[prop:Orthogonal_Polynomials_and_Lanczos]{proposition \ref*{prop:Orthogonal_Polynomials_and_Lanczos}} in the appendix for a proof) which also is a rescaled version of the characterstic polynomial of $T_k$. 
             \end{remark}
@@ -1361,185 +1284,25 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{align}
             Where $\alpha_j$ for $1\le j \le n - 1$ are the diagonal of the tridiagonal matrix $T_k$ generated by Lanczos, and $\beta_j$ for $2\le j \le k - 2$ are the lower and upper subdiagonals of the matrix $T_k$. 
         \end{prop}
-        We will break the proof into several parts. Firstly we address the base case, and then we address the inductive case to establish the parameters between the Tridiagonal matrix and $a_k, b_k$, finally we resolve the sign problem between the Lanczos vectors and the residual vectors. 
-        \subsubsection{The Base Case}
-            Right from the start of the CG iteration we have: 
-            \begin{align}
-                r_0 &= p_0
-                \\
-                r_1 &= r_0 - a_0Ar_0
-                \\
-                Ar_0 &= a_0^{-1}(r_0 - r_1)
-                \\
-                Ar_0 &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}(r_0 - r_1)
-            \end{align}
-            Consider substituting $r_0 = \Vert r_0\Vert q_1, r_1 = -\Vert r_1\Vert q_2$, then: 
-            \begin{align}
-                A\Vert r_0\Vert q_1 
-                &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\left(
-                    \Vert r_0\Vert q_1 + \Vert r_1\Vert q_2
-                \right)
-                \\
-                &= 
-                \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\Vert r_0\Vert q_1 + 
-                    \frac{\Vert r_1\Vert}{\Vert r_0\Vert} q_2
-            \end{align}
-            And from this relation, using the Lanczos recurrence theorem would imply that $\alpha_1 = a_0^{-1}$; $\beta_1 = \frac{\sqrt{b_0}}{\alpha_0}$. So far so good, we have shown that there is an equivalence between the Lanczos and the CG for the first iterations of the CG algorithm. 
-        \subsubsection{The Inductive Case}
-            \begin{lemma}
-                Inductively we wish to show the relation that: 
-                \begin{align}
-                    \begin{cases}
-                        \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
-                        & \forall 1 \le j \le n - 1
-                        \\
-                        \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
-                        & \forall 2 \le j \le n - 2 
-                    \end{cases}
-                \end{align}
-            \end{lemma}
-            \begin{proof}
-                We start by considering: 
-                \begin{align}
-                    r_j &= r_{j - 1} - a_{j -1 }Ap_{j - 1}
-                    \\
-                    & =r_{j - 1} - a_{j - 1} A(r_{j - 1} + b_{j - 2}p_{j - 1})
-                    \\
-                    &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 1}
-                \end{align}
-                We make use of the recurrence asserted by the CG algorithm, giving us: 
-                \begin{align}
-                    r_{j - 1} &= r_{j - 1} - a_{j - 2}Ap_{j - 1}
-                    \\
-                    r_{j - 1} - r_{j - 1} &= a_{j - 2} Ap_{j - 1}
-                    \\
-                    Ap_{j - 1} &= a^{-1}_{j -2} 
-                    \left(
-                        r_{j - 2} - r_{j - 1}
-                    \right)
-                \end{align}
-                Here, we can substitute the results for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
-                \begin{align}
-                    r_{j} &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 2}
-                    \\
-                    &= 
-                    r_{j - 1} - a_{j - 1}Ar_{j - 1} - \frac{a_{j-1}b_{j-2}}{a_{j-2}}\left(
-                        r_{j - 2} - r_{j - 1}
-                    \right)
-                    \\
-                    &= \left(
-                        1 + \frac{a_{j - 1}b_{j -2}}{a_{j - 2}}r_{j - 1}
-                    \right)- a_{j - 1}Ar_{j - 1} - \frac{a_{j-1}b_{j-2}}{a_{j-2}}r_{j - 2}
-                    \\
-                    a_{j - 1}Ar_{j - 1} &= 
-                    \left(
-                        1 + \frac{a_{j - 1}b_{j -2}}{a_{j - 2}}r_{j - 1}
-                    \right)
-                    - \frac{a_{j-1}b_{j-2}}{a_{j-2}}r_{j - 2}
-                    \\
-                    Ar_{j - 1} &=
-                    \left(
-                        \frac{1}{a_{j - 1}} + \frac{b_{j - 2}}{a_{j- 2}}
-                    \right)r_{j - 1} + 
-                    \frac{r_{j}}{a_{j-1}} - 
-                    \frac{b_{j - 2}}{a_{j - 2}}r_{j - 2}
-                \end{align}
-                Finally, we increment the index $j$ by one for notational convenience, and therefore we establish the following relations between the residuals of the conjugate gradient algorithm: 
-                \begin{align}
-                    Ar_{j} &=
-                    \left(
-                        \frac{1}{a_{j}} + \frac{b_{j - 1}}{a_{j-  1}}
-                    \right)r_{j} + 
-                    \frac{r_{j + 1}}{a_{j}} - 
-                    \frac{b_{j - 1}}{a_{j - 1}}r_{j - 1}
-                \end{align}
-                Reader, please observe that this is somewhat similar to the recurrence relations between the Lanczos vectors, however it's failing to match the sign, at the same time, it's not quite matching the form of the recurrence of $\beta_k$ from the Lanczos algorithm. To match it, we need the coefficients of $r_{j - 1}$ and $r_{j + 1}$ to be in the same form, parameterized by the same iterations parameter: $j$. To do that, consider the doing this:  
-                \begin{align}
-                    q_{j + 1} &:= \frac{r_{j}}{\Vert r_j\Vert}
-                    \\
-                    q_{j} &:= -\frac{r_{j - 1}}{\Vert r_{j - 1}\Vert} \quad 
-                    \text{Note: This is Negative}
-                    \\
-                    q_{j + 2} &:= \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
-                    \\
-                    \implies 
-                    A\Vert r_j\Vert q_{j + 1} 
-                    &= 
-                    \left(
-                        \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
-                    \right)\Vert r_j\Vert q_{j + 1}
-                    + 
-                    \frac{\Vert r_{j + 1}\Vert q_{j + 2}}{a_j}
-                    +
-                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}}q_{j}
-                    \\
-                    Aq_{j + 1} &= 
-                    \left(
-                        \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}} 
-                    \right)
-                    q_{j + 1}
-                    + 
-                    \frac{\Vert r_{j + 1}\Vert}{a_j \Vert r_j\Vert}q_{j + 2} + 
-                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}\Vert r_j\Vert}q_j
-                \end{align}
-                Recall that parameters from Conjugate Gradient, $\sqrt b_j = \Vert r_{j + 1}\Vert/\Vert r_j\Vert$, and $a_j = \frac{\Vert r_j\Vert^2}{\Vert p_j\Vert_A^2}$, and we can use the substitution to match the coefficients for $q_{j + 2}$ and $q_j$, giving us: 
-                \begin{align}
-                    \frac{\Vert r_{j + 1}\Vert}{a_j\Vert r_j\Vert} &= 
-                    \frac{1}{a_j}\sqrt{b_j}
-                    \\
-                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}\Vert r_j \Vert}
-                    &= 
-                    \frac{b_{j - 1}}{a_{j - 1}}\frac{1}{\sqrt{b_{j - 1}}}
-                    = 
-                    \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
-                    \\
-                    \implies& 
-                    \begin{cases}
-                        \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
-                        & \forall 1 \le j \le n - 1
-                        \\
-                        \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
-                        & \forall 2 \le j \le n - 2 
-                    \end{cases}
-                \end{align}
-                Take notes that the form is now matched, but the expression for $\alpha_{j + 1}$ has an extra $b_{j - 1}/a_{j - 1}$, to resolve that, we take the audacity to make $b_0$ so that it's consistent with the base case. 
-            \end{proof}
-        \subsubsection{Fixing the Sign}
-            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalence residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially two substitutions possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
-            \begin{align}
-                \begin{cases}
-                    q_{j + 1} := \pm \frac{r_j}{\Vert r_j\Vert}
-                    \\
-                    q_{j} := \mp \frac{r_{j - 1}}{\Vert r_{j - 1}\Vert}
-                    \\
-                    q_{j + 2} := \pm \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
-                \end{cases}
-            \end{align}
-            Under the context, the operations $\pm, \mp$ are correlated, choose a sign for one, the other must be of opposite sign. In this case both substitutions work the same because multiplying the equation by $-1$ would give the same equality, and we can always multiply by another negative sign to get it back. The key here is that, the sign going from $q_{j}$ to the next $q_{j - 1}$ will have to alternate. To find out precisely which one it is, we consider the base case for the Lanczos Vectors and Residuals: 
-            \begin{align}
-                q_1 &= \hat r_0\\
-                q_2 &= -\hat r_1
-                \\
-                \vdots
-                \\
-                q_j &= (-1)^{j + 1}\hat r_{j + 1}
-            \end{align}
-            And at this point, we have established the equivalence going from the Conjugate Gradient algorithm to the Lanczos Algorithm. And the moral of the story is, CG is a special case of applying the Lanczos Iterations with $q_1 = r_0$ to a positive definite matrix. However, something is still off and one can ask the following questions to inquire further, leading us to more discussion between these two algorithms. 
+        \begin{proof}
+            The proof is long and it's presented in \hyperref[sec:From_CG_to_Lanczos:The_Proof]{appendex item: \ref*{sec:From_CG_to_Lanczos:The_Proof}}
+        \end{proof}
+        CG is a special case of applying the Lanczos Iterations with $q_1 = r_0$ to a positive definite matrix. However there are still questions left. 
             \begin{enumerate}
                 \item [1.)] How are the solutions $x_k$ generated by CG related to the Lanczos Iterations? 
-                \item [2.)] How are the A-Orthogonal vectors $p_k$ from CG related to Lanczos? 
+                \item [2.)] How are the A-Orthogonal vectors $p_k$ from CG related to Lanczos?
             \end{enumerate}
-            \begin{remark}[A Better Terminations Conditions for CG]
-                The derivation hinted at a better terminations conditions for the CG algorithm. Because CG is equivalent to the Lanczos Iterations initialized with $q_1 = r_0$, and we can directly apply from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{proposition \ref*{remark:Minimal_Polynomial_from_Lanczos_Iterations}} to get the precise number of iterations of CG under exact arithmetic given $r_0$, improving the bound we got from \hyperref[prop:Termination_of_CG]{proposition \ref*{prop:Termination_of_CG}}. 
+        \begin{remark}[A Better Terminations Conditions for CG]
+                The derivation hinted at a better termination condition for the CG algorithm. Because CG is equivalent to the Lanczos Iterations initialized with $q_1 = r_0$, and we can directly apply from \hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{proposition \ref*{remark:Minimal_Polynomial_from_Lanczos_Iterations}} to get the precise number of iterations of CG under exact arithmetic given $r_0$, improving the bound we got from \hyperref[prop:Termination_of_CG]{proposition \ref*{prop:Termination_of_CG}}.
             \end{remark}
     \subsection{From Lanczos to Conjugate Gradient}
-            In this section, we show the equivalence of the Conjugate Gradient and Lanczos iterations by deriving the CG using the Lanczos. 
+            In this section, we state the Conjugate Gradient parameters using parameters from the Lanczos iterations. 
             \par
-            The goal is to show that CG is a special case of Lanczos. In the end we discuss the key that can inspire solvers for symmetric indefinite systems of linear equations. 
+            The relations exposes the fact that CG is a special case of Lanczos. In the end we discuss the key that can inspire solvers for symmetric indefinite systems of linear equations. 
             \par
             We start off by considering the LU decomposition of the tridiagonal matrix of Lanczos and use its entries to express the scalars $a_k, b_k$ in CG. In addition, we express the conjugate vectors $p_k$ as a short recurrence of the Lanczos vectors $q_k$. 
         \subsubsection{Matching the Residual and Conjugate Vectors}
-            In this section, we go from the Iterative Lanczos algorithm to the Conjugate Gradient algorithm and we seek to establish a link between the solution $x_k, p_k$ from CG with the Lanczos vectors and the symmetric tridiagonal matrix generated by Lanczos. This section will also play an important role for the backwards analysis for the floating-point behavior of the CG algorithm in the later parts of the paper. At the end, we highlight some of the hidden insights that this particular derivation of equivalence leads to, and how it inspires algorithms that directly solves symmetric indefinite systems. 
+            In this section, we state the connections between the solution $x_k, p_k$ from CG with the Lanczos vectors and the symmetric tridiagonal matrix generated by Lanczos which plays an  role for the analysis for the floating-point behavior of the CG algorithm in the later parts of the paper. In the remark we highlight some of the insights that the connections lead to solvers for symmetric indefinite systems. 
             \begin{prop}[Lanczos Vectors and Residuals]\label{prop:Lanczos_Vectors_and_Residuals}
                 The $Q_k$ is the orthogonal matrix generated by Lanczos Iteration. To match the Krylov Subspace generated by the Lanczos iterations and CG, we initialize $q_1 = \hat{r}_0$, then the following relationship between Lanczos and CG occurs between their parameters: 
                 \begin{align}
@@ -1624,11 +1387,11 @@ We review results from the literature on the conjugate gradient algorithm for so
                     \\
                     &= (Q_k U_k^{-1})^T AQ_kU_k^{-1}
                     \\
-                    &= U_k^{-T}Q_k^{T}AQ_k U_k^{-1}
+                    &= (U_k^{-1})^{T}Q_k^{T}AQ_k U_k^{-1}
                     \\
-                    &= U_k^{-T}T_kU_k^{-1}
+                    &= (U_k^{-1})^{T}T_kU_k^{-1}
                     \\
-                    &= U^{-T}_kL_k
+                    &= (U^{-1})^T_kL_k
                 \end{align}
                 Reader please observe that $U_k$ is upper triangular, therefore, it's inverse it's also upper triangular, therefore, $U_k^{-T}$ is lower triangular, and because $L_k$ is also lower triangular, their product is a lower triangular matrix, and therefore, the resulting matrix above is lower triangular, however, given that $P_k^TAP_k$ is symmetric, therefore, $U_k^{-T}L_k$ will have to be symmetric as well, and a matrix that is lower triangular and symmetric has to be diagonal. Therefore, the columns of $P_k$ are conjugate vectors. 
             \end{proof}
@@ -1644,7 +1407,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                     q_1 & q_2 & \cdots & q_k
                 \end{bmatrix}
             \end{align}
-            Assuming matrix $A$ is invertible and using the \hyperref[theorem:cauchy_interlace]{Cauchy Interlace Theorem (theorem \ref*{theorem:cauchy_interlace})}, $T_k$ is invertible, we consider the LU decomposition of the symmetric tridiagonal matrix: 
+            Next, when $T_k$ is invertible, we consider the LU decomposition of the symmetric tridiagonal matrix (See remark for more information about the conditions for invertibility of the matrix): 
             \begin{align}
                 T_k = L_k U_k =
                 \begin{bmatrix}
@@ -1660,7 +1423,7 @@ We review results from the literature on the conjugate gradient algorithm for so
                     & & & u_k
                 \end{bmatrix}
             \end{align}
-            Reader should agree with some considerations that the upper diagonal of $U_k$ is indeed the same as the upper diagonal of the symmetric tridiagonal matrix $T_k$. And recall the expression for $x_k$ from the previous section, we have: 
+            The upper diagonal of $U_k$ is indeed the same as the upper diagonal of the symmetric tridiagonal matrix $T_k$. And recall the expression for $x_k$ from the previous section, we have: 
             \begin{align}
                 x_k &= x_0 + P_k L_k^{-1}\beta \xi_1 \\ 
                 x_{k} - x_{k - 1} &= 
@@ -1684,92 +1447,23 @@ We review results from the literature on the conjugate gradient algorithm for so
                 \\
                 p_k &= u^{-1}_k(q_k - \beta_{k - 1}p_{k - 1})
             \end{align}
-            We made use of the fact that the matrix $U_k$ is unit upper bidiagonal. Next, we seek for the recurrences of the parameters $u_k, l_k$. Let's consider the recurrence using the block structure of the matrices: 
-            \begin{align}
-                T_k &= L_kU_k
-                \\
-                T_{k + 1} &= \begin{bmatrix}
-                    T_k & \beta_k \xi_k \\
-                    \beta_k \xi^T_k & \alpha_{k + 1}
-                \end{bmatrix} = 
-                \begin{bmatrix}
-                    L_k & \mathbf{0} \\ l_k \xi_k^{-1} & 1
-                \end{bmatrix}
-                \begin{bmatrix}
-                    U_k & \eta_k \xi_k \\
-                    \mathbf{0} & u_{k + 1}
-                \end{bmatrix}
-                \\
-                &= 
-                \begin{bmatrix}
-                    L_kU_k & \eta_k L_k \xi_k 
-                    \\
-                    l_k \xi_k^TU_k & \eta_k l_k \xi_k^T \xi_k + u_{k + 1}\alpha_k
-                \end{bmatrix}
-                \\
-                &= 
-                \begin{bmatrix}
-                    T_k & \eta_k (L_k)_{:, k} \\ 
-                    l_k(U_k)_{k, :} & \eta_k l_k + u_{k + 1}
-                \end{bmatrix}
-                \\
-                &= 
-                \begin{bmatrix}
-                    T_k & \eta_k \\
-                    l_k u_k & \eta_k l_k + u_{k + 1}
-                \end{bmatrix}
-            \end{align}
-            Note that I changed the upper diagonal of matrix $U$ at the top to be $\eta_k$ instead of $\beta_k$ so then we have a chance to convince ourselves that $\beta_k$ for the upper diagonal of $T_k$ are indeed the same as the $\eta_k$ for the upper diagonal of matrix $U_k$. From the results above, $\eta_k = \beta_k$ as expected, and $l_k = \beta_k/u_k$, $u_{k + 1} = \alpha_{k +1} - \beta_{k}l_k$, and hence, to sum up the recurrence relation we have: 
+            In fact, a short recurrence can be built for $u^{-1}_k$ and $(L_k^{-1})_{k ,1}$, we stated it below: 
             \begin{align}
                 \begin{cases}
                     u_{k + 1} &= \alpha_{k + 1} - \beta_k^2/u_k
                     \\
                     l_k &= \beta_k/u_k
+                    \\
+                    (L^{-1}_{k + 1})_{k + 1, 1} 
+                    &=
+                    -l_k(L^{-1}_k)_{k, 1}
                 \end{cases}
             \end{align}
-            The base case is $u_1 = \alpha_1$. The recurrence of the parameter $u_k$ is immediately useful for figuring out the recurrence for $x_k$, And to figure out the recurrence relations of $(L^{-1}_k)_{k, 1}$, we consider the following fact: 
-            \begin{align}
-                L^{-1}_k L_k &= I 
-                \\
-                \begin{bmatrix}
-                    L^{-1}_k & \mathbf{0} \\
-                    s_k^T & d_{k + 1}
-                \end{bmatrix}
-                \begin{bmatrix}
-                    L_k & \mathbf{0} \\
-                    l_k \xi_k^T & 1
-                \end{bmatrix} &= I
-                \\
-                \begin{bmatrix}
-                    I & \mathbf{0} \\ 
-                    s_k^TL_k + d_{k + 1}l_k \xi_k^T &d_{k + 1}
-                \end{bmatrix} &= I
-            \end{align}
-            It equals the identity matrix therefore $d_{k + 1} = 1$, and it has to be that the lower diagonal sub vector in the results has to be zero. For the bi-lower unit diagonal matrix $L_k$, we cannot predict the structure, most of the time it's likely to be dense and unit lower triangular. We are interested in look for the first element of the vector $s_k^T$, the equality will assert: 
-            \begin{align}
-                s^TL_k + d_{k + 1}l_k \xi_k^T &= \mathbf{0}
-                \\
-                L_k^{T}s_k + d_{k + 1}l_k \xi_k &= \mathbf{0}
-                \\
-                s_k + L^{-T} d_{k + 1}l_k \xi_k &= \mathbf{0}
-                \\
-                (s_k)_1 + d_{k + 1}l_k ((L^{-1}_k)\xi_k)_1 &= 0
-                \\
-                (s_k)_1 + d_{k + 1}l_k(L^{-1}_k)_{k , 1} &= 0
-                \\\implies
-                (s_k)_1 &= - l_k(L^{-1}_k)_{k, 1} 
-                \\
-                (s_k)_1 &= (L^{-1}_{k + 1})_{k + 1, 1}  \quad \text{by definition}
-                \\
-                \implies
-                (L^{-1}_{k + 1})_{k + 1, 1} &=
-                -l_k(L^{-1}_k)_{k, 1}
-            \end{align}
-            To assert the fact that $L_k^{-1}L_k$ is identity, we carefully consider the last row excluding the bottom right element vector: $s^TL_k + d_{k + 1}l_k\xi_k^T$ which will have to be a zero vector. From the first line to the second line, we took the transpose of the vector. From the second to the third line we multiplied both sides by the inverse of $L_k^{T}$. And from the third to the fourth line, we took out only the first element in the vector. Observe that the first element of the vector $L_k^{-1}\xi_k$ is just $(L_k^{-1})_{k, 1}$. 
-            \par
-            Therefore, the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm at the same time. 
+            The derivation for above recurrence is more relevant to the LU decomposition of a Tridiagonal matrix, which is a digression and we put the proof in \hyperref[sec:Derive_CG_using_Lanczos: Proof]{appendix item \ref*{sec:Derive_CG_using_Lanczos: Proof}}. 
             \begin{remark}
-                The derivation might seem excessive for the discussion, but it's part of the analysis of the Conjugate Gradient. It derived the conjugate gradient without using the fact that $A$ is symmetric positive definite, providing potential to new algorithm that can solve symmetric indefinite systems directly. The Lanczos Algorithm for linear systems (we refer to the method derived in the above section) is a special case of FOM \cite{paper:FOM} when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrence for its parameters, and it's based on the fact that $A$ is symmetric. It's implied from the above derivation that under exact arithmetic, CG can be applied to a symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the CG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle points for the indefinite error norm. 
+                Using the Lanczos iterations, we derived the conjugate gradient without using the fact that $A$ is symmetric positive definite, which hinted at potential new algorithms that can solve symmetric indefinite systems directly. 
+                \par
+                The Lanczos Algorithm for linear systems (we refer to the method derived in the above section) is a special case of FOM \cite{paper:FOM} when the matrix $A$ is symmetric. The above algorithm is just FOM with a short term recurrence for its parameters, and it's based on convenience of solving a symmetric tridiagonal matrix. It's implied from the above derivation that under exact arithmetic, CG can be applied to a symmetric indefinite system, if we have the luck where $T_j$ is non-singular for all $j\le k$. Recall that when we derived the CG algorithm, we convert it into solving the system: $P^T_kr_0 = P_k^TAP_kw$, and when the matrix $A$ is indefinite, we can still solve the system and get the saddle point for the indefinite error norm. 
                 \par
                 However there are two problems solving Symmetric Indefinite using the CG. The first problem is the bad numerical accuracy of using the recurrence to perform LU decomposition on $T_K$ without pivoting. Another problem is $T_k$ can be singular during some iterations of the Lanczos Algorithm. For example, $T_j$ will become singular if $A$ is a symmetric tridiagonal matrix with zeros as its diagonals and all ones on its subdiagonals. The good part is that $T_j$ never will not become singular for more than 2 consecutive iteration\cite{paper:greenbaum_indefinite_lanczos}. These problems can be overcome by considering something other than LU without pivoting. In fact, there is work by C. C. Paige and M. A. Saunders which extends the idea and derives algorithms that can solve a symmetric indefinite system without using the norm equation \cite{paper:SYMLQ}. 
             \end{remark}
@@ -2123,7 +1817,9 @@ We review results from the literature on the conjugate gradient algorithm for so
         The results of the experiments are plotted out in \hyperref[fig:7]{fig \ref*{fig:7}}. For a tolerance of $10^{-10}$ on the relative energy norm of the error, we reproduced the behaviors of the CG without re-orthogonalizations using the tiny intervals ideas. In \hyperref[fig:7.1]{fig \ref*{fig:7.1}} is the CG without any re-orthogonalizations applied on $Ax = b$ for different values of $\rho$, and in \hyperref[fig:7.2]{fig \ref*{fig:7.2}}, it's the convergence of the CG with full re-orthogonalizations on the system $\tilde A x = \tilde b$. 
         
         \begin{remark}[Optimal in Another Measure, and Open Questions]
-            As we seem, the idea of tiny intervals allows for a good predictions for the behaviors of CG and Lanczos when finite precision arithemtic is involved. However, recall that 
+            The idea of tiny intervals allows for a good predictions for the behaviors of CG and Lanczos when finite precision arithemtic is involved. The underlying mechanism was shown by Greenbaum in 1989\cite{paper:greenbaum_tiny_interval_experiments}. The Lanczos iterations generates orthogonal polynomial under the weighted discrete measure, (\hyperref[remark:Minimal_Polynomial_from_Lanczos_Iterations]{remark \ref*{remark:Minimal_Polynomial_from_Lanczos_Iterations}}, \hyperref[prop:Orthogonal_Polynomials_and_Lanczos]{appendix \ref*{prop:Orthogonal_Polynomials_and_Lanczos}}), however under finite arithmetic, they are no longer orthogonal under the original but instead, they are orthogonal under a new measured defined by the tiny intervals around the eigenvalues of $A$. 
+            \par
+            It's hypothesized that the tiny intervals are fixed and wrt to the number of iterations, however no current bounds are tight enough to show that's true. 
         \end{remark}
     
 
@@ -2160,6 +1856,7 @@ We review results from the literature on the conjugate gradient algorithm for so
 \begin{appendices}
     
     \section{Useful Lemmas}
+        \subsection{Relative Energy Norm and Relative 2-Norm Conversions}
         \begin{lemma}[Relative Energy Norm and Relative 2-Norm Conversions]\label{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}
             Let $A$ be a Positive Symmetric Positive Definite Matrix, then it can be said that: 
             $$
@@ -2169,89 +1866,91 @@ We review results from the literature on the conjugate gradient algorithm for so
         \end{lemma}
         \begin{proof}
             From the definition of included 2-norm of matrices, assuming that $\lambda_1$ is the minimum eigenvalue of the matrix $A$, and $\lambda_n$ the maximum, and the fact that matrix $A$ has factorization $A^{1/2}A^{1/2}$: 
-        \end{proof}
-        \begin{align}
-            \lambda_1 \Vert x \Vert 
-            &\le \Vert Ax\Vert 
-            \le \lambda_2 \Vert x\Vert
-            \\
-            \sqrt{\lambda_1} \Vert x\Vert 
-            & \le \Vert A^{1/2}x\Vert \le \sqrt{\lambda_n}\Vert x \Vert
-            \\
-            \implies
-            \sqrt{\lambda_1} & \le \frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
-            \le \sqrt{\lambda_n}
-        \end{align}
-        Consider another vector $y$: 
-        \begin{align}
-            \sqrt{\lambda_1} \le \frac{\Vert Ay\Vert}{\Vert A^{1/2}y \Vert} \le \sqrt{\lambda_n}
-        \end{align}
-        Combining the two we have: 
-        \begin{align}
-            \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
-            & \le \sqrt{\lambda_n}\sqrt{\lambda_1}
-            \\
-            \sqrt{\lambda_1}\sqrt{\lambda_n}& \ge \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
-                A^{1/2}y
-            \right\Vert}
-            \\
-            \implies 
-            \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} & \le 
-            \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
-                A^{1/2}y
-            \right\Vert}
-            \\
-            \frac{\Vert Ax\Vert}{\Vert A^{1/2}x\Vert} &\le 
-            \sqrt{\kappa(A)} 
-            \frac{\Vert Ay\Vert}{\Vert A^{1/2}y\Vert}
-            \\
-            \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
-            \sqrt{\kappa(A)} 
-            \frac{\Vert A^{1/2}x\Vert}{\Vert A^{1/2}y\Vert}
-            \\
-            \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
-            \sqrt{\kappa(A)} 
-            \frac{\Vert x\Vert_A}{\Vert y\Vert_A}
-        \end{align}
-    \section{Theorems, Propositions}
-        \begin{prop}[Krylov Subspace Grade Invariant Theorem]\label{prop:Krylov_Subspace_Grade_Invariant_Theorem}
-            Once the subspace becomes linearly dependent, the subspace becomes invariant. 
-        \end{prop}
-        \begin{proof}
             \begin{align}
-                & K_k = \begin{bmatrix}
-                    b & AB & \cdots & A^{k - 1}b
-                \end{bmatrix}
+                \lambda_1 \Vert x \Vert 
+                &\le \Vert Ax\Vert 
+                \le \lambda_2 \Vert x\Vert
                 \\
-                & K_k \text{ Lin Dep} \implies A^{k-1}b = K_{k - 1}c_k
+                \sqrt{\lambda_1} \Vert x\Vert 
+                & \le \Vert A^{1/2}x\Vert \le \sqrt{\lambda_n}\Vert x \Vert
                 \\
-                & \implies 
-                AK_k = K_k
-                    \underbrace{\begin{bmatrix}
-                        e_2 & \cdots & e_k & c_k
-                    \end{bmatrix}}_{:= C_k}
-                \\
-                & \implies 
-                A^2K_k = AK_kC_k = K_kC_k^2
+                \implies
+                \sqrt{\lambda_1} & \le \frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
+                \le \sqrt{\lambda_n}
             \end{align}
-            $A^2K_k$ will span the same space as the range of the matrix $K_k$.
-        \end{proof}
-        \begin{theorem}[Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices]\label{theorem:cauchy_interlace}
-            Let $T_k$ be a $k\times k$ symmetric tridiagonal matrix, then its top left upper submatrix: $T_{k-1}=(T_k)_{:k - 1, :k -1}$ has eigenvalues interlaced between the eigenvalues of $T_k$. Denotes all $k$ eigenvalues of $T_k$ as $\theta_i^{(k)}$, and all $k - 1$ eigenvalues of $T_{k - 1}$ as $\theta_i^{(k - 1)}$. Order them so that: $\theta_1^{(k - 1)} \le \cdots, \le \theta_i^{(k - 1)}$, similarly: $\theta_1^{(k)}\le \cdots \le \theta_i^{(k)}$, then: 
+            Consider another vector $y$: 
             \begin{align}
-                & \theta_{k}^{(k)} \ge \theta_{k - 1}^{(k - 1)}
-                \\
-                & \theta_{1}^{(k)} \le \theta_{1}^{(k - 1)}
-                \\
-                & \theta_{i -1}^{(k - 1)} \le \theta_{i}^{(k)} \le \theta_{i}^{(k - 1)}
+                \sqrt{\lambda_1} \le \frac{\Vert Ay\Vert}{\Vert A^{1/2}y \Vert} \le \sqrt{\lambda_n}
             \end{align}
-            Theorem taken from first chapter of Greenbuam's book\cite{book:greenbaum} and it's adapted for symmetric tridiagonal matrix. 
-        \end{theorem}
+            Combining the two we have: 
+            \begin{align}
+                \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} 
+                & \le \sqrt{\lambda_n}\sqrt{\lambda_1}
+                \\
+                \sqrt{\lambda_1}\sqrt{\lambda_n}& \ge \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
+                    A^{1/2}y
+                \right\Vert}
+                \\
+                \implies 
+                \sqrt{\lambda_1}\frac{\Vert Ax\Vert}{\Vert A^{1/2}x \Vert} & \le 
+                \sqrt{\lambda_n} \frac{\Vert Ay\Vert}{\left\Vert
+                    A^{1/2}y
+                \right\Vert}
+                \\
+                \frac{\Vert Ax\Vert}{\Vert A^{1/2}x\Vert} &\le 
+                \sqrt{\kappa(A)} 
+                \frac{\Vert Ay\Vert}{\Vert A^{1/2}y\Vert}
+                \\
+                \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
+                \sqrt{\kappa(A)} 
+                \frac{\Vert A^{1/2}x\Vert}{\Vert A^{1/2}y\Vert}
+                \\
+                \frac{\Vert Ax\Vert}{\Vert Ay\Vert} &\le 
+                \sqrt{\kappa(A)} 
+                \frac{\Vert x\Vert_A}{\Vert y\Vert_A}
+            \end{align}
+        \end{proof}
+    \section{Theorems, Propositions, Proofs}
+        \subsection{Krylov Subspace Grade Invariant Theorem}
+            \begin{prop}[Krylov Subspace Grade Invariant Theorem]\label{prop:Krylov_Subspace_Grade_Invariant_Theorem}
+                Once the subspace becomes linearly dependent, the subspace becomes invariant. 
+            \end{prop}
+            \begin{proof}
+                \begin{align}
+                    & K_k = \begin{bmatrix}
+                        b & AB & \cdots & A^{k - 1}b
+                    \end{bmatrix}
+                    \\
+                    & K_k \text{ Lin Dep} \implies A^{k-1}b = K_{k - 1}c_k
+                    \\
+                    & \implies 
+                    AK_k = K_k
+                        \underbrace{\begin{bmatrix}
+                            e_2 & \cdots & e_k & c_k
+                        \end{bmatrix}}_{:= C_k}
+                    \\
+                    & \implies 
+                    A^2K_k = AK_kC_k = K_kC_k^2
+                \end{align}
+                $A^2K_k$ will span the same space as the range of the matrix $K_k$.
+            \end{proof}
+        \subsection{Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}
+            \begin{theorem}[Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices]\label{theorem:cauchy_interlace}
+                Let $T_k$ be a $k\times k$ symmetric tridiagonal matrix, then its top left upper submatrix: $T_{k-1}=(T_k)_{:k - 1, :k -1}$ has eigenvalues interlaced between the eigenvalues of $T_k$. Denotes all $k$ eigenvalues of $T_k$ as $\theta_i^{(k)}$, and all $k - 1$ eigenvalues of $T_{k - 1}$ as $\theta_i^{(k - 1)}$. Order them so that: $\theta_1^{(k - 1)} \le \cdots, \le \theta_i^{(k - 1)}$, similarly: $\theta_1^{(k)}\le \cdots \le \theta_i^{(k)}$, then: 
+                \begin{align}
+                    & \theta_{k}^{(k)} \ge \theta_{k - 1}^{(k - 1)}
+                    \\
+                    & \theta_{1}^{(k)} \le \theta_{1}^{(k - 1)}
+                    \\
+                    & \theta_{i -1}^{(k - 1)} \le \theta_{i}^{(k)} \le \theta_{i}^{(k - 1)}
+                \end{align}
+                Theorem taken from first chapter of Greenbuam's book\cite{book:greenbaum} and it's adapted for symmetric tridiagonal matrix. 
+            \end{theorem}
         \begin{prop}[Orthogonal Polynomials and Lanczos]\label{prop:Orthogonal_Polynomials_and_Lanczos}
             The Lanczos algorithm generates orthogonaly polynomial under a discrete weighted measure under the eigenvalues of matrix $A$, which is also the Lanczos vector $q_k$ represented under the Krylov subspace. 
         \end{prop}
         \begin{proof}
-            Let $V_k^HAV_k = T_k$ be the tridiagonal decomposition and we assume exact arithematic, using the fact that each lanczos vector $q_k$ is an element from the Krylov subspace, we can represent it as a matrix polynomial multiplied by $q_k$: 
+            Let $V_k^HAV_k = T_k$ be the tridiagonalization resulted from Lanczos algorithm and we assume exact arithematic, using the fact that each lanczos vector $q_k$ is an element from the Krylov subspace, we can represent it as a matrix polynomial multiplied by $q_k$: 
             \begin{align}
                 v_{m + 1} &= q_{m}(A)v_1 \in \mathcal{K}(A|v_1) \quad \forall\; m \le k - 1
                 \\
@@ -2275,57 +1974,59 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{align}
             Therefore the polynomials $\phi, \varphi$ are orthogonal under the discrete measure over eigenvalues of $A$ weighted by the vector $(f_1)^2$. 
         \end{proof}
-        \begin{prop}[Recursion of the Symmetric Tridiagonal Matrix Determinant]\label{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}
-            Let $T_K$ be a symmetric tridiagonal matrix $\in \mathbb{R}^{k\times k}$ with $\alpha$ on its diagonal and $\beta$ on its subdiagona. Recursively, we define $T_{k - i}$ to be the top left sub matrix of $T_k$, with size $(k - 1)\times(k - 1)$. Using $|\cdot|$ to denote the determinant of a matrix, we have the recurrence relation: 
-            $$
-                |T_k| = \alpha_k|T_{k - 1}| - \beta_{k - 1}^2|T_{k - 2}|
-            $$
-        \end{prop}
-        \begin{proof}
-            Using the notation of $e_{k}^{(m)}$ to denote the $k^{th}$ standard basis vector in $\mathbb{R}^m$, consider the Block Matrix: 
-            \begin{align}
-                T_k &= \begin{bmatrix}
-                    T_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 2)} & 
-                    \\
-                    \beta_{k - 2}e_{k - 2}^{(k - 2)T} & \alpha_{k - 1}  & \beta_{k - 1}e_{k - 1}^{(k - 1)}
-                    \\
-                    & \beta_{k - 1}e_{k - 1}^{(k - 1)T} & \alpha_k&
-                \end{bmatrix}
-            \end{align}
-            Now, we use the Laplace Expansion to figure out the determinant we are expanding the Laplace Expansion on the last row of $T_k$
-            \begin{align}
-                &|T_k| = (-1)^{k+(k - 1)}\beta_{k - 1} \left|\begin{bmatrix}
-                    T_{k - 2} & 
-                    \\
-                    \beta_{k - 2}e^{(k - 2)T}_{k - 2} & \beta_{k - 1}e_{k - 1}^{(k - 1)}
-                \end{bmatrix}\right|&
-                 + 
-                (-1)^{2k} \alpha_k
-                \left|
-                    \underbrace{\begin{bmatrix}
-                        T_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 2)} 
+        \subsection{Recursion of the Symmetric Tridiagonal Matrix Determinant}
+            \begin{prop}[Recursion of the Symmetric Tridiagonal Matrix Determinant]\label{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}
+                Let $T_K$ be a symmetric tridiagonal matrix $\in \mathbb{R}^{k\times k}$ with $\alpha$ on its diagonal and $\beta$ on its subdiagona. Recursively, we define $T_{k - i}$ to be the top left sub matrix of $T_k$, with size $(k - 1)\times(k - 1)$. Using $|\cdot|$ to denote the determinant of a matrix, we have the recurrence relation: 
+                $$
+                    |T_k| = \alpha_k|T_{k - 1}| - \beta_{k - 1}^2|T_{k - 2}|
+                $$
+            \end{prop}
+            \begin{proof}
+                Using the notation of $e_{k}^{(m)}$ to denote the $k^{th}$ standard basis vector in $\mathbb{R}^m$, consider the Block Matrix: 
+                \begin{align}
+                    T_k &= \begin{bmatrix}
+                        T_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 2)} & 
                         \\
-                        \beta_{k - 2}e_{k - 2}^{(k - 2)T} & \alpha_{k - 1}
-                    \end{bmatrix}}_{=T_{k - 1}}
-                \right|
-                \\
-                &(-1)^{2k - 2}\beta_{k - 1}|T_{k - 2}| 
-                = 
-                \left|\begin{bmatrix}
-                    T_{k - 2} & 
+                        \beta_{k - 2}e_{k - 2}^{(k - 2)T} & \alpha_{k - 1}  & \beta_{k - 1}e_{k - 1}^{(k - 1)}
+                        \\
+                        & \beta_{k - 1}e_{k - 1}^{(k - 1)T} & \alpha_k&
+                    \end{bmatrix}
+                \end{align}
+                Now, we use the Laplace Expansion to figure out the determinant we are expanding the Laplace Expansion on the last row of $T_k$
+                \begin{align}
+                    &|T_k| = (-1)^{k+(k - 1)}\beta_{k - 1} \left|\begin{bmatrix}
+                        T_{k - 2} & 
+                        \\
+                        \beta_{k - 2}e^{(k - 2)T}_{k - 2} & \beta_{k - 1}e_{k - 1}^{(k - 1)}
+                    \end{bmatrix}\right|&
+                     + 
+                    (-1)^{2k} \alpha_k
+                    \left|
+                        \underbrace{\begin{bmatrix}
+                            T_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 2)} 
+                            \\
+                            \beta_{k - 2}e_{k - 2}^{(k - 2)T} & \alpha_{k - 1}
+                        \end{bmatrix}}_{=T_{k - 1}}
+                    \right|
                     \\
-                    \beta_{k - 1}e^{(k - 2)T}_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 1)}
-                \end{bmatrix}\right|&
-            \end{align}
-            Substituting the last equation back to the first equation of the first term. 
-            \begin{align}
-                |T_k| &= 
-                (-1)^{2k - 2 + 2k - 1}\beta_{k - 1}^2|T_{k - 2}| + \alpha_k|T_{k - 1}|
-                \\
-                &= -\beta_{k - 1}^2|T_{k - 2}| + \alpha_k|T_{k - 1}|
-            \end{align}
-        \end{proof}
-        \begin{theorem}[Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix]
+                    &(-1)^{2k - 2}\beta_{k - 1}|T_{k - 2}| 
+                    = 
+                    \left|\begin{bmatrix}
+                        T_{k - 2} & 
+                        \\
+                        \beta_{k - 1}e^{(k - 2)T}_{k - 2} & \beta_{k - 2}e_{k - 1}^{(k - 1)}
+                    \end{bmatrix}\right|&
+                \end{align}
+                Substituting the last equation back to the first equation of the first term. 
+                \begin{align}
+                    |T_k| &= 
+                    (-1)^{2k - 2 + 2k - 1}\beta_{k - 1}^2|T_{k - 2}| + \alpha_k|T_{k - 1}|
+                    \\
+                    &= -\beta_{k - 1}^2|T_{k - 2}| + \alpha_k|T_{k - 1}|
+                \end{align}
+            \end{proof}
+        \subsection{Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix}
+            \begin{theorem}[Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix]
             \label{theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix}
             The characteristic polynomial of a symmetric tridiagonal matrix satisfies the recurrences: 
             $$
@@ -2338,23 +2039,307 @@ We review results from the literature on the conjugate gradient algorithm for so
             \end{cases}
             $$
             Where, $p_k(x) = |T_k - xI|$, and $p_{k - 1}(x) :=|(T_k)_{1:k - 1, 1:k - 1}|$, and $p_{k - 2} = |(T_k)_{1:k - 2, 1:k - 2}|$. 
-        \end{theorem}
-        \begin{proof}
-            Using \hyperref[prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant]{Proposition \ref*{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}}, but replacing $\alpha_k$ to be $\alpha_k - x$ due to the shifting introduced by $T_k - xI$, then: 
+            \end{theorem}
+            \begin{proof}
+                Using \hyperref[prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant]{Proposition \ref*{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}}, but replacing $\alpha_k$ to be $\alpha_k - x$ due to the shifting introduced by $T_k - xI$, then: 
+                \begin{align}
+                    |T_k - Ix| &= (\alpha_k - x)|T_{k - 1} - xI| -\beta_{k - 1}^2|T_{k - 2} - Ix|
+                    \\
+                    \implies
+                    p_k(x) &= - \beta_{k - 1}^2 p_{k - 2}(x) + (\alpha_k - x)p_{k - 1}(x)
+                \end{align}
+                The recurrence is direct from the recurrences of the determinant of symmetric tridiagonal matrix, and a monic polynomial with degree zero is just $1$, therefore the base case matches up as well. 
+            \end{proof}
+        
+        \subsection{Tridiagonal Characteristic Polynomials is Scaled Lanczos Orthgonal Polynomials}
+            \begin{prop}[Tridiagonal Characteristic Polynomials is Scaled Lanczos Orthgonal Polynomials]
+                The polynomial from \hyperref[theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix]{Theorem \ref*{theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix}} is a scalar multiple of the polynomial that represents the lanczos vector $q_k$ under the Krylov Subspace. 
+            \end{prop}
+        \subsection{Irreducible Symmetric Tridiagonal Matrix}
+            \begin{prop}
+                The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. It's what referred to as a irreducible symmetric tridiagonal matrix in some literature. 
+            \end{prop}
+    \subsection{From CG to Lanczos: The Proof}\label{sec:From_CG_to_Lanczos:The_Proof}
+        We will break the proof into several parts. Firstly we address the base case, and then we address the inductive case to establish the parameters between the Tridiagonal matrix and $a_k, b_k$, finally we resolve the sign problem between the Lanczos vectors and the residual vectors. 
+        \subsubsection{The Base Case}
+            Right from the start of the CG iteration we have: 
             \begin{align}
-                |T_k - Ix| &= (\alpha_k - x)|T_{k - 1} - xI| -\beta_{k - 1}^2|T_{k - 2} - Ix|
+                r_0 &= p_0
+                \\
+                r_1 &= r_0 - a_0Ar_0
+                \\
+                Ar_0 &= a_0^{-1}(r_0 - r_1)
+                \\
+                Ar_0 &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}(r_0 - r_1)
+            \end{align}
+            Consider substituting $r_0 = \Vert r_0\Vert q_1, r_1 = -\Vert r_1\Vert q_2$, then: 
+            \begin{align}
+                A\Vert r_0\Vert q_1 
+                &= \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\left(
+                    \Vert r_0\Vert q_1 + \Vert r_1\Vert q_2
+                \right)
+                \\
+                &= 
+                \frac{\Vert r_0\Vert_A^2}{\Vert r_0\Vert^2}\Vert r_0\Vert q_1 + 
+                    \frac{\Vert r_1\Vert}{\Vert r_0\Vert} q_2
+            \end{align}
+            And from this relation, using the Lanczos recurrence theorem would imply that $\alpha_1 = a_0^{-1}$; $\beta_1 = \frac{\sqrt{b_0}}{\alpha_0}$. So far so good, we have shown that there is an equivalence between the Lanczos and the CG for the first iterations of the CG algorithm. 
+        \subsubsection{The Inductive Case}
+            \begin{lemma}
+                Inductively we wish to show the relation that: 
+                \begin{align}
+                    \begin{cases}
+                        \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                        & \forall 1 \le j \le n - 1
+                        \\
+                        \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                        & \forall 2 \le j \le n - 2 
+                    \end{cases}
+                \end{align}
+            \end{lemma}
+            \begin{proof}
+                We start by considering: 
+                \begin{align}
+                    r_j &= r_{j - 1} - a_{j -1 }Ap_{j - 1}
+                    \\
+                    & =r_{j - 1} - a_{j - 1} A(r_{j - 1} + b_{j - 2}p_{j - 1})
+                    \\
+                    &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 1}
+                \end{align}
+                We make use of the recurrence asserted by the CG algorithm, giving us: 
+                \begin{align}
+                    r_{j - 1} &= r_{j - 1} - a_{j - 2}Ap_{j - 1}
+                    \\
+                    r_{j - 1} - r_{j - 1} &= a_{j - 2} Ap_{j - 1}
+                    \\
+                    Ap_{j - 1} &= a^{-1}_{j -2} 
+                    \left(
+                        r_{j - 2} - r_{j - 1}
+                    \right)
+                \end{align}
+                Here, we can substitute the results for the term $Ap_{j - 1}$, and then we can express the recurrence of residual purely in terms of residual. Consider: 
+                \begin{align}
+                    r_{j} &= r_{j - 1} - a_{j - 1}Ar_{j - 1} - a_{j - 1}b_{j - 2}Ap_{j - 2}
+                    \\
+                    &= 
+                    r_{j - 1} - a_{j - 1}Ar_{j - 1} - \frac{a_{j-1}b_{j-2}}{a_{j-2}}\left(
+                        r_{j - 2} - r_{j - 1}
+                    \right)
+                    \\
+                    &= \left(
+                        1 + \frac{a_{j - 1}b_{j -2}}{a_{j - 2}}r_{j - 1}
+                    \right)- a_{j - 1}Ar_{j - 1} - \frac{a_{j-1}b_{j-2}}{a_{j-2}}r_{j - 2}
+                    \\
+                    a_{j - 1}Ar_{j - 1} &= 
+                    \left(
+                        1 + \frac{a_{j - 1}b_{j -2}}{a_{j - 2}}r_{j - 1}
+                    \right)
+                    - \frac{a_{j-1}b_{j-2}}{a_{j-2}}r_{j - 2}
+                    \\
+                    Ar_{j - 1} &=
+                    \left(
+                        \frac{1}{a_{j - 1}} + \frac{b_{j - 2}}{a_{j- 2}}
+                    \right)r_{j - 1} + 
+                    \frac{r_{j}}{a_{j-1}} - 
+                    \frac{b_{j - 2}}{a_{j - 2}}r_{j - 2}
+                \end{align}
+                Finally, we increment the index $j$ by one for notational convenience, and therefore we establish the following relations between the residuals of the conjugate gradient algorithm: 
+                \begin{align}
+                    Ar_{j} &=
+                    \left(
+                        \frac{1}{a_{j}} + \frac{b_{j - 1}}{a_{j-  1}}
+                    \right)r_{j} + 
+                    \frac{r_{j + 1}}{a_{j}} - 
+                    \frac{b_{j - 1}}{a_{j - 1}}r_{j - 1}
+                \end{align}
+                Reader, please observe that this is somewhat similar to the recurrence relations between the Lanczos vectors, however it's failing to match the sign, at the same time, it's not quite matching the form of the recurrence of $\beta_k$ from the Lanczos algorithm. To match it, we need the coefficients of $r_{j - 1}$ and $r_{j + 1}$ to be in the same form, parameterized by the same iterations parameter: $j$. To do that, consider the doing this:  
+                \begin{align}
+                    q_{j + 1} &:= \frac{r_{j}}{\Vert r_j\Vert}
+                    \\
+                    q_{j} &:= -\frac{r_{j - 1}}{\Vert r_{j - 1}\Vert} \quad 
+                    \text{Note: This is Negative}
+                    \\
+                    q_{j + 2} &:= \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
+                    \\
+                    \implies 
+                    A\Vert r_j\Vert q_{j + 1} 
+                    &= 
+                    \left(
+                        \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                    \right)\Vert r_j\Vert q_{j + 1}
+                    + 
+                    \frac{\Vert r_{j + 1}\Vert q_{j + 2}}{a_j}
+                    +
+                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}}q_{j}
+                    \\
+                    Aq_{j + 1} &= 
+                    \left(
+                        \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}} 
+                    \right)
+                    q_{j + 1}
+                    + 
+                    \frac{\Vert r_{j + 1}\Vert}{a_j \Vert r_j\Vert}q_{j + 2} + 
+                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}\Vert r_j\Vert}q_j
+                \end{align}
+                Recall that parameters from Conjugate Gradient, $\sqrt b_j = \Vert r_{j + 1}\Vert/\Vert r_j\Vert$, and $a_j = \frac{\Vert r_j\Vert^2}{\Vert p_j\Vert_A^2}$, and we can use the substitution to match the coefficients for $q_{j + 2}$ and $q_j$, giving us: 
+                \begin{align}
+                    \frac{\Vert r_{j + 1}\Vert}{a_j\Vert r_j\Vert} &= 
+                    \frac{1}{a_j}\sqrt{b_j}
+                    \\
+                    \frac{b_{j - 1}\Vert r_{j - 1}\Vert}{a_{j - 1}\Vert r_j \Vert}
+                    &= 
+                    \frac{b_{j - 1}}{a_{j - 1}}\frac{1}{\sqrt{b_{j - 1}}}
+                    = 
+                    \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                    \\
+                    \implies& 
+                    \begin{cases}
+                        \alpha_{j + 1} = \frac{1}{a_j} + \frac{b_{j - 1}}{a_{j - 1}}
+                        & \forall 1 \le j \le n - 1
+                        \\
+                        \beta_{j} = \frac{\sqrt{b_{j - 1}}}{a_{j - 1}}
+                        & \forall 2 \le j \le n - 2 
+                    \end{cases}
+                \end{align}
+                Take notes that the form is now matched, but the expression for $\alpha_{j + 1}$ has an extra $b_{j - 1}/a_{j - 1}$, to resolve that, we take the audacity to make $b_0$ so that it's consistent with the base case. 
+            \end{proof}
+        \subsubsection{Fixing the Sign}
+            We can't take the triumph yet; we need to take a more careful look into the sign between $q_j$ the Lanczos Vector and its equivalence residual: $r_{j - 1}$ in CG. Here, I want to point out the fact that, there are potentially two substitutions possible for the above derivation for the inductive case and regardless of which one we use, it would still preserve the correctness for the proof. By which I mean the following substitutions would have both made it work: 
+            \begin{align}
+                \begin{cases}
+                    q_{j + 1} := \pm \frac{r_j}{\Vert r_j\Vert}
+                    \\
+                    q_{j} := \mp \frac{r_{j - 1}}{\Vert r_{j - 1}\Vert}
+                    \\
+                    q_{j + 2} := \pm \frac{r_{j + 1}}{\Vert r_{j + 1}\Vert}
+                \end{cases}
+            \end{align}
+            Under the context, the operations $\pm, \mp$ are correlated, choose a sign for one, the other must be of opposite sign. In this case both substitutions work the same because multiplying the equation by $-1$ would give the same equality, and we can always multiply by another negative sign to get it back. The key here is that, the sign going from $q_{j}$ to the next $q_{j - 1}$ will have to alternate. To find out precisely which one it is, we consider the base case for the Lanczos Vectors and Residuals: 
+            \begin{align}
+                q_1 &= \hat r_0\\
+                q_2 &= -\hat r_1
+                \\
+                \vdots
+                \\
+                q_j &= (-1)^{j + 1}\hat r_{j + 1}
+            \end{align}
+        \subsection{Derive CG using Lanczos: Proof}\label{sec:Derive_CG_using_Lanczos: Proof}
+            We made use of the fact that the matrix $U_k$ is unit upper bidiagonal. Next, we seek for the recurrences of the parameters $u_k, l_k$. Let's consider the recurrence using the block structure of the matrices: 
+            \begin{align}
+                T_k &= L_kU_k
+                \\
+                T_{k + 1} &= \begin{bmatrix}
+                    T_k & \beta_k \xi_k \\
+                    \beta_k \xi^T_k & \alpha_{k + 1}
+                \end{bmatrix} = 
+                \begin{bmatrix}
+                    L_k & \mathbf{0} \\ l_k \xi_k^{-1} & 1
+                \end{bmatrix}
+                \begin{bmatrix}
+                    U_k & \eta_k \xi_k \\
+                    \mathbf{0} & u_{k + 1}
+                \end{bmatrix}
+                \\
+                &= 
+                \begin{bmatrix}
+                    L_kU_k & \eta_k L_k \xi_k 
+                    \\
+                    l_k \xi_k^TU_k & \eta_k l_k \xi_k^T \xi_k + u_{k + 1}\alpha_k
+                \end{bmatrix}
+                \\
+                &= 
+                \begin{bmatrix}
+                    T_k & \eta_k (L_k)_{:, k} \\ 
+                    l_k(U_k)_{k, :} & \eta_k l_k + u_{k + 1}
+                \end{bmatrix}
+                \\
+                &= 
+                \begin{bmatrix}
+                    T_k & \eta_k \\
+                    l_k u_k & \eta_k l_k + u_{k + 1}
+                \end{bmatrix}
+            \end{align}
+            Note that I changed the upper diagonal of matrix $U$ at the top to be $\eta_k$ instead of $\beta_k$ so then we have a chance to convince ourselves that $\beta_k$ for the upper diagonal of $T_k$ are indeed the same as the $\eta_k$ for the upper diagonal of matrix $U_k$. From the results above, $\eta_k = \beta_k$ as expected, and $l_k = \beta_k/u_k$, $u_{k + 1} = \alpha_{k +1} - \beta_{k}l_k$, and hence, to sum up the recurrence relation we have: 
+            \begin{align}
+                \begin{cases}
+                    u_{k + 1} &= \alpha_{k + 1} - \beta_k^2/u_k
+                    \\
+                    l_k &= \beta_k/u_k
+                \end{cases}
+            \end{align}
+            The base case is $u_1 = \alpha_1$. The recurrence of the parameter $u_k$ is immediately useful for figuring out the recurrence for $x_k$, And to figure out the recurrence relations of $(L^{-1}_k)_{k, 1}$, we consider the following fact: 
+            \begin{align}
+                L^{-1}_k L_k &= I 
+                \\
+                \begin{bmatrix}
+                    L^{-1}_k & \mathbf{0} \\
+                    s_k^T & d_{k + 1}
+                \end{bmatrix}
+                \begin{bmatrix}
+                    L_k & \mathbf{0} \\
+                    l_k \xi_k^T & 1
+                \end{bmatrix} &= I
+                \\
+                \begin{bmatrix}
+                    I & \mathbf{0} \\ 
+                    s_k^TL_k + d_{k + 1}l_k \xi_k^T &d_{k + 1}
+                \end{bmatrix} &= I
+            \end{align}
+            It equals the identity matrix therefore $d_{k + 1} = 1$, and it has to be that the lower diagonal sub vector in the results has to be zero. For the bi-lower unit diagonal matrix $L_k$, we cannot predict the structure, most of the time it's likely to be dense and unit lower triangular. We are interested in look for the first element of the vector $s_k^T$, the equality will assert: 
+            \begin{align}
+                s^TL_k + d_{k + 1}l_k \xi_k^T &= \mathbf{0}
+                \\
+                L_k^{T}s_k + d_{k + 1}l_k \xi_k &= \mathbf{0}
+                \\
+                s_k + L^{-T} d_{k + 1}l_k \xi_k &= \mathbf{0}
+                \\
+                (s_k)_1 + d_{k + 1}l_k ((L^{-1}_k)\xi_k)_1 &= 0
+                \\
+                (s_k)_1 + d_{k + 1}l_k(L^{-1}_k)_{k , 1} &= 0
+                \\\implies
+                (s_k)_1 &= - l_k(L^{-1}_k)_{k, 1} 
+                \\
+                (s_k)_1 &= (L^{-1}_{k + 1})_{k + 1, 1}  \quad \text{by definition}
                 \\
                 \implies
-                p_k(x) &= - \beta_{k - 1}^2 p_{k - 2}(x) + (\alpha_k - x)p_{k - 1}(x)
+                (L^{-1}_{k + 1})_{k + 1, 1} &=
+                -l_k(L^{-1}_k)_{k, 1}
             \end{align}
-            The recurrence is direct from the recurrences of the determinant of symmetric tridiagonal matrix, and a monic polynomial with degree zero is just $1$, therefore the base case matches up as well. 
-        \end{proof}
-        \begin{prop}[Relations between Tridiagonal Characteristic Polynomials and Lanczos Orthgonal Polynomials]
-
-        \end{prop}
-        \begin{prop}
-            The tridiagonal matrix $T_k$ generated by the Lanczos algoithm cannot have repeated eigenvalues. It's what referred to as a irreducible symmetric tridiagonal matrix in some literature. 
-        \end{prop}
+            To assert the fact that $L_k^{-1}L_k$ is identity, we carefully consider the last row excluding the bottom right element vector: $s^TL_k + d_{k + 1}l_k\xi_k^T$ which will have to be a zero vector. From the first line to the second line, we took the transpose of the vector. From the second to the third line we multiplied both sides by the inverse of $L_k^{T}$. And from the third to the fourth line, we took out only the first element in the vector. Observe that the first element of the vector $L_k^{-1}\xi_k$ is just $(L_k^{-1})_{k, 1}$. 
+            \par
+            Therefore, the recurrence for the step size into the direction of the conjugate vector requires us to use the newest element $l_k$ from $L_{k + 1}$ and the previous step size in the direction of the conjugate vector $p_k$. The short recurrence allows us to build up another algorithm that is just as efficient as CG algorithm but running Lanczos Algorithm under the hood. 
+        
+    \section{Algorithms}
+    \begin{definition}[Lanczos Iterations Variants]\label{def:Lanczos Iterations Variants}
+        \begin{align}
+            \begin{aligned}
+                & \text{Given arbitrary: }q_1 \text{ s.t: } \Vert q_1\Vert = 1
+                \\
+                & \alpha_1 := \langle q_1, Aq_1\rangle
+                \\
+                & \beta_0 := 0
+                \\
+                & \text{Memorize}: Aq_1
+                \\
+                & \text{For }j = 1, 2, \cdots
+                \\
+                &\hspace{1.1em}
+                \begin{aligned}
+                    & \tilde{q}_{j + 1} := Aq_j - \beta_{j - 1} q_{j - 1}
+                    \\
+                    & \tilde{q}_{j + 1} \leftarrow \tilde{q}_{j + 1} - \alpha_jq_j
+                    \\
+                    & \beta_j = \Vert \tilde{q}_{j + 1}\Vert
+                    \\
+                    & q_{j + 1}:= \tilde{q}_{j + 1}/\beta_j
+                    \\
+                    & \alpha_{j + 1} := \left\langle q_{j + 1}, Aq_{j + 1} \right\rangle
+                    \\
+                    & \text{Memorize: }Aq_{j + 1}
+                \end{aligned}
+            \end{aligned}
+        \end{align}
+    \end{definition}
 \end{appendices}
 \newpage
 
