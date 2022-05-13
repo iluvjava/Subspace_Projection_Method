@@ -36,6 +36,7 @@
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Projectors}{7}{subsubsection.3.1.2}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Subspace Projection Methods}{7}{subsection.3.2}\protected@file@percent }
 \newlabel{sec:Subspace_Projection_Methods}{{3.2}{7}{Subspace Projection Methods}{subsection.3.2}{}}
+\newlabel{eqn.Orthogonalitycond}{{3.2.2}{7}{Subspace Projection Methods}{equation.3.2.2}{}}
 \abx@aux@cite{paper:cg_original}
 \abx@aux@segm{0}{0}{paper:cg_original}
 \abx@aux@cite{notes:painless_cg}
@@ -52,10 +53,10 @@
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.4}Properties of CDM}{11}{subsubsection.3.3.4}\protected@file@percent }
 \newlabel{prop:CDM_Recurrence}{{3.5}{11}{CDM Recurrence}{prop.3.5}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.5}Conjugate Gradient}{11}{subsubsection.3.3.5}\protected@file@percent }
-\newlabel{lemma:CG_Lemma_1}{{3.3.1}{12}{}{lemma.3.3.1}{}}
+\newlabel{lemma:CG_Lemma_1}{{3.3.1}{11}{}{lemma.3.3.1}{}}
 \newlabel{lemma:CG_Lemma_2}{{3.3.2}{12}{}{lemma.3.3.2}{}}
 \newlabel{prop:CG_Generates_Orthogonal_Residuals}{{3.6}{12}{CG Generates Orthogonal Residuals}{prop.3.6}{}}
-\newlabel{prop:CG_Recurrences}{{3.7}{13}{CG Recurrences}{prop.3.7}{}}
+\newlabel{prop:CG_Recurrences}{{3.7}{12}{CG Recurrences}{prop.3.7}{}}
 \abx@aux@cite{paper:cg_original}
 \abx@aux@segm{0}{0}{paper:cg_original}
 \newlabel{def:CG}{{5}{14}{CG}{definition.5}{}}
@@ -73,7 +74,7 @@
 \newlabel{remark:Minimal_Polynomial_from_Lanczos_Iterations}{{3.4.2}{18}{Minimal Polynomial from Lanczos Iterations}{remark.3.4.2}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {4}Analysis of Conjugate Gradient and Lanczos Iterations}{18}{section.4}\protected@file@percent }
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Conjugate Gradient and Matrix Polynomial}{18}{subsection.4.1}\protected@file@percent }
-\newlabel{prop:CG_Relative_Energy Error}{{4.1}{18}{CG Relative Energy Error}{prop.4.1}{}}
+\newlabel{prop:CG_Relative_Energy Error}{{4.1}{19}{CG Relative Energy Error}{prop.4.1}{}}
 \abx@aux@cite{book:greenbaum}
 \abx@aux@segm{0}{0}{book:greenbaum}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}Termination Conditions of CG}{20}{subsubsection.4.1.1}\protected@file@percent }
@@ -120,7 +121,7 @@
 \abx@aux@segm{0}{0}{book:greenbaum}
 \abx@aux@cite{paper:paige1980}
 \abx@aux@segm{0}{0}{paper:paige1980}
-\newlabel{remark:CG_Float_Remark}{{5.3.1}{34}{Running Lanczos on Tridiagonal with $q_1=\xi _1$}{remark.5.3.1}{}}
+\newlabel{remark:CG_Float_Remark}{{5.3.1}{34}{When Finite Arithmetic Lanczos is Exact}{remark.5.3.1}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.2}Paige's Theorem and Floating-point Convergence of CG}{34}{subsubsection.5.3.2}\protected@file@percent }
 \newlabel{theorem:paige1}{{4}{34}{Paige's Theorem}{theorem.4}{}}
 \abx@aux@cite{book:trefethen}
@@ -130,65 +131,66 @@
 \newlabel{eqn:the_ill_conditioned_matrix}{{5.4.1}{37}{Ghost Eigenvalues Experiments}{equation.5.4.1}{}}
 \@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.1}{\ignorespaces The highest and lowest 10 eigenvalues of the matrix $T_k$ during the Lanczos Iterations are being tracked by their relative order. During each iteration, the first, the second, the third, ... etc eigenvalues of $T_k$ are linked together by a line in a different color. Left is Lanczos with numerical round-off error, right is Lanczos iterations that fully re-orthogonalize $q_k$ for each iteration which emulates the behaviors under exact arithmetic. \relax }}{37}{figure.caption.3}\protected@file@percent }
 \newlabel{fig:2}{{5.4.1}{37}{Ghost Eigenvalues Experiments}{figure.caption.3}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.2}{\ignorespaces left: The heatmap of the plot of log2 of the absolute values of the matrix $Q^T_kQ_k$. right: The plot of $Q_k^TAQ_k$ from floating-point Lanczos iterations\relax }}{38}{figure.caption.4}\protected@file@percent }
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.2}{\ignorespaces left: The heatmap of the plot of the absolute values of the matrix $Q^T_kQ_k$. right: The plot of $Q_k^TAQ_k$ from floating-point Lanczos iterations\relax }}{38}{figure.caption.4}\protected@file@percent }
 \newlabel{fig:3}{{5.4.1}{38}{Ghost Eigenvalues Experiments}{figure.caption.4}{}}
 \abx@aux@cite{book:reliable_computation}
 \abx@aux@segm{0}{0}{book:reliable_computation}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2}Lanczos Vectors Losing Orthogonality on converged Ritzvectors}{39}{subsubsection.5.4.2}\protected@file@percent }
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.3}{\ignorespaces Projection of floating-point Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$ \relax }}{40}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:4}{{5.4.2}{40}{Lanczos Vectors Losing Orthogonality on converged Ritzvectors}{figure.caption.5}{}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.3}{\ignorespaces Projection of floating-point Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$ \relax }}{41}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:4}{{5.4.2}{41}{Lanczos Vectors Losing Orthogonality on converged Ritzvectors}{figure.caption.5}{}}
 \@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.4}{\ignorespaces prHjection of the exact Lanczos vector $q_k$ onto 3 of the largest Ritz vectors: $Q_ks_i^{(k)}$, for $i = k, k - 1, k - 2$\relax }}{41}{figure.caption.6}\protected@file@percent }
 \newlabel{fig:5}{{5.4.2}{41}{Lanczos Vectors Losing Orthogonality on converged Ritzvectors}{figure.caption.6}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.5}{\ignorespaces The projection of most recent Lanczos vector $q_k$ onto the first 3 Ritzvectors: $Q_ks_i^{(k)}$ for $1\le i \le 3$, it's performed on a Tridiagonal matrix $T_k$ generated by finite precision lanczos with $q_1 = \xi _1$. \relax }}{41}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:6}{{5.4.2}{41}{Lanczos Vectors Losing Orthogonality on converged Ritzvectors}{figure.caption.7}{}}
 \abx@aux@cite{paper:saad_ritz_convergence}
 \abx@aux@segm{0}{0}{paper:saad_ritz_convergence}
 \abx@aux@cite{paper:kaniel1966}
 \abx@aux@segm{0}{0}{paper:kaniel1966}
-\abx@aux@cite{paper:greenbaum_tiny_interval_experiments}
-\abx@aux@segm{0}{0}{paper:greenbaum_tiny_interval_experiments}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.5}{\ignorespaces The projection of most recent Lanczos vector $q_k$ onto the first 3 Ritzvectors: $Q_ks_i^{(k)}$ for $1\le i \le 3$, it's performed on a Tridiagonal matrix $T_k$ generated by finite precision lanczos with $q_1 = \xi _1$. \relax }}{42}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:6}{{5.4.2}{42}{Lanczos Vectors Losing Orthogonality on converged Ritzvectors}{figure.caption.7}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.3}Greenbaum's Tiny Interval Experiments}{42}{subsubsection.5.4.3}\protected@file@percent }
 \abx@aux@cite{paper:greenbaum_tiny_interval_experiments}
 \abx@aux@segm{0}{0}{paper:greenbaum_tiny_interval_experiments}
-\newlabel{fig:7.1}{{5.4.6a}{43}{Applying CG without re-orthogonalizations on $Ax = b$, the original matrix without the tiny intervals. \relax }{figure.caption.8}{}}
-\newlabel{sub@fig:7.1}{{a}{43}{Applying CG without re-orthogonalizations on $Ax = b$, the original matrix without the tiny intervals. \relax }{figure.caption.8}{}}
-\newlabel{fig:7.2}{{5.4.6b}{43}{Applying CG with full re-orthogonalizations on $\tilde Ax = \tilde b$. $\tilde A$ has tiny intervals. \relax }{figure.caption.8}{}}
-\newlabel{sub@fig:7.2}{{b}{43}{Applying CG with full re-orthogonalizations on $\tilde Ax = \tilde b$. $\tilde A$ has tiny intervals. \relax }{figure.caption.8}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.6}{\ignorespaces \relax }}{43}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:7}{{5.4.6}{43}{\relax }{figure.caption.8}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Another Paige's Theorem}{44}{subsection.5.5}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{45}{subsection.5.6}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{Appendices}{45}{section*.9}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {A}Useful Lemmas}{45}{appendix.1.A}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Relative Energy Norm and Relative 2-Norm Conversions}{45}{subsection.1.A.1}\protected@file@percent }
-\newlabel{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}{{A.1.1}{45}{Relative Energy Norm and Relative 2-Norm Conversions}{lemma.1.A.1.1}{}}
+\abx@aux@cite{paper:greenbaum1989}
+\abx@aux@segm{0}{0}{paper:greenbaum1989}
+\newlabel{fig:7.1}{{5.4.6a}{44}{Applying CG without re-orthogonalizations on $Ax = b$, the original matrix without the tiny intervals. \relax }{figure.caption.8}{}}
+\newlabel{sub@fig:7.1}{{a}{44}{Applying CG without re-orthogonalizations on $Ax = b$, the original matrix without the tiny intervals. \relax }{figure.caption.8}{}}
+\newlabel{fig:7.2}{{5.4.6b}{44}{Applying CG with full re-orthogonalizations on $\tilde Ax = \tilde b$. $\tilde A$ has tiny intervals. \relax }{figure.caption.8}{}}
+\newlabel{sub@fig:7.2}{{b}{44}{Applying CG with full re-orthogonalizations on $\tilde Ax = \tilde b$. $\tilde A$ has tiny intervals. \relax }{figure.caption.8}{}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5.4.6}{\ignorespaces \relax }}{44}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:7}{{5.4.6}{44}{\relax }{figure.caption.8}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Another Paige's Theorem}{45}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Forward Error Analysis}{46}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{Appendices}{46}{section*.9}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {A}Useful Lemmas}{46}{appendix.1.A}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Relative Energy Norm and Relative 2-Norm Conversions}{46}{subsection.1.A.1}\protected@file@percent }
+\newlabel{lemma:Relative_Energy_Norm_and_Relative_2_Norm_Conversions}{{A.1.1}{46}{Relative Energy Norm and Relative 2-Norm Conversions}{lemma.1.A.1.1}{}}
 \abx@aux@cite{book:greenbaum}
 \abx@aux@segm{0}{0}{book:greenbaum}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {B}Theorems, Propositions, Proofs}{46}{appendix.1.B}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Krylov Subspace Grade Invariant Theorem}{46}{subsection.1.B.1}\protected@file@percent }
-\newlabel{prop:Krylov_Subspace_Grade_Invariant_Theorem}{{B.1}{46}{Krylov Subspace Grade Invariant Theorem}{prop.1.B.1}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}{46}{subsection.1.B.2}\protected@file@percent }
-\newlabel{theorem:cauchy_interlace}{{6}{46}{Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}{theorem.6}{}}
-\newlabel{prop:Orthogonal_Polynomials_and_Lanczos}{{B.2}{46}{Orthogonal Polynomials and Lanczos}{prop.1.B.2}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Recursion of the Symmetric Tridiagonal Matrix Determinant}{47}{subsection.1.B.3}\protected@file@percent }
-\newlabel{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}{{B.3}{47}{Recursion of the Symmetric Tridiagonal Matrix Determinant}{prop.1.B.3}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix}{48}{subsection.1.B.4}\protected@file@percent }
-\newlabel{theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix}{{7}{48}{Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix}{theorem.7}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}Tridiagonal Characteristic Polynomials is Scaled Lanczos Orthgonal Polynomials}{48}{subsection.1.B.5}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}Irreducible Symmetric Tridiagonal Matrix}{48}{subsection.1.B.6}\protected@file@percent }
-\newlabel{prop:Irreducible Symmetric Tridiagonal Matrix}{{B.5}{48}{}{prop.1.B.5}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.7}From CG to Lanczos: The Proof}{49}{subsection.1.B.7}\protected@file@percent }
-\newlabel{sec:From_CG_to_Lanczos:The_Proof}{{B.7}{49}{From CG to Lanczos: The Proof}{subsection.1.B.7}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {B.7.1}The Base Case}{49}{subsubsection.1.B.7.1}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {B.7.2}The Inductive Case}{49}{subsubsection.1.B.7.2}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {B.7.3}Fixing the Sign}{51}{subsubsection.1.B.7.3}\protected@file@percent }
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.8}Derive CG using Lanczos: Proof}{51}{subsection.1.B.8}\protected@file@percent }
-\newlabel{sec:Derive_CG_using_Lanczos: Proof}{{B.8}{51}{Derive CG using Lanczos: Proof}{subsection.1.B.8}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {C}Algorithms}{53}{appendix.1.C}\protected@file@percent }
-\newlabel{def:Lanczos Iterations Variants}{{7}{53}{Lanczos Iterations Variants}{definition.7}{}}
-\abx@aux@read@bbl@mdfivesum{F19D7CF8AA4F0B7D698FEF65DA985A33}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {B}Theorems, Propositions, Proofs}{47}{appendix.1.B}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Krylov Subspace Grade Invariant Theorem}{47}{subsection.1.B.1}\protected@file@percent }
+\newlabel{prop:Krylov_Subspace_Grade_Invariant_Theorem}{{B.1}{47}{Krylov Subspace Grade Invariant Theorem}{prop.1.B.1}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}{47}{subsection.1.B.2}\protected@file@percent }
+\newlabel{theorem:cauchy_interlace}{{6}{47}{Cauchy Interlace Theorem for Tridiagonal Symmetric Matrices}{theorem.6}{}}
+\newlabel{prop:Orthogonal_Polynomials_and_Lanczos}{{B.2}{47}{Orthogonal Polynomials and Lanczos}{prop.1.B.2}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Recursion of the Symmetric Tridiagonal Matrix Determinant}{48}{subsection.1.B.3}\protected@file@percent }
+\newlabel{prop:Recursion_of_the_Symmetric_Tridiagonal_Matrix_Determinant}{{B.3}{48}{Recursion of the Symmetric Tridiagonal Matrix Determinant}{prop.1.B.3}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix}{49}{subsection.1.B.4}\protected@file@percent }
+\newlabel{theorem:Recurrence_of_the_Characteristic_Polynomial_of_a_Symmetric_Tridiagonal_Matrix}{{7}{49}{Recurrence of the Characteristic Polynomial of a Symmetric Tridiagonal Matrix}{theorem.7}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}Tridiagonal Characteristic Polynomials is Scaled Lanczos Orthgonal Polynomials}{49}{subsection.1.B.5}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}Irreducible Symmetric Tridiagonal Matrix}{49}{subsection.1.B.6}\protected@file@percent }
+\newlabel{prop:Irreducible Symmetric Tridiagonal Matrix}{{B.5}{49}{}{prop.1.B.5}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.7}From CG to Lanczos: The Proof}{50}{subsection.1.B.7}\protected@file@percent }
+\newlabel{sec:From_CG_to_Lanczos:The_Proof}{{B.7}{50}{From CG to Lanczos: The Proof}{subsection.1.B.7}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {B.7.1}The Base Case}{50}{subsubsection.1.B.7.1}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {B.7.2}The Inductive Case}{50}{subsubsection.1.B.7.2}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{\numberline {B.7.3}Fixing the Sign}{52}{subsubsection.1.B.7.3}\protected@file@percent }
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {B.8}Derive CG using Lanczos: Proof}{52}{subsection.1.B.8}\protected@file@percent }
+\newlabel{sec:Derive_CG_using_Lanczos: Proof}{{B.8}{52}{Derive CG using Lanczos: Proof}{subsection.1.B.8}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {C}Algorithms}{54}{appendix.1.C}\protected@file@percent }
+\newlabel{def:Lanczos Iterations Variants}{{7}{54}{Lanczos Iterations Variants}{definition.7}{}}
+\abx@aux@read@bbl@mdfivesum{E8963C24518751238904E016B45B3B91}
 \abx@aux@refcontextdefaultsdone
 \abx@aux@defaultrefcontext{0}{book:reliable_computation}{nty/global//global/global}
+\abx@aux@defaultrefcontext{0}{paper:greenbaum1989}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:greenbaum_indefinite_lanczos}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:greenbaum_tiny_interval_experiments}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{book:greenbaum}{nty/global//global/global}
@@ -201,4 +203,4 @@
 \abx@aux@defaultrefcontext{0}{notes:painless_cg}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{paper:kaniel1966}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{book:trefethen}{nty/global//global/global}
-\gdef \@abspage@last{54}
+\gdef \@abspage@last{55}
