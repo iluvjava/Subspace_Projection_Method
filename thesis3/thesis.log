@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  16 MAY 2022 15:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.12.17)  20 MAY 2022 02:33
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -412,7 +412,9 @@ Package graphics Info: Driver file: pdftex.def on input line 105.
 \c@definition=\count306
 \c@remark=\count307
 Package hyperref Info: Option `colorlinks' set `true' on input line 38.
- (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/biblatex.sty
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/biblatex/biblatex.sty
 Package: biblatex 2020/12/31 v3.16 programmable bibliographies (PK/MW)
  (/usr/local/texlive/2021/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
@@ -639,26 +641,26 @@ Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
 (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
 \c@lstlisting=\count439
-Package hyperref Info: Link coloring ON on input line 76.
+Package hyperref Info: Link coloring ON on input line 77.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (/usr/local/texlive/2021/texmf-dist/tex/latex/refcount/refcount.sty
@@ -668,9 +670,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count440
 )
-LaTeX Info: Redefining \ref on input line 76.
-LaTeX Info: Redefining \pageref on input line 76.
-LaTeX Info: Redefining \nameref on input line 76.
+LaTeX Info: Redefining \ref on input line 77.
+LaTeX Info: Redefining \pageref on input line 77.
+LaTeX Info: Redefining \nameref on input line 77.
  (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.out) (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.out)
 \@outlinefile=\write5
 \openout5 = `thesis.out'.
@@ -753,11 +755,19 @@ Package: blx-case-expl3 2020/12/31 v3.16 expl3 case changing code for biblatex
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'thesis.bbl' found.
  (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.bbl)
-Package biblatex Info: Reference section=0 on input line 76.
-Package biblatex Info: Reference segment=0 on input line 76.
+Package biblatex Info: Reference section=0 on input line 77.
+Package biblatex Info: Reference segment=0 on input line 77.
  [1
 
-{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.toc
+{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.118 \newpage
+               [2]pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.133 \newpage
+               [3] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 10.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -765,106 +775,106 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 10.
  (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [2])
+) [1])
 \tf@toc=\write6
 \openout6 = `thesis.toc'.
 
- [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-Overfull \hbox (16.56534pt too wide) in paragraph at lines 689--690
+ [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+Overfull \hbox (16.56534pt too wide) in paragraph at lines 713--714
 []\T1/cmr/m/n/12 The base case is triv-ial and it's di-rectly true from the def-i-ni-tion of CG: $\OML/cmm/m/it/12 r[] \OMS/cmsy/m/n/12 2 K[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 A\OMS/cmsy/m/n/12 j\OML/cmm/m/it/12 r[]\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ; p[] \OT1/cmr/m/n/12 =
  []
 
-[14] [15]
-Overfull \hbox (7.69136pt too wide) in paragraph at lines 778--779
+[13] [14]
+Overfull \hbox (7.69136pt too wide) in paragraph at lines 779--780
 []\T1/cmr/m/n/12 Assuming Arnoldi it-er-a-tion doesn't ter-mi-nates, then it's di-rect be-cause if $\OML/cmm/m/it/12 q[] \OMS/cmsy/m/n/12 2 K[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 A\OMS/cmsy/m/n/12 j\OML/cmm/m/it/12 q[]\OT1/cmr/m/n/12 )$\T1/cmr/m/n/12 ,
  []
 
-[16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
+[15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1401.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1401.
+(hyperref)                removing `math shift' on input line 1399.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1401.
+(hyperref)                removing `subscript' on input line 1399.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1401.
+(hyperref)                removing `subscript' on input line 1399.
 
-[27] [28] [29]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1399.
+
+[26] [27]
 <cg_convergence_0.9.png, id=742, 2258.4375pt x 1505.625pt>
 File: cg_convergence_0.9.png Graphic file (type png)
 <use cg_convergence_0.9.png>
-Package pdftex.def Info: cg_convergence_0.9.png  used on input line 1517.
+Package pdftex.def Info: cg_convergence_0.9.png  used on input line 1515.
 (pdftex.def)             Requested size: 341.43306pt x 227.603pt.
 <cg_convergence_1.png, id=743, 2258.4375pt x 1505.625pt>
 File: cg_convergence_1.png Graphic file (type png)
 <use cg_convergence_1.png>
-Package pdftex.def Info: cg_convergence_1.png  used on input line 1524.
+Package pdftex.def Info: cg_convergence_1.png  used on input line 1522.
 (pdftex.def)             Requested size: 341.43306pt x 227.603pt.
- [30] [31 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/cg_convergence_0.9.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/cg_convergence_1.png>]
-LaTeX Font Info:    Calculating math sizes for size <10.00012> on input line 1544.
- [32] [33] [34] [35]
+ [28] [29 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/cg_convergence_0.9.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/cg_convergence_1.png>]
+LaTeX Font Info:    Calculating math sizes for size <10.00012> on input line 1542.
+ [30] [31] [32] [33]
 <ritz_trajectory_plot_floats.png, id=843, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_floats.png Graphic file (type png)
 <use ritz_trajectory_plot_floats.png>
-Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1735.
+Package pdftex.def Info: ritz_trajectory_plot_floats.png  used on input line 1733.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
 <ritz_trajectory_plot_exact.png, id=844, 1882.03125pt x 1882.03125pt>
 File: ritz_trajectory_plot_exact.png Graphic file (type png)
 <use ritz_trajectory_plot_exact.png>
-Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1736.
+Package pdftex.def Info: ritz_trajectory_plot_exact.png  used on input line 1734.
 (pdftex.def)             Requested size: 227.62204pt x 227.61449pt.
- [36 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/ritz_trajectory_plot_floats.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/ritz_trajectory_plot_exact.png>]
-<fig3.png, id=859, 724.7075pt x 513.92pt>
+ [34 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/ritz_trajectory_plot_floats.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/ritz_trajectory_plot_exact.png>]
+<fig3.png, id=860, 724.7075pt x 513.92pt>
 File: fig3.png Graphic file (type png)
 <use fig3.png>
-Package pdftex.def Info: fig3.png  used on input line 1748.
+Package pdftex.def Info: fig3.png  used on input line 1746.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
-<fig4.png, id=860, 724.7075pt x 513.92pt>
+<fig4.png, id=861, 724.7075pt x 513.92pt>
 File: fig4.png Graphic file (type png)
 <use fig4.png>
-Package pdftex.def Info: fig4.png  used on input line 1749.
+Package pdftex.def Info: fig4.png  used on input line 1747.
 (pdftex.def)             Requested size: 227.62204pt x 161.41515pt.
- [37 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/fig3.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/fig4.png>] [38]
+ [35 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/fig3.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/fig4.png>] [36]
 <lanczos_proj_on_ritz_float.png, id=890, 2258.4375pt x 1505.625pt>
 File: lanczos_proj_on_ritz_float.png Graphic file (type png)
 <use lanczos_proj_on_ritz_float.png>
-Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 1782.
+Package pdftex.def Info: lanczos_proj_on_ritz_float.png  used on input line 1780.
 (pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
 <lanczos_proj_on_ritz_exact.png, id=891, 2258.4375pt x 1505.625pt>
 File: lanczos_proj_on_ritz_exact.png Graphic file (type png)
 <use lanczos_proj_on_ritz_exact.png>
-Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 1788.
+Package pdftex.def Info: lanczos_proj_on_ritz_exact.png  used on input line 1786.
 (pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
- [39]
+ [37]
 <ritz_proj_tridiagonal.png, id=900, 2258.4375pt x 1505.625pt>
 File: ritz_proj_tridiagonal.png Graphic file (type png)
 <use ritz_proj_tridiagonal.png>
-Package pdftex.def Info: ritz_proj_tridiagonal.png  used on input line 1793.
+Package pdftex.def Info: ritz_proj_tridiagonal.png  used on input line 1791.
 (pdftex.def)             Requested size: 398.33858pt x 265.55598pt.
- [40 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/lanczos_proj_on_ritz_float.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/lanczos_proj_on_ritz_exact.png>] [41 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/ritz_proj_tridiagonal.png>]
+ [38 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/lanczos_proj_on_ritz_float.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/lanczos_proj_on_ritz_exact.png>] [39 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/ritz_proj_tridiagonal.png>]
 <floats_cg_on_exact_matrix.png, id=918, 2258.4375pt x 1505.625pt>
 File: floats_cg_on_exact_matrix.png Graphic file (type png)
 <use floats_cg_on_exact_matrix.png>
-Package pdftex.def Info: floats_cg_on_exact_matrix.png  used on input line 1815.
+Package pdftex.def Info: floats_cg_on_exact_matrix.png  used on input line 1813.
 (pdftex.def)             Requested size: 341.43306pt x 227.603pt.
 <exact_cg_on_smeared_matrix.png, id=919, 2258.4375pt x 1505.625pt>
 File: exact_cg_on_smeared_matrix.png Graphic file (type png)
 <use exact_cg_on_smeared_matrix.png>
-Package pdftex.def Info: exact_cg_on_smeared_matrix.png  used on input line 1822.
+Package pdftex.def Info: exact_cg_on_smeared_matrix.png  used on input line 1820.
 (pdftex.def)             Requested size: 341.43306pt x 227.603pt.
- [42] [43 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/floats_cg_on_exact_matrix.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/exact_cg_on_smeared_matrix.png>] [44]
-Overfull \hbox (5.83687pt too wide) in paragraph at lines 1919--1921
+ [40] [41 </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/floats_cg_on_exact_matrix.png> </Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/exact_cg_on_smeared_matrix.png>] [42]
+Overfull \hbox (5.83687pt too wide) in paragraph at lines 1917--1919
 \T1/cmr/m/n/12 Adding back the sub-scripts we have: $\OML/cmm/m/it/12 ^^L[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 v[]\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 q[]y[] \OT1/cmr/m/n/12 = \OML/cmm/m/it/12 v[]Lv$\T1/cmr/m/n/12 , no-tice that $\OMS/cmsy/m/n/12 j\OML/cmm/m/it/12 v[]Lv\OMS/cmsy/m/n/12 j \OT1/cmr/m/n/12 = \OMS/cmsy/m/n/12 O\OT1/cmr/m/n/12 (\OMS/cmsy/m/n/12 k\OML/cmm/m/it/12 L\OMS/cmsy/m/n/12 k\OT1/cmr/m/n/12 ) =
  []
 
-[45] [46] [47] [48] [49] [50] [51] [52] [53] [54] [55] [56] [57] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.aux)
+[43] [44] [45] [46] [47] [48] [49] [50] [51] [52] [53] [54] [55] (/Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 4058442D939A195ECC1FAAE2DC7A9C88;13492.
 Package logreq Info: Writing requests to 'thesis.run.xml'.
@@ -872,18 +882,20 @@ Package logreq Info: Writing requests to 'thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 22656 strings out of 478994
- 377346 string characters out of 5858183
- 1147965 words of memory out of 5000000
- 39265 multiletter control sequences out of 15000+600000
+ 22687 strings out of 478994
+ 377943 string characters out of 5858183
+ 1148252 words of memory out of 5000000
+ 39293 multiletter control sequences out of 15000+600000
  423092 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  81i,22n,117p,1472b,1991s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
-Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.pdf (57 pages, 2090513 bytes).
+pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
+
+{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
+Output written on /Users/hongdali/Desktop/repos/Subspace_Projection_Method/thesis3/thesis.pdf (58 pages, 2074787 bytes).
 PDF statistics:
- 1373 PDF objects out of 1440 (max. 8388607)
- 1254 compressed objects within 13 object streams
- 566 named destinations out of 1000 (max. 500000)
+ 1370 PDF objects out of 1440 (max. 8388607)
+ 1251 compressed objects within 13 object streams
+ 565 named destinations out of 1000 (max. 500000)
  520 words of extra memory for PDF output out of 10000 (max. 10000000)
 
